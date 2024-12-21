@@ -1,0 +1,70 @@
+# Node.js dependencies
+/node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.pid.lock
+
+# Directory for debug by vscode
+.vscode/
+
+# Coverage directory used by testing tools
+coverage/
+
+# Environment variable files
+.env
+.env.*.local
+
+# Build output
+dist/
+build/
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE-specific files
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# macOS System Files
+.DS_Store
+
+# Windows System Files
+Thumbs.db
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Parcel-bundler cache
+.cache/
+
+# Optional Stylelint cache
+.stylelintcache
+
+# Storybook files
+out/
+
+# Ignore compiled TS files (if applicable)
+*.js
+*.js.map
+
+# Temporary files
+*.tmp
+*.temp

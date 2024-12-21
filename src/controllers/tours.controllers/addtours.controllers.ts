@@ -117,3 +117,4 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
 
 export default addTour;
 
+// add tours

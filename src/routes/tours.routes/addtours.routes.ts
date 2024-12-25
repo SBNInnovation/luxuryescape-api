@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import addTour from "../../controllers/tours.controllers/addtours.controllers";
+import addTour from "../../controllers/tours/addtours.controllers";
 import { Request } from "express";
 import { Express } from "express";
 

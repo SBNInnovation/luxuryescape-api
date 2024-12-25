@@ -69,9 +69,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     
     // Uploading logic remains the same
     const uploadedThumbnail = await uploadFile(thumbnail[0]?.path || "", "tours/thumbnail/images");
-    const uploadedDestinationPhotos = await uploadFile(destinationPhoto[0]?.path || "", "tours/destination/images");
-    const uploadedHighlightPictures = await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images");
-    const uploadedItineraryDayPhotos = await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images");
+    const uploadedDestinationPhoto = await uploadFile(destinationPhoto[0]?.path || "", "tours/destination/images");
+    const uploadedHighlightPicture = await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images");
+    const uploadedItineraryDayPhoto = await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images");
     const uploadedAccommodationPics = await Promise.all(
       accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images"))
     );
@@ -84,20 +84,20 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const createTour = await Tour.create({
       tourName,
       slug: tourName,
-      thumbnail: uploadedThumbnail,
+      thumbnail: uploadedThumbnail?.secure_url,
       duration,
       idealTime,
       cost,
       tourTypes,
       destination: parsedDestination,
-      destinationPhoto: uploadedDestinationPhotos,
+      destinationPhoto: uploadedDestinationPhoto?.secure_url,
       tourOverview,
       keyHighlights: parsedKeyHighlights,
       tourHighlights: parsedKeyHighlights,
-      highlightPicture: uploadedHighlightPictures,
+      highlightPicture: uploadedHighlightPicture?.secure_url,
       tourItinerary: parsedTourItinerary,
       itinerary: parsedTourItinerary,
-      itineraryDayPhoto: uploadedItineraryDayPhotos,
+      itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
       accommodationPics: uploadedAccommodationPics,
       faq: parsedFaq,
     });

@@ -6,6 +6,7 @@ import addTourRouter from "./routes/tours.routes/addtours.routes";
 import signupRouter from "./routes/login&signup/signupRouter";
 import loginRouter from "./routes/login&signup/loginRoutes";
 import cookieParser from "cookie-parser";
+import otpRouter from "./routes/otp/otpRoutes";
 
 const app = express();
 
@@ -21,7 +22,11 @@ app.use(cookieParser())
 app.use("/api/v1",addTourRouter)
 
 //for signup and login 
-app.use(signupRouter,loginRouter)
+app.use(
+    signupRouter,
+    loginRouter,
+    otpRouter
+)
 
 app.get("/", (req: Request, res: Response) => {
     res.send("Hello World");

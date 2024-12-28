@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Register from "../../models/login&signup.models/register";
+import Register from "../../models/signup.models/register";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken";
 

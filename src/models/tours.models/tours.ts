@@ -52,8 +52,14 @@ const addTours = new Schema({
     faq: [{
         question: {type:String},
         answer: {type:String}
-    }]
-})
+    }],
+    isRecommend:{type:Boolean,default:false},
+    isActivate:{type:Boolean,default:false}
+},
+{
+  timestamps:true
+}
+)
 
 const Tour = mongoose.model("Tour", addTours)
 

@@ -7,6 +7,8 @@ import signupRouter from "./routes/login&signup/signupRouter";
 import loginRouter from "./routes/login&signup/loginRoutes";
 import cookieParser from "cookie-parser";
 import otpRouter from "./routes/otp/otpRoutes";
+import getActivateTourRouter from "./routes/tours.routes/getActivateTours.routes";
+import getAllTourRouter from "./routes/tours.routes/getAllTours.routes";
 
 const app = express();
 
@@ -19,7 +21,11 @@ app.use(express.json());
 app.use(urlencoded({extended:true}))
 app.use(cookieParser())
 
-app.use("/api/v1",addTourRouter)
+app.use("/api/v1",
+    addTourRouter,
+    getActivateTourRouter,
+    getAllTourRouter
+)
 
 //for signup and login 
 app.use(

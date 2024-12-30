@@ -3,6 +3,6 @@ import getToursByActivate from "../../controllers/tours/getToursByActivate.contr
 
 const getActivateTourRouter = express.Router();
 
-getActivateTourRouter.route("/get-activate-tours").get(getToursByActivate)
+getActivateTourRouter.route("/get-activated-tours").get(getToursByActivate)
 
 export default getActivateTourRouter

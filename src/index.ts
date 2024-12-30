@@ -9,6 +9,9 @@ import cookieParser from "cookie-parser";
 import otpRouter from "./routes/otp/otpRoutes";
 import getActivateTourRouter from "./routes/tours.routes/getActivateTours.routes";
 import getAllTourRouter from "./routes/tours.routes/getAllTours.routes";
+import activeteTourRouter from "./routes/tours.routes/activateTours.routes";
+import getRecommendTourRouter from "./routes/tours.routes/getRecommendTours.routes";
+import recommendTourRouter from "./routes/tours.routes/recommendTours.routes";
 
 const app = express();
 
@@ -21,18 +24,23 @@ app.use(express.json());
 app.use(urlencoded({extended:true}))
 app.use(cookieParser())
 
-app.use("/api/v1",
-    addTourRouter,
-    getActivateTourRouter,
-    getAllTourRouter
-)
-
-//for signup and login 
+//for client route
 app.use(
+    getActivateTourRouter,
+    getRecommendTourRouter
+)
+//for adminpanel route
+app.use("/admin",
     signupRouter,
     loginRouter,
-    otpRouter
+    otpRouter,
+    addTourRouter,
+    getAllTourRouter,
+    activeteTourRouter,
+    recommendTourRouter
 )
+
+
 
 app.get("/", (req: Request, res: Response) => {
     res.send("Hello World");

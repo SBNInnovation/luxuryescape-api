@@ -1,78 +1,128 @@
 import { Request, Response } from "express";
 import Register from "../../models/signup.models/register";
 import { generateOtp, sendOtpEmail } from "../../middleware/forgotPassword";
+import jwt, { JwtPayload } from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 
-const sendotp = async(req:Request,res:Response):Promise<void> =>{
-    try {
-        const {email} = req.body;
-        if(!email){
-             res.status(404).json({success:false, message:"Email is required"});
-             return
-        }
-        const findValidUser = await Register.findOne({email});
-        if(!findValidUser){
-             res.status(404).json({success:false, message:"Email is not registered"});
-             return
-            }
-        const otp = generateOtp(6);
-        if(!otp){
-             res.status(404).json({success:false, message:"Failed to generate OTP"});
-             return
-        }
-        const sentOtp = sendOtpEmail(email,otp);
-        findValidUser.otp = otp;
-        await findValidUser.save()
-        res.status(200).json({success:true,message:"Otp sent successfully",sentOtp})
+const sendotp = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email } = req.body;
 
-    } catch (error) {
-        res.status(400).json({success:false, message:"Internal server error",error})
+    if (!email) {
+      res.status(400).json({ success: false, message: "Email is required" });
+      return;
     }
-}
+
+    const findValidUser = await Register.findOne({ email });
+    if (!findValidUser) {
+      res.status(404).json({ success: false, message: "Email is not registered" });
+      return;
+    }
+
+    const otp = generateOtp(6);
+    if (!otp) {
+      res.status(500).json({ success: false, message: "Failed to generate OTP" });
+      return;
+    }
+
+    const fpwToken = jwt.sign({ email }, process.env.FPW_SECRET_KEY as string, { expiresIn: '15m' });
+
+    findValidUser.otp = otp;
+    await findValidUser.save();
+
+    await sendOtpEmail(email, otp);
+
+    res.status(200).json({ success: true, message: "OTP sent successfully", fpwToken });
+
+  } catch (error) {
+    console.error('Error in sendOtp:', error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+
 
 const verifyOtp = async(req:Request,res:Response):Promise<void> =>{
     try {
-        const {otp} = req.body;
-        if(!otp){
-            res.status(404).json({success:false, message:"Otp is required"});
-            return
+        const { otp } = req.body;
+        const { fpwToken } = req.query;
+
+        if (!otp || !fpwToken || typeof fpwToken !== 'string') {
+        res.status(400).json({ success: false, message: "OTP and token are required" });
+        return;
         }
-        const verify  = await Register.findOne({otp});
-        if(!verify){
-            res.status(404).json({success:false, message:"Invalid otp"});
-            return
-            }
-        res.status(200).json({success:true,message:"Otp verified"})
-    } catch (error) {
-        res.status(400).json({success:false, message:"Internal server error",error})
-    }
+
+        let decodedToken: JwtPayload;
+        try {
+        decodedToken = jwt.verify(fpwToken, process.env.FPW_SECRET_KEY as string) as JwtPayload;
+        } catch (error) {
+        res.status(401).json({ success: false, message: "Invalid or expired token" });
+        return;
+        }
+        const user = await Register.findOne({ email: decodedToken.email });
+        if (!user) {
+        res.status(404).json({ success: false, message: "User not found" });
+        return;
+        }
+
+        if (user.otp !== otp) {
+        res.status(400).json({ success: false, message: "Invalid OTP" });
+        return;
+        }
+
+        // Clear the OTP after successful verification
+        user.otp = "";
+        await user.save();
+
+        res.status(200).json({ success: true, message: "OTP verified successfully" });
+        } catch (error) {
+            res.status(400).json({success:false, message:"Internal server error",error})
+        }
 }
 
-const generatePassword = async(req:Request,res:Response) =>{
+const generatePassword = async (req: Request, res: Response): Promise<void> => {
     try {
-        const{email,password} = req.body;
-        if(!password){
-            res.status(404).json({success:false, message:"Password is required"});
-            return
-        }
-        const salt = bcrypt.genSaltSync(10)
-        const hashedPassword = await bcrypt.hash(password, salt);
-        
-        const user = await Register.findOneAndUpdate(
-            { email }, // Find user by email
-            { password: hashedPassword }, // Update the password
-            { new: true } // Return the updated document
-          );
-        if(!user){
-            res.status(404).json({success:false, message:"Failed to update password"});
-            return
-        }
-        res.status(200).json({success:true,message:"Password updated successfully",user: { email: user.email, name: user.name }, // Return non-sensitive data 
-            })
-
+      const { password } = req.body;
+      const { fpwToken } = req.query;
+  
+      if (!password || !fpwToken || typeof fpwToken !== 'string') {
+        res.status(400).json({ success: false, message: "Password and token are required" });
+        return;
+      }
+  
+      let decodedToken: JwtPayload;
+      try {
+        decodedToken = jwt.verify(fpwToken, process.env.FPW_SECRET_KEY as string) as JwtPayload;
+      } catch (error) {
+        res.status(401).json({ success: false, message: "Invalid or expired token" });
+        return;
+      }
+  
+      const salt = await bcrypt.genSalt(10); // Increased from 10 to 12 for better security
+      const hashedPassword = await bcrypt.hash(password, salt);
+  
+      const user = await Register.findOneAndUpdate(
+        { email: decodedToken.email },
+        { 
+          password: hashedPassword
+        },
+        { new: true, select: 'email name' } // Only return email and name fields
+      );
+  
+      if (!user) {
+        res.status(404).json({ success: false, message: "User not found" });
+        return;
+      }
+  
+      res.status(200).json({
+        success: true,
+        message: "Password updated successfully",
+        user: { email: user.email, name: user.name }
+      });
+  
     } catch (error) {
-        res.status(400).json({success:false,message:"Internal server error"})
+      console.error('Error in generatePassword:', error);
+      res.status(500).json({ success: false, message: "Internal server error" });
     }
-}
-
+  };
 export {sendotp,verifyOtp,generatePassword};

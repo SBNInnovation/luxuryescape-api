@@ -28,7 +28,7 @@ const addTours = new Schema(
   {
     tourName: { type: String, required: true },
     slug: { type: String, required: true },
-    thumbnail: { type: String, default: "" },
+    gallery: { type: [String], default: [] },
     country: { type: String, enum: ["Nepal", "Bhutan", "Tibet"], required: true },
     location: { type: String, required: true },
     duration: { type: String, required: true },
@@ -56,6 +56,7 @@ const addTours = new Schema(
       ],
       default: [],
     },
+    tourInclusion:{type:[String],default:[]},
     tourItinerary: {
       mainOverview: { type: String, required: true },
       itinerary: { type: [itineraryDetails], default: [] },
@@ -63,8 +64,8 @@ const addTours = new Schema(
     faq: {
       type: [
         {
-          question: { type: String, required: false },
-          answer: { type: String, required: false },
+          question: { type: String },
+          answer: { type: String},
         },
       ],
       default: [],

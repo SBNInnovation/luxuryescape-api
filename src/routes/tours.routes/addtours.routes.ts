@@ -7,14 +7,14 @@ import { Express } from "express";
 const addTourRouter = express.Router();
 
 interface MulterRequest extends Request {
-    files: {
-      thumbnail?: Express.Multer.File[],
-      destinationPhoto?: Express.Multer.File[],
-      highlightPicture?: Express.Multer.File[],
-      itineraryDayPhoto?: Express.Multer.File[],
-      accommodationPics?: Express.Multer.File[]
-    }
-  }
+  files?: {
+    gallery?: Express.Multer.File[];
+    destinationPhoto?: Express.Multer.File[];
+    highlightPicture?: Express.Multer.File[];
+    itineraryDayPhoto?: Express.Multer.File[];
+    accommodationPics?: Express.Multer.File[];
+  };
+}
 
 
   const uploader = multer({
@@ -29,7 +29,7 @@ interface MulterRequest extends Request {
   });
 
 const upload = [
-  { name: "thumbnail", maxCount: 1 }, 
+  { name: "gallery", maxCount: 1 }, 
   { name: "destinationPhoto", maxCount: 1 },
   { name: "highlightPicture", maxCount: 1 },
   { name: "itineraryDayPhoto", maxCount: 1 },

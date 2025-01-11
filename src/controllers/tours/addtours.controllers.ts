@@ -5,7 +5,7 @@ import { Express } from "express";
 
 interface MulterRequest extends Request {
   files?: {
-    thumbnail?: Express.Multer.File[];
+    gallery?: Express.Multer.File[];
     destinationPhoto?: Express.Multer.File[];
     highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
@@ -25,6 +25,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourOverview,
       keyHighlights,
       tourHighlights,
+      tourInclusion,
       tourItinerary,
       faq,
       location,
@@ -42,6 +43,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       !destination ||
       !tourOverview ||
       !keyHighlights ||
+      !tourInclusion ||
       !tourHighlights ||
       !tourItinerary ||
       !faq ||
@@ -52,13 +54,13 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       return;
     }
 
-    const thumbnail = req?.files?.thumbnail;
+    const gallery = req?.files?.gallery;
     const destinationPhoto = req?.files?.destinationPhoto;
     const highlightPicture = req?.files?.highlightPicture;
     const itineraryDayPhoto = req?.files?.itineraryDayPhoto;
     const accommodationPics = req?.files?.accommodationPics;
 
-    if (!thumbnail || !destinationPhoto || !highlightPicture || !itineraryDayPhoto || !accommodationPics) {
+    if (!gallery || !destinationPhoto || !highlightPicture || !itineraryDayPhoto || !accommodationPics) {
       res.status(400).json({
         success: false,
         message: "Please upload all required files",
@@ -67,13 +69,17 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     }
 
     // Uploading files
-    const uploadedThumbnail = await uploadFile(thumbnail[0]?.path || "", "tours/thumbnail/images");
+    const uploadedgallery = await Promise.all(
+      gallery.map((file) => uploadFile(file?.path || "", "tours/gallery/images"))
+    );
+    //const uploadedThumbnail = await uploadFile(thumbnail[0]?.path || "", "tours/thumbnail/images");
     const uploadedDestinationPhoto = await uploadFile(destinationPhoto[0]?.path || "", "tours/destination/images");
     const uploadedHighlightPicture = await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images");
     const uploadedItineraryDayPhoto = await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images");
     const uploadedAccommodationPics = await Promise.all(
       accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images"))
     );
+   
 
     // Parsing JSON fields
     const parsedDestination = JSON.parse(destination);
@@ -86,7 +92,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const createTour = await Tour.create({
       tourName,
       slug: tourName.toLowerCase().replace(/\s+/g, "-"),
-      thumbnail: uploadedThumbnail?.secure_url,
+      gallery: uploadedgallery,
       country,
       location,
       duration,
@@ -99,6 +105,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       keyHighlights: parsedKeyHighlights,
       tourHighlights: parsedTourHighlights,
       highlightPicture: uploadedHighlightPicture?.secure_url,
+      tourInclusion,
       tourItinerary: {
         mainOverview: parsedTourItinerary.mainOverview,
         itinerary: parsedTourItinerary.itinerary,

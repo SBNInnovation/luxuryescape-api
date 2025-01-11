@@ -12,7 +12,7 @@ import cookieParser from "cookie-parser";
 // import activeteTourRouter from "./routes/tours.routes/activateTours.routes";
 // import getRecommendTourRouter from "./routes/tours.routes/getRecommendTours.routes";
 // import recommendTourRouter from "./routes/tours.routes/recommendTours.routes";
-import dbConnection from "./connectDB";
+import dbConnection from "./connectDB.js";
 
 const app = express();
 

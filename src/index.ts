@@ -1,7 +1,7 @@
 import express, { Request, Response, urlencoded } from "express";
 import dotenv from "dotenv";
 dotenv.config()
-import dbConnection from "./connectDB";
+
 import addTourRouter from "./routes/tours.routes/addtours.routes";
 import signupRouter from "./routes/login&signup/signupRouter";
 import loginRouter from "./routes/login&signup/loginRoutes";
@@ -12,6 +12,7 @@ import getAllTourRouter from "./routes/tours.routes/getAllTours.routes";
 import activeteTourRouter from "./routes/tours.routes/activateTours.routes";
 import getRecommendTourRouter from "./routes/tours.routes/getRecommendTours.routes";
 import recommendTourRouter from "./routes/tours.routes/recommendTours.routes";
+import dbConnection from "./connectDB";
 
 const app = express();
 

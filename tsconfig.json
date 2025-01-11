@@ -14,3 +14,17 @@
   "include": ["src/**/*.ts"],          // Include all TypeScript files in the src folder
   "exclude": ["node_modules"]          // Exclude node_modules folder
 }
+
+// {
+//   "compilerOptions": {
+//     "outDir": "./dist",
+//     "module": "ESNext",
+//     "target": "ES2020",
+//     "moduleResolution": "Node",
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true
+//   },
+//   "include": ["src/**/*.ts"],
+//   "exclude": ["node_modules"]
+// }

@@ -17,7 +17,6 @@ const getAllTours = async (req: Request, res: Response): Promise<void> => {
       .skip(skip)
       .limit(limit);
 
- 
     if (allTours.length === 0) {
       res.status(404).json({ success: false, message: "No tours found" });
       return;

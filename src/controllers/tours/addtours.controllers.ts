@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
-// import slug from "slug";
-
 import { uploadFile } from "../../utility/cloudinary";
 import Tour from "../../models/tours.models/tours";
-import { Express } from 'express';
+import { Express } from "express";
 
 interface MulterRequest extends Request {
   files?: {
@@ -14,7 +12,6 @@ interface MulterRequest extends Request {
     accommodationPics?: Express.Multer.File[];
   };
 }
-
 
 const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
@@ -27,11 +24,14 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       destination,
       tourOverview,
       keyHighlights,
+      tourHighlights,
       tourItinerary,
       faq,
+      location,
+      country,
+      isRecommend,
+      isActivate,
     } = req.body;
-
-    // const tourSlug = slug(tourName, { lower: true });
 
     if (
       !tourName ||
@@ -42,13 +42,14 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       !destination ||
       !tourOverview ||
       !keyHighlights ||
+      !tourHighlights ||
       !tourItinerary ||
-      !faq
+      !faq ||
+      !location ||
+      !country
     ) {
-      res
-        .status(400)
-        .json({ success: false, message: "Please fill all the fields" });
-        return
+      res.status(400).json({ success: false, message: "Please fill all required fields" });
+      return;
     }
 
     const thumbnail = req?.files?.thumbnail;
@@ -57,17 +58,15 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const itineraryDayPhoto = req?.files?.itineraryDayPhoto;
     const accommodationPics = req?.files?.accommodationPics;
 
-    console.log(req.files)
-    
     if (!thumbnail || !destinationPhoto || !highlightPicture || !itineraryDayPhoto || !accommodationPics) {
-       res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Please upload all required files",
       });
       return;
     }
-    
-    // Uploading logic remains the same
+
+    // Uploading files
     const uploadedThumbnail = await uploadFile(thumbnail[0]?.path || "", "tours/thumbnail/images");
     const uploadedDestinationPhoto = await uploadFile(destinationPhoto[0]?.path || "", "tours/destination/images");
     const uploadedHighlightPicture = await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images");
@@ -75,16 +74,21 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const uploadedAccommodationPics = await Promise.all(
       accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images"))
     );
-    
+
+    // Parsing JSON fields
     const parsedDestination = JSON.parse(destination);
     const parsedKeyHighlights = JSON.parse(keyHighlights);
+    const parsedTourHighlights = JSON.parse(tourHighlights);
     const parsedTourItinerary = JSON.parse(tourItinerary);
     const parsedFaq = JSON.parse(faq);
 
+    // Creating the tour
     const createTour = await Tour.create({
       tourName,
-      slug: tourName,
+      slug: tourName.toLowerCase().replace(/\s+/g, "-"),
       thumbnail: uploadedThumbnail?.secure_url,
+      country,
+      location,
       duration,
       idealTime,
       cost,
@@ -93,25 +97,23 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       destinationPhoto: uploadedDestinationPhoto?.secure_url,
       tourOverview,
       keyHighlights: parsedKeyHighlights,
-      tourHighlights: parsedKeyHighlights,
+      tourHighlights: parsedTourHighlights,
       highlightPicture: uploadedHighlightPicture?.secure_url,
-      tourItinerary: parsedTourItinerary,
-      itinerary: parsedTourItinerary,
+      tourItinerary: {
+        mainOverview: parsedTourItinerary.mainOverview,
+        itinerary: parsedTourItinerary.itinerary,
+      },
       itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
       accommodationPics: uploadedAccommodationPics,
       faq: parsedFaq,
+      isRecommend: isRecommend || false,
+      isActivate: isActivate || false,
     });
 
-     res
-      .status(201)
-      .json({ success: true, message: "Tour added successfully", createTour });
-      return
+    res.status(201).json({ success: true, message: "Tour added successfully", createTour });
   } catch (error) {
     console.error("Error adding tour:", error);
-     res
-      .status(500)
-      .json({ success: false, message: "Internal server error" });
-      return
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 

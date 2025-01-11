@@ -8,7 +8,7 @@ interface AuthenticatedRequest extends Request{
 
 const authenticate = async(req:AuthenticatedRequest, res:Response, next:NextFunction):Promise<void>=>{
     try {
-        const cookies = req.cookies.token;
+        const cookies = req.cookies.token 
         if (!cookies) {
              res.status(401).json({success:false, message: "Unable to get the accessToken"});
              return;

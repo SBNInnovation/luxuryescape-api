@@ -1,6 +1,6 @@
 import express from "express";
 import authenticate from "../../middleware/tokenAuth";
-import activateTours from "../../controllers/tours/activatTours.controllers";
+import activateTours from "../../controllers/tours/activateTours.controllers";
 
 const activeteTourRouter = express.Router();
 

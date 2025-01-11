@@ -1,5 +1,5 @@
 import express from "express";
-import {generatePassword, sendotp, verifyOtp} from "../../controllers/forgotPassword/otp";
+import {generatePassword, sendotp, verifyOtp} from "../../controllers/forgotPassword/otp.js";
 
 const otpRouter = express.Router();
 

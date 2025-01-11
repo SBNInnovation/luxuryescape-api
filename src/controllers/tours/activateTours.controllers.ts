@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Tour from "../../models/tours.models/tours";
+import Tour from "../../models/tours.models/tours.js";
 
 interface AuthenticatedRequest extends Request{
     user?: any;

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { uploadFile } from "../../utility/cloudinary";
-import Tour from "../../models/tours.models/tours";
+import { uploadFile } from "../../utility/cloudinary.js";
+import Tour from "../../models/tours.models/tours.js";
 import { Express } from "express";
 
 interface MulterRequest extends Request {

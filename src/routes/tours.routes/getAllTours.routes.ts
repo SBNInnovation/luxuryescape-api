@@ -1,5 +1,5 @@
 import express from "express";
-import getAllTours from "../../controllers/tours/getAllTours.controllers";
+import getAllTours from "../../controllers/tours/getAllTours.controllers.js";
 
 const getAllTourRouter = express.Router();
 

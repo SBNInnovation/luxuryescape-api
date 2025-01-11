@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Register from "../../models/signup.models/register";
-import { generateOtp, sendOtpEmail } from "../../middleware/forgotPassword";
+import Register from "../../models/signup.models/register.js";
+import { generateOtp, sendOtpEmail } from "../../middleware/forgotPassword.js";
 import jwt, { JwtPayload } from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 

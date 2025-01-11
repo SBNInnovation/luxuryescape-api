@@ -2,16 +2,16 @@ import express, { Request, Response, urlencoded } from "express";
 import dotenv from "dotenv";
 dotenv.config()
 
-// import addTourRouter from "./routes/tours.routes/addtours.routes";
-// import signupRouter from "./routes/login&signup/signupRouter";
-// import loginRouter from "./routes/login&signup/loginRoutes";
+import addTourRouter from "./routes/tours.routes/addtours.routes.js";
+import signupRouter from "./routes/login&signup/signupRouter.js";
+import loginRouter from "./routes/login&signup/loginRoutes.js";
 import cookieParser from "cookie-parser";
-// import otpRouter from "./routes/otp/otpRoutes";
-// import getActivateTourRouter from "./routes/tours.routes/getActivateTours.routes";
-// import getAllTourRouter from "./routes/tours.routes/getAllTours.routes";
-// import activeteTourRouter from "./routes/tours.routes/activateTours.routes";
-// import getRecommendTourRouter from "./routes/tours.routes/getRecommendTours.routes";
-// import recommendTourRouter from "./routes/tours.routes/recommendTours.routes";
+import otpRouter from "./routes/otp/otpRoutes.js";
+import getActivateTourRouter from "./routes/tours.routes/getActivateTours.routes.js";
+import getAllTourRouter from "./routes/tours.routes/getAllTours.routes.js";
+import activeteTourRouter from "./routes/tours.routes/activateTours.routes.js";
+import getRecommendTourRouter from "./routes/tours.routes/getRecommendTours.routes.js";
+import recommendTourRouter from "./routes/tours.routes/recommendTours.routes.js";
 import dbConnection from "./connectDB.js";
 
 const app = express();
@@ -26,20 +26,20 @@ app.use(urlencoded({extended:true}))
 app.use(cookieParser())
 
 // for client route
-// app.use(
-//     getActivateTourRouter,
-//     getRecommendTourRouter
-// )
+app.use(
+    getActivateTourRouter,
+    getRecommendTourRouter
+)
 //for adminpanel route
-// app.use("/admin",
-//     signupRouter,
-//     loginRouter,
-//     otpRouter,
-//     addTourRouter,
-//     getAllTourRouter,
-//     activeteTourRouter,
-//     recommendTourRouter
-// )
+app.use("/admin",
+    signupRouter,
+    loginRouter,
+    otpRouter,
+    addTourRouter,
+    getAllTourRouter,
+    activeteTourRouter,
+    recommendTourRouter
+)
 
 
 

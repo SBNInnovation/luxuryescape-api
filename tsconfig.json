@@ -1,30 +1,30 @@
-{
-  "compilerOptions": {
-    "target": "ES2020",                // Set the target to ES2020 or later
-    "module": "CommonJS",              // Use CommonJS modules for compatibility with Node.js
-    "strict": true,                    // Enable strict type checking
-    "esModuleInterop": true,           // Allows default imports for CommonJS modules
-    "skipLibCheck": true,              // Skip type checking of declaration files
-    "forceConsistentCasingInFileNames": true, // Enforces case consistency
-    "outDir": "./dist",                // Output directory for compiled JS files
-    "rootDir": "./src",                // Root directory for source files
-    "moduleResolution": "Node",        // Resolves modules like Node.js
-    "resolveJsonModule": true          // Allow importing JSON files
-  },
-  "include": ["src/**/*.ts"],          // Include all TypeScript files in the src folder
-  "exclude": ["node_modules"]          // Exclude node_modules folder
-}
-
 // {
 //   "compilerOptions": {
-//     "outDir": "./dist",
-//     "module": "ESNext",
-//     "target": "ES2020",
-//     "moduleResolution": "Node",
-//     "strict": true,
-//     "esModuleInterop": true,
-//     "skipLibCheck": true
+//     "target": "ES2020",                // Set the target to ES2020 or later
+//     "module": "CommonJS",              // Use CommonJS modules for compatibility with Node.js
+//     "strict": true,                    // Enable strict type checking
+//     "esModuleInterop": true,           // Allows default imports for CommonJS modules
+//     "skipLibCheck": true,              // Skip type checking of declaration files
+//     "forceConsistentCasingInFileNames": true, // Enforces case consistency
+//     "outDir": "./dist",                // Output directory for compiled JS files
+//     "rootDir": "./src",                // Root directory for source files
+//     "moduleResolution": "Node",        // Resolves modules like Node.js
+//     "resolveJsonModule": true          // Allow importing JSON files
 //   },
-//   "include": ["src/**/*.ts"],
-//   "exclude": ["node_modules"]
+//   "include": ["src/**/*.ts"],          // Include all TypeScript files in the src folder
+//   "exclude": ["node_modules"]          // Exclude node_modules folder
 // }
+
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "ESNext",
+    "target": "ES2020",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

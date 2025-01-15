@@ -34,6 +34,7 @@ const addTours = new Schema(
   {
     tourName: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
+    thumbnail:{type:String,},
     gallery: { type: [String], default: [] },
     country: { type: String, enum: ["Nepal", "Bhutan", "Tibet"], required: true },
     location: { type: String, required: true },

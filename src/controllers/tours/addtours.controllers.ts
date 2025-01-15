@@ -5,6 +5,7 @@ import { Express } from "express";
 
 interface MulterRequest extends Request {
   files?: {
+    thumbnail?:Express.Multer.File[];
     gallery?: Express.Multer.File[];
     destinationPhoto?: Express.Multer.File[];
     highlightPicture?: Express.Multer.File[];
@@ -55,6 +56,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     }
 
       // Check for files in the request, but allow them to be optional
+      const thumbnail = req?.files?.thumbnail ||[]; 
       const gallery = req?.files?.gallery || [];
       const destinationPhoto = req?.files?.destinationPhoto || [];
       const highlightPicture = req?.files?.highlightPicture || [];
@@ -62,6 +64,10 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       const accommodationPics = req?.files?.accommodationPics || [];
   
       // Upload files only if they are provided
+      const uploadedThumbnail = thumbnail.length
+      ? await uploadFile(thumbnail[0]?.path || "", "thumbnail")
+      :null;
+
       const uploadedGallery = gallery.length
         ? await Promise.all(gallery.map((file) => uploadFile(file?.path || "", "tours/gallery/images")))
         : [];
@@ -90,7 +96,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const createTour = await Tour.create({
       tourName,
       slug: tourName.toLowerCase().replace(/\s+/g, "-"),
-      gallery: uploadedGallery,
+      thumbnail: uploadedThumbnail,
       country,
       location,
       duration,
@@ -104,15 +110,16 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourHighlights: parsedTourHighlights,
       highlightPicture: uploadedHighlightPicture?.secure_url,
       tourInclusion,
-      tourItinerary: parsedTourItinerary.map((itinerary: any) => ({
+      tourItinerary: parsedTourItinerary.map((itinerary:any) => ({
         ...itinerary,
         links: itinerary.links || [],
       })),
       itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
       accommodationPics: uploadedAccommodationPics.map((file) => file?.secure_url),
       faq: parsedFaq,
-      isRecommend: isRecommend || false,
-      isActivate: isActivate || false,
+      gallery: uploadedGallery,
+      // isRecommend: isRecommend || false,
+      // isActivate: isActivate || false,
     });
 
     res.status(201).json({ success: true, message: "Tour added successfully", createTour });

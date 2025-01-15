@@ -8,6 +8,7 @@ const addTourRouter = express.Router();
 
 interface MulterRequest extends Request {
   files?: {
+    thumbnail?:Express.Multer.File[];
     gallery?: Express.Multer.File[];
     destinationPhoto?: Express.Multer.File[];
     highlightPicture?: Express.Multer.File[];
@@ -15,7 +16,6 @@ interface MulterRequest extends Request {
     accommodationPics?: Express.Multer.File[];
   };
 }
-
 
   const uploader = multer({
     storage: multer.diskStorage({
@@ -29,7 +29,8 @@ interface MulterRequest extends Request {
   });
 
 const upload = [
-  { name: "gallery", maxCount: 1 }, 
+  {name:"thumbnail",maxCount:1},
+  { name: "gallery", maxCount: 5 }, 
   { name: "destinationPhoto", maxCount: 1 },
   { name: "highlightPicture", maxCount: 1 },
   { name: "itineraryDayPhoto", maxCount: 1 },

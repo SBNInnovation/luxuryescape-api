@@ -30,7 +30,7 @@ const sendotp = async (req: Request, res: Response): Promise<void> => {
     findValidUser.otp = otp;
     await findValidUser.save();
 
-    await sendOtpEmail(email, otp);
+    sendOtpEmail(email, otp);
 
     res.status(200).json({ success: true, message: "OTP sent successfully", fpwToken });
 

@@ -54,31 +54,29 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       return;
     }
 
-    const gallery = req?.files?.gallery;
-    const destinationPhoto = req?.files?.destinationPhoto;
-    const highlightPicture = req?.files?.highlightPicture;
-    const itineraryDayPhoto = req?.files?.itineraryDayPhoto;
-    const accommodationPics = req?.files?.accommodationPics;
-
-    if (!gallery || !destinationPhoto || !highlightPicture || !itineraryDayPhoto || !accommodationPics) {
-      res.status(400).json({
-        success: false,
-        message: "Please upload all required files",
-      });
-      return;
-    }
-
-    // Uploading files
-    const uploadedgallery = await Promise.all(
-      gallery.map((file) => uploadFile(file?.path || "", "tours/gallery/images"))
-    );
-    //const uploadedThumbnail = await uploadFile(thumbnail[0]?.path || "", "tours/thumbnail/images");
-    const uploadedDestinationPhoto = await uploadFile(destinationPhoto[0]?.path || "", "tours/destination/images");
-    const uploadedHighlightPicture = await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images");
-    const uploadedItineraryDayPhoto = await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images");
-    const uploadedAccommodationPics = await Promise.all(
-      accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images"))
-    );
+      // Check for files in the request, but allow them to be optional
+      const gallery = req?.files?.gallery || [];
+      const destinationPhoto = req?.files?.destinationPhoto || [];
+      const highlightPicture = req?.files?.highlightPicture || [];
+      const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
+      const accommodationPics = req?.files?.accommodationPics || [];
+  
+      // Upload files only if they are provided
+      const uploadedGallery = gallery.length
+        ? await Promise.all(gallery.map((file) => uploadFile(file?.path || "", "tours/gallery/images")))
+        : [];
+      const uploadedDestinationPhoto = destinationPhoto.length
+        ? await uploadFile(destinationPhoto[0]?.path || "", "tours/destination/images")
+        : null;
+      const uploadedHighlightPicture = highlightPicture.length
+        ? await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images")
+        : null;
+      const uploadedItineraryDayPhoto = itineraryDayPhoto.length
+        ? await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images")
+        : null;
+      const uploadedAccommodationPics = accommodationPics.length
+        ? await Promise.all(accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images")))
+        : [];
    
 
     // Parsing JSON fields
@@ -92,7 +90,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const createTour = await Tour.create({
       tourName,
       slug: tourName.toLowerCase().replace(/\s+/g, "-"),
-      gallery: uploadedgallery,
+      gallery: uploadedGallery,
       country,
       location,
       duration,
@@ -106,12 +104,12 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourHighlights: parsedTourHighlights,
       highlightPicture: uploadedHighlightPicture?.secure_url,
       tourInclusion,
-      tourItinerary: {
-        mainOverview: parsedTourItinerary.mainOverview,
-        itinerary: parsedTourItinerary.itinerary,
-      },
+      tourItinerary: parsedTourItinerary.map((itinerary: any) => ({
+        ...itinerary,
+        links: itinerary.links || [],
+      })),
       itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
-      accommodationPics: uploadedAccommodationPics,
+      accommodationPics: uploadedAccommodationPics.map((file) => file?.secure_url),
       faq: parsedFaq,
       isRecommend: isRecommend || false,
       isActivate: isActivate || false,

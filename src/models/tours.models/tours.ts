@@ -11,6 +11,11 @@ const accommodationDetails = new Schema(
   }
 );
 
+const links = new Schema({
+  linkTitle: { type: String, required: true },
+  linkUrl: { type: String, required: true },
+})
+
 const itineraryDetails = new Schema(
   {
     day: { type: String, required: true },
@@ -18,6 +23,7 @@ const itineraryDetails = new Schema(
     description: { type: String, required: true },
     itineraryDayPhoto: { type: String, default: "" },
     accommodation: { type: [accommodationDetails], default: [] },
+    links: [links]
   },
   {
     _id: false,
@@ -27,7 +33,7 @@ const itineraryDetails = new Schema(
 const addTours = new Schema(
   {
     tourName: { type: String, required: true },
-    slug: { type: String, required: true },
+    slug: { type: String, required: true, unique: true },
     gallery: { type: [String], default: [] },
     country: { type: String, enum: ["Nepal", "Bhutan", "Tibet"], required: true },
     location: { type: String, required: true },
@@ -57,10 +63,7 @@ const addTours = new Schema(
       default: [],
     },
     tourInclusion:{type:[String],default:[]},
-    tourItinerary: {
-      mainOverview: { type: String, required: true },
-      itinerary: { type: [itineraryDetails], default: [] },
-    },
+    tourItinerary: [itineraryDetails],
     faq: {
       type: [
         {

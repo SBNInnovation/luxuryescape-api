@@ -14,6 +14,7 @@ import getRecommendTourRouter from "./routes/tours.routes/getRecommendTours.rout
 import recommendTourRouter from "./routes/tours.routes/recommendTours.routes.js";
 import dbConnection from "./connectDB.js";
 import getSpecifictourRouter from "./routes/tours.routes/getSpecifictour.routes.js";
+import cors from "cors"
 
 const app = express();
 
@@ -25,6 +26,11 @@ const port = process.env.PORT || 4000;  // Use PORT from .env or default to 4000
 app.use(express.json());
 app.use(urlencoded({extended:true}))
 app.use(cookieParser())
+app.use(cors({
+    origin: ["http://localhost:3000","https://luxuryescape-admin.vercel.app"],
+    methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
+}))
+
 
 app.use(
     signupRouter,

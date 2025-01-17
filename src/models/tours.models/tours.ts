@@ -1,75 +1,100 @@
 import mongoose, { Schema } from "mongoose";
 
-const accommodationDetails = new Schema(
+// Room Details Schema
+const roomDetailsSchema = new Schema(
   {
-    accommodationTitle: { type: String, required: true },
+    roomTitle: { type: String, required: true, trim: true },
+    roomPhotos: { type: [String], default: [] },
+    roomStandard: { type: String, required: true, trim: true },
+    roomDescription: { type: String, required: true, trim: true, minLength: 100 },
+    roomFacilities: { type: [String], required: true, default: [] },
+  },
+  { _id: false } 
+);
+
+// Accommodation Details Schema
+const accommodationDetailsSchema = new Schema(
+  {
     accommodationPics: { type: [String], default: [] },
-    accommodationDescription: { type: String, required: true }, // Fixed spelling
+    accommodationTitle: { type: String, required: true, trim: true },
+    accommodationLocation: { type: String, required: true, trim: true },
+    accommodationRating: { type: Number, min: 0, max: 5 }, // Ratings typically range 0-5
+    accommodationDescription: { type: String, required: true, trim: true, minLength: 100 },
+    accommodationFeatures: { type: [String], default: [] },
+    accommodationAmenities: { type: [String], default: [] },
+    rooms: { type: [roomDetailsSchema], default: [] },
   },
-  {
-    _id: false,
-  }
+  { _id: false }
 );
 
-const links = new Schema({
-  linkTitle: { type: String, required: true },
-  linkUrl: { type: String, required: true },
-})
-
-const itineraryDetails = new Schema(
+// Links Schema
+const linksSchema = new Schema(
   {
-    day: { type: String, required: true },
-    title: { type: String, required: true },
-    description: { type: String, required: true },
+    linkTitle: { type: String, required: true, trim: true },
+    linkUrl: {
+      type: String,
+      required: true,
+      trim: true,
+      match: /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]+)*\/?$/,
+    },
+  },
+  { _id: false }
+);
+
+// Itinerary Details Schema
+const itineraryDetailsSchema = new Schema(
+  {
+    day: { type: String, required: true, trim:true }, 
+    title: { type: String, required: true, trim: true },
+    description: { type: String, required: true, trim: true, minLength: 150 },
     itineraryDayPhoto: { type: String, default: "" },
-    accommodation: { type: [accommodationDetails], default: [] },
-    links: [links]
+    accommodation: { type: [accommodationDetailsSchema], default: [] },
+    links: { type: [linksSchema], default: [] },
   },
-  {
-    _id: false,
-  }
+  { _id: false }
 );
 
-const addTours = new Schema(
+// Tour Schema
+const tourSchema = new Schema(
   {
-    tourName: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
-    thumbnail:{type:String,},
+    tourName: { type: String, required: true, trim: true, minLength: 5 },
+    slug: { type: String, required: true, unique: true, lowercase: true },
+    thumbnail: { type: String, default: "" },
     gallery: { type: [String], default: [] },
     country: { type: String, enum: ["Nepal", "Bhutan", "Tibet"], required: true },
-    location: { type: String, required: true },
-    duration: { type: String, required: true },
-    idealTime: { type: String, required: true },
-    cost: { type: String, required: true },
-    tourTypes: { type: String, required: true },
+    location: { type: String, required: true, trim: true },
+    duration: { type: String, required: true, trim: true },
+    idealTime: { type: String, required: true, trim: true },
+    cost: { type: Number, required: true, min: 0 },
+    tourTypes: { type: String, required: true, trim: true },
     destination: {
       type: [
         {
-          destinationDays: { type: String, required: true },
-          destinationPlace: { type: String, required: true },
+          destinationDays: { type: Number, required: true, min: 1 },
+          destinationPlace: { type: String, required: true, trim: true },
           destinationPhoto: { type: String, default: "" },
         },
       ],
       default: [],
     },
-    tourOverview: { type: String, required: true },
+    tourOverview: { type: String, required: true, trim: true, minLength: 150 },
     keyHighlights: { type: [String], default: [] },
     tourHighlights: {
       type: [
         {
-          highlightsTitle: { type: String, required: true },
+          highlightsTitle: { type: String, required: true, trim: true },
           highlightPicture: { type: String, default: "" },
         },
       ],
       default: [],
     },
-    tourInclusion:{type:[String],default:[]},
-    tourItinerary: [itineraryDetails],
+    tourInclusion: { type: [String], default: [] },
+    tourItinerary: { type: [itineraryDetailsSchema], default: [] },
     faq: {
       type: [
         {
-          question: { type: String },
-          answer: { type: String},
+          question: { type: String, required: true, trim: true },
+          answer: { type: String, required: true, trim: true },
         },
       ],
       default: [],
@@ -77,11 +102,10 @@ const addTours = new Schema(
     isRecommend: { type: Boolean, default: false },
     isActivate: { type: Boolean, default: false },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-const Tour = mongoose.model("Tour", addTours);
+// Model
+const Tour = mongoose.model("Tour", tourSchema);
 
 export default Tour;

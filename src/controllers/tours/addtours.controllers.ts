@@ -11,11 +11,13 @@ interface MulterRequest extends Request {
     highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
     accommodationPics?: Express.Multer.File[];
+    roomPhotos?: Express.Multer.File[];
   };
 }
 
 const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
+   
     const {
       tourName,
       duration,
@@ -31,30 +33,30 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       faq,
       location,
       country,
-      isRecommend,
-      isActivate,
+      // isRecommend,
+      // isActivate,
     } = req.body;
 
-    if (
-      !tourName ||
-      !duration ||
-      !idealTime ||
-      !cost ||
-      !tourTypes ||
-      !destination ||
-      !tourOverview ||
-      !keyHighlights ||
-      !tourInclusion ||
-      !tourHighlights ||
-      !tourItinerary ||
-      !faq ||
-      !location ||
-      !country
-    ) {
-      res.status(400).json({ success: false, message: "Please fill all required fields" });
-      return;
-    }
-
+      if (
+        !tourName ||
+        !duration ||
+        !idealTime ||
+        !cost ||
+        !tourTypes ||
+        !destination ||
+        !tourOverview ||
+        !keyHighlights ||
+        !tourInclusion ||
+        !tourHighlights ||
+        !tourItinerary ||
+        !faq ||
+        !location ||
+        !country
+      ) {
+        res.status(400).json({ success: false, message: "Please fill all required fields" });
+        return;
+      }
+  
       // Check for files in the request, but allow them to be optional
       const thumbnail = req?.files?.thumbnail ||[]; 
       const gallery = req?.files?.gallery || [];
@@ -62,10 +64,11 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       const highlightPicture = req?.files?.highlightPicture || [];
       const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
       const accommodationPics = req?.files?.accommodationPics || [];
-  
+      const roomPhotos = req?.files?.roomPhotos || [];
+
       // Upload files only if they are provided
       const uploadedThumbnail = thumbnail.length
-      ? await uploadFile(thumbnail[0]?.path || "", "thumbnail")
+      ? await uploadFile(thumbnail[0]?.path || "", "thumbnail/itinerary/images")
       :null;
 
       const uploadedGallery = gallery.length
@@ -81,6 +84,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
         ? await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images")
         : null;
       const uploadedAccommodationPics = accommodationPics.length
+        ? await Promise.all(accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images")))
+        : [];
+        const uploadedRoomPhotos = roomPhotos.length
         ? await Promise.all(accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images")))
         : [];
    
@@ -112,10 +118,13 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourInclusion,
       tourItinerary: parsedTourItinerary.map((itinerary:any) => ({
         ...itinerary,
+        accomodation: itinerary.accommodation || [],
+        rooms: itinerary.accommodation.rooms || [],
         links: itinerary.links || [],
       })),
       itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
       accommodationPics: uploadedAccommodationPics.map((file) => file?.secure_url),
+      roomPhotos: uploadedRoomPhotos.map((file) =>file?.secure_url),
       faq: parsedFaq,
       gallery: uploadedGallery,
       // isRecommend: isRecommend || false,
@@ -128,6 +137,8 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
+
 
 export default addTour;
 

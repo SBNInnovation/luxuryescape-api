@@ -14,6 +14,7 @@ interface MulterRequest extends Request {
     highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
     accommodationPics?: Express.Multer.File[];
+    roomPhotos?: Express.Multer.File[];
   };
 }
 
@@ -35,7 +36,11 @@ const upload = [
   { name: "highlightPicture", maxCount: 1 },
   { name: "itineraryDayPhoto", maxCount: 1 },
   { name: "accommodationPics", maxCount: 5 },
+  { name: "roomPhotos", maxCount: 5 },
 ];
+
+
+
 
 addTourRouter.post("/add-tours",uploader.fields(upload),(req,res)=>{
     addTour(req as MulterRequest,res)

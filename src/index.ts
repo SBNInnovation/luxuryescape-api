@@ -15,6 +15,8 @@ import recommendTourRouter from "./routes/tours.routes/recommendTours.routes.js"
 import dbConnection from "./connectDB.js";
 import getSpecifictourRouter from "./routes/tours.routes/getSpecifictour.routes.js";
 import cors from "cors"
+import addAccommodationRouter from "./routes/accommodation.routes/addAccommodation.routes.js";
+import addTourTypesRouter from "./routes/tourTypes.routes/addTourTypes.routes.js";
 
 const app = express();
 
@@ -42,7 +44,9 @@ app.use(
     recommendTourRouter,
     getActivateTourRouter,
     getRecommendTourRouter,
-    getSpecifictourRouter
+    getSpecifictourRouter,
+    addAccommodationRouter,
+    addTourTypesRouter
 )
 
 

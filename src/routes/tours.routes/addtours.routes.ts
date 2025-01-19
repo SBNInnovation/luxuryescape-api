@@ -13,8 +13,6 @@ interface MulterRequest extends Request {
     destinationPhoto?: Express.Multer.File[];
     highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
-    accommodationPics?: Express.Multer.File[];
-    roomPhotos?: Express.Multer.File[];
   };
 }
 
@@ -31,12 +29,10 @@ interface MulterRequest extends Request {
 
 const upload = [
   {name:"thumbnail",maxCount:1},
-  { name: "gallery", maxCount: 5 }, 
+  { name: "images", maxCount: 5 }, 
   { name: "destinationPhoto", maxCount: 1 },
   { name: "highlightPicture", maxCount: 1 },
   { name: "itineraryDayPhoto", maxCount: 1 },
-  { name: "accommodationPics", maxCount: 5 },
-  { name: "roomPhotos", maxCount: 5 },
 ];
 
 

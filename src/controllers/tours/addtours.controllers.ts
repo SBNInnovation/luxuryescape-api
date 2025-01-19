@@ -30,6 +30,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourHighlights,
       tourInclusion,
       tourItinerary,
+      accommodation,
       faq,
       location,
       country,
@@ -49,6 +50,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
         !tourInclusion ||
         !tourHighlights ||
         !tourItinerary ||
+        !accommodation ||
         !faq ||
         !location ||
         !country
@@ -63,9 +65,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       const destinationPhoto = req?.files?.destinationPhoto || [];
       const highlightPicture = req?.files?.highlightPicture || [];
       const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
-      const accommodationPics = req?.files?.accommodationPics || [];
-      const roomPhotos = req?.files?.roomPhotos || [];
-
+      
       // Upload files only if they are provided
       const uploadedThumbnail = thumbnail.length
       ? await uploadFile(thumbnail[0]?.path || "", "thumbnail/itinerary/images")
@@ -83,20 +83,13 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       const uploadedItineraryDayPhoto = itineraryDayPhoto.length
         ? await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images")
         : null;
-      const uploadedAccommodationPics = accommodationPics.length
-        ? await Promise.all(accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images")))
-        : [];
-        const uploadedRoomPhotos = roomPhotos.length
-        ? await Promise.all(accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images")))
-        : [];
-   
 
     // Parsing JSON fields
-    const parsedDestination = JSON.parse(destination);
-    const parsedKeyHighlights = JSON.parse(keyHighlights);
-    const parsedTourHighlights = JSON.parse(tourHighlights);
-    const parsedTourItinerary = JSON.parse(tourItinerary);
-    const parsedFaq = JSON.parse(faq);
+    // const parsedDestination = JSON.parse(destination);
+    // const parsedKeyHighlights = JSON.parse(keyHighlights);
+    // const parsedTourHighlights = JSON.parse(tourHighlights);
+    // const parsedTourItinerary = JSON.parse(tourItinerary);
+    // const parsedFaq = JSON.parse(faq);
 
     // Creating the tour
     const createTour = await Tour.create({
@@ -109,26 +102,22 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       idealTime,
       cost,
       tourTypes,
-      destination: parsedDestination,
+      // destination: parsedDestination,
+      destination,
       destinationPhoto: uploadedDestinationPhoto?.secure_url,
       tourOverview,
-      keyHighlights: parsedKeyHighlights,
-      tourHighlights: parsedTourHighlights,
+      // keyHighlights: parsedKeyHighlights,
+      keyHighlights,
+      // tourHighlights: parsedTourHighlights,
+      tourHighlights,
       highlightPicture: uploadedHighlightPicture?.secure_url,
       tourInclusion,
-      tourItinerary: parsedTourItinerary.map((itinerary:any) => ({
-        ...itinerary,
-        accomodation: itinerary.accommodation || [],
-        rooms: itinerary.accommodation.rooms || [],
-        links: itinerary.links || [],
-      })),
+      // tourItinerary: parsedTourItinerary,
+      tourItinerary,
       itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
-      accommodationPics: uploadedAccommodationPics.map((file) => file?.secure_url),
-      roomPhotos: uploadedRoomPhotos.map((file) =>file?.secure_url),
-      faq: parsedFaq,
-      gallery: uploadedGallery,
-      // isRecommend: isRecommend || false,
-      // isActivate: isActivate || false,
+      // faq: parsedFaq,
+      faq,
+      gallery: uploadedGallery?.map((file)=> file?.secure_url),
     });
 
     res.status(201).json({ success: true, message: "Tour added successfully", createTour });
@@ -137,8 +126,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
-
 
 export default addTour;
 

@@ -1,32 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 
-// Room Details Schema
-const roomDetailsSchema = new Schema(
-  {
-    roomTitle: { type: String, required: true, trim: true },
-    roomPhotos: { type: [String], default: [] },
-    roomStandard: { type: String, required: true, trim: true },
-    roomDescription: { type: String, required: true, trim: true, minLength: 100 },
-    roomFacilities: { type: [String], required: true, default: [] },
-  },
-  { _id: false } 
-);
-
-// Accommodation Details Schema
-const accommodationDetailsSchema = new Schema(
-  {
-    accommodationPics: { type: [String], default: [] },
-    accommodationTitle: { type: String, required: true, trim: true },
-    accommodationLocation: { type: String, required: true, trim: true },
-    accommodationRating: { type: Number, min: 0, max: 5 }, // Ratings typically range 0-5
-    accommodationDescription: { type: String, required: true, trim: true, minLength: 100 },
-    accommodationFeatures: { type: [String], default: [] },
-    accommodationAmenities: { type: [String], default: [] },
-    rooms: { type: [roomDetailsSchema], default: [] },
-  },
-  { _id: false }
-);
-
 // Links Schema
 const linksSchema = new Schema(
   {
@@ -35,10 +8,10 @@ const linksSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      match: /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]+)*\/?$/,
+      // match: /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]+)*\/?$/,
     },
   },
-  { _id: false }
+  { _id: false }  
 );
 
 // Itinerary Details Schema
@@ -46,9 +19,9 @@ const itineraryDetailsSchema = new Schema(
   {
     day: { type: String, required: true, trim:true }, 
     title: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true, minLength: 150 },
+    description: { type: String, required: true, trim: true, minLength: 10 },
     itineraryDayPhoto: { type: String, default: "" },
-    accommodation: { type: [accommodationDetailsSchema], default: [] },
+    accommodation: [{ type: mongoose.Schema.Types.ObjectId, ref: "Accommodation" }],
     links: { type: [linksSchema], default: [] },
   },
   { _id: false }
@@ -57,7 +30,7 @@ const itineraryDetailsSchema = new Schema(
 // Tour Schema
 const tourSchema = new Schema(
   {
-    tourName: { type: String, required: true, trim: true, minLength: 5 },
+    tourName: { type: String, required: true, trim: true},
     slug: { type: String, required: true, unique: true, lowercase: true },
     thumbnail: { type: String, default: "" },
     gallery: { type: [String], default: [] },
@@ -66,25 +39,27 @@ const tourSchema = new Schema(
     duration: { type: String, required: true, trim: true },
     idealTime: { type: String, required: true, trim: true },
     cost: { type: Number, required: true, min: 0 },
-    tourTypes: { type: String, required: true, trim: true },
+    tourTypes: { type: mongoose.Schema.Types.ObjectId, ref:"TourTypes"},
     destination: {
       type: [
         {
           destinationDays: { type: Number, required: true, min: 1 },
           destinationPlace: { type: String, required: true, trim: true },
           destinationPhoto: { type: String, default: "" },
+          _id:false
         },
       ],
       default: [],
     },
-    tourOverview: { type: String, required: true, trim: true, minLength: 150 },
+    tourOverview: { type: String, required: true, trim: true, minLength: 10 },
     keyHighlights: { type: [String], default: [] },
     tourHighlights: {
       type: [
         {
           highlightsTitle: { type: String, required: true, trim: true },
           highlightPicture: { type: String, default: "" },
-        },
+          _id:false
+        }
       ],
       default: [],
     },
@@ -95,7 +70,8 @@ const tourSchema = new Schema(
         {
           question: { type: String, required: true, trim: true },
           answer: { type: String, required: true, trim: true },
-        },
+          _id:false
+        }
       ],
       default: [],
     },

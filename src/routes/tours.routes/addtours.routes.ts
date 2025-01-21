@@ -38,7 +38,7 @@ const upload = [
 
 
 
-addTourRouter.post("/add-tours",uploader.fields(upload),(req,res)=>{
+addTourRouter.post("/tour/add-tour",uploader.fields(upload),(req,res)=>{
     addTour(req as MulterRequest,res)
 })
 

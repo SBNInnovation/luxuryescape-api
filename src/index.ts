@@ -17,6 +17,7 @@ import getSpecifictourRouter from "./routes/tours.routes/getSpecifictour.routes.
 import cors from "cors"
 import addAccommodationRouter from "./routes/accommodation.routes/addAccommodation.routes.js";
 import addTourTypesRouter from "./routes/tourTypes.routes/addTourTypes.routes.js";
+import getAllTourTypesRouter from "./routes/tourTypes.routes/getAllTourTypes.route.js";
 
 const app = express();
 
@@ -46,7 +47,8 @@ app.use(
     getRecommendTourRouter,
     getSpecifictourRouter,
     addAccommodationRouter,
-    addTourTypesRouter
+    addTourTypesRouter,
+    getAllTourTypesRouter
 )
 
 

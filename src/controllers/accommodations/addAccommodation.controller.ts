@@ -3,7 +3,7 @@ import { uploadFile } from "../../utility/cloudinary.js";
 import { Express } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
 
-interface MulterRequest extends Request {
+export interface MulterRequest extends Request {
     files?: {
       accommodationPics?: Express.Multer.File[];
       roomPhotos?: Express.Multer.File[];
@@ -56,8 +56,8 @@ const addAccomodation = async(req:MulterRequest, res:Response):Promise<void> =>{
             accommodationAmenities,
             // rooms:parsedRooms,
             rooms,
-            accommodationPics: uploadedAccommodationPics.map((file) => file?.secure_url),
-            roomPhotos: uploadedRoomPhotos.map((file) =>file?.secure_url),
+            accommodationPics: uploadedAccommodationPics.map((file) => file?.secure_url) || [],
+            roomPhotos: uploadedRoomPhotos.map((file) =>file?.secure_url) || [],
         });
 
         if(!accommodation){

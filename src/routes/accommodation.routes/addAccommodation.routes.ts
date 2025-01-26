@@ -42,7 +42,7 @@ const upload = [
 ];
 
 addAccommodationRouter.post(
-  "/accommodation/add-accomodation",
+  "/accommodation/add-accommodation",
   uploader.fields(upload),
   (req, res) => {
     console.log(req.files); // Debug to see what is received

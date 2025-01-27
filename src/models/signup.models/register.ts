@@ -12,6 +12,8 @@ const registerUser = new Schema({
         required: true,
         minlength: 6 },
     otp: {type:String, default:""}
+},{
+    timestamps:true
 })
 
 const Register = mongoose.model("Register",registerUser)

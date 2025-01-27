@@ -23,6 +23,8 @@ const accommodationDetailsSchema = new Schema({
   accommodationFeatures: { type: [String], default: [] },
   accommodationAmenities: { type: [String], default: [] },
   rooms: { type: [roomDetailsSchema], default: [] },
+},{
+  timestamps:true
 });
 
 // Model

@@ -30,11 +30,19 @@ const port = process.env.PORT || 4000;  // Use PORT from .env or default to 4000
 app.use(express.json());
 app.use(urlencoded({extended:true}))
 app.use(cookieParser())
-app.use(cors({
-    origin: ["http://localhost:3000","https://luxuryescape-admin.vercel.app"],
-    methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
-}))
+// app.use(cors({
+//     origin: ["http://localhost:3000","https://luxuryescape-admin.vercel.app"],
+//     methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
+// }))
 
+app.use(
+    cors({
+      origin: ["http://localhost:3000", "https://luxuryescape-admin.vercel.app"],
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      credentials: true, // Allow cookies
+    })
+  );
+  
 
 app.use(
     signupRouter,
@@ -56,7 +64,6 @@ app.use(
 
     // for accommodation
     addAccommodationRouter,
-    
     getAllAccommodationRouter
 )
 

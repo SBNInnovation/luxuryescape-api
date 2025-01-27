@@ -1,18 +1,23 @@
-import { Request, Response } from "express";
+import { query, Request, Response } from "express";
 import Tour from "../../models/tours.models/tours.js";
 
 const getAllTours = async (req: Request, res: Response): Promise<void> => {
   try {
     const page: number = parseInt(req.query.page as string) || 1; 
     const limit: number = parseInt(req.query.limit as string) || 10;
+    const search = req.query.search?.toString();
 
     if (page < 1 || limit < 1) {
       res.status(404).json({ success: false, message: "Invalid pagination parameters" });
       return;
     }
     const skip = (page - 1) * limit;
+    const query = search?
+    {
+      tourName: {$regex:search, $option: "i"} 
+    }:{}
 
-    const allTours = await Tour.find({})
+    const allTours = await Tour.find({query})
       .sort({ createdAt: -1 }) // Fetch tours with pagination and sorting by `createdAt` in desending
       .skip(skip)
       .limit(limit);

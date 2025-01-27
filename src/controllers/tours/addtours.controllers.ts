@@ -68,7 +68,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       
       // Upload files only if they are provided
       const uploadedThumbnail = thumbnail.length
-      ? await uploadFile(thumbnail[0]?.path || "", "thumbnail/itinerary/images")
+      ? await uploadFile(thumbnail[0]?.path || "", "tours/thumbnail/images")
       :null;
 
       const uploadedGallery = gallery.length

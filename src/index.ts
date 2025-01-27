@@ -18,6 +18,7 @@ import cors from "cors"
 import addAccommodationRouter from "./routes/accommodation.routes/addAccommodation.routes.js";
 import addTourTypesRouter from "./routes/tourTypes.routes/addTourTypes.routes.js";
 import getAllTourTypesRouter from "./routes/tourTypes.routes/getAllTourTypes.route.js";
+import getAllAccommodationRouter from "./routes/accommodation.routes/getAllAccommodation.routes.js";
 
 const app = express();
 
@@ -39,6 +40,8 @@ app.use(
     signupRouter,
     loginRouter,
     otpRouter,
+
+    //for tours
     addTourRouter,
     getAllTourRouter,
     activeteTourRouter,
@@ -46,9 +49,15 @@ app.use(
     getActivateTourRouter,
     getRecommendTourRouter,
     getSpecifictourRouter,
-    addAccommodationRouter,
+
+    //for tourtypes
     addTourTypesRouter,
-    getAllTourTypesRouter
+    getAllTourTypesRouter,
+
+    // for accommodation
+    addAccommodationRouter,
+    
+    getAllAccommodationRouter
 )
 
 

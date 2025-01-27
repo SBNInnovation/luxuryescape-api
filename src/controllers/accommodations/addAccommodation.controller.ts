@@ -111,10 +111,12 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       return;
     }
 
-    const parsedRooms = rooms ? JSON.parse(rooms) : [];
-    const validRooms = Array.isArray(parsedRooms) && parsedRooms.every((room) =>
-      room.roomTitle && room.roomStandard && room.roomDescription && Array.isArray(room.roomFacilities)
-    );
+    // const parsedRooms = rooms ? JSON.parse(rooms) : [];
+    const validRooms = Array.isArray(rooms)
+
+    // const validRooms = Array.isArray(parsedRooms) && parsedRooms.every((room) =>
+    //   room.roomTitle && room.roomStandard && room.roomDescription && Array.isArray(room.roomFacilities)
+    // );
 
     if (!validRooms) {
       res.status(400).json({ success: false, message: "Invalid room data provided." });
@@ -166,7 +168,8 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       accommodationDescription,
       accommodationFeatures,
       accommodationAmenities,
-      rooms: parsedRooms,
+      rooms,
+    //   rooms: parsedRooms,
       accommodationPics: uploadedAccommodationPics.map((file) => file?.secure_url) || [],
       roomPhotos: uploadedRoomPhotos.map((file) =>file?.secure_url) || [],
     });

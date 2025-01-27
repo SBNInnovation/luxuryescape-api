@@ -28,8 +28,8 @@ const addAccomodation = async(req:MulterRequest, res:Response):Promise<void> =>{
             !accommodationRating ||
             !accommodationDescription ||
             !accommodationFeatures ||
-            !accommodationAmenities ||
-            !rooms
+            !accommodationAmenities
+            // !rooms
         ){
             res.status(404).json({success:false, message: "Please fill in all fields."});
             return;

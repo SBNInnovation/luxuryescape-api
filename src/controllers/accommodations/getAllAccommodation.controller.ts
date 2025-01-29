@@ -6,7 +6,7 @@ const getAllAccommodation = async (req: Request, res: Response): Promise<void> =
     // Parse pagination parameters
     const page: number = parseInt(req.query.page as string, 10) || 1;
     const limit: number = parseInt(req.query.limit as string, 10) || 10;
-    const search = req.query.search?.toString(); // Convert search query to string if present
+    const search = req.query.search as string || ""?.toLowerCase().trim(); 
 
     // Validate pagination values
     if (page < 1 || limit < 1) {

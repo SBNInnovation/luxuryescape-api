@@ -153,8 +153,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
     //     )
     //   : [];
 
-      const uploadedAccommodationPics = accommodationPics.length
-      
+    const uploadedAccommodationPics = accommodationPics.length    
   ? await Promise.all(accommodationPics.map((file) => uploadFile(file?.path || "", "tours/accommodation/images")))
         : [];
         const uploadedRoomPhotos = roomPhotos.length

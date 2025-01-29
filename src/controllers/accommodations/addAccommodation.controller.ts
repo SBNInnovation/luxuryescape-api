@@ -191,8 +191,97 @@
 
 // export default addAccommodation;
 
+
+// import { Request, Response } from "express";
+// import { Express } from "express";
+// import Accommodation from "../../models/accommodation.models/Accommodation.js";
+
+// export interface MulterRequest extends Request {
+//   files?: {
+//     accommodationPics?: Express.Multer.File[];
+//     roomPhotos?: Express.Multer.File[];
+//   };
+// }
+
+// const addAccommodation = async (req: MulterRequest, res: Response): Promise<void> => {
+//   try {
+//     const {
+//       accommodationTitle,
+//       accommodationLocation,
+//       accommodationRating,
+//       accommodationDescription,
+//       accommodationFeatures,
+//       accommodationAmenities,
+//       rooms,
+//     } = req.body;
+
+//     // Validate required fields
+//     if (!accommodationTitle || !accommodationLocation || !accommodationRating || !accommodationDescription) {
+//       res.status(400).json({ success: false, message: "Missing required fields." });
+//       return;
+//     }
+
+//     // Parse JSON fields if they come as strings
+//     const parsedAccommodationAmenities = typeof accommodationAmenities === "string"
+//       ? JSON.parse(accommodationAmenities)
+//       : accommodationAmenities || [];
+
+//     const parsedAccommodationFeatures = typeof accommodationFeatures === "string"
+//       ? JSON.parse(accommodationFeatures)
+//       : accommodationFeatures || [];
+
+//     const parsedRooms = typeof rooms === "string" ? JSON.parse(rooms) : rooms || [];
+    
+//     if (!Array.isArray(parsedAccommodationAmenities) || !Array.isArray(parsedAccommodationFeatures) || !Array.isArray(parsedRooms)) {
+//       res.status(400).json({ success: false, message: "Features, amenities, and rooms must be arrays." });
+//       return;
+//     }
+
+//     // Handle file uploads using Multer
+//     const accommodationPics = req?.files?.accommodationPics || [];
+//     const roomPhotos = req?.files?.roomPhotos || [];
+
+//     // Get local file paths for accommodation pictures
+//     const accommodationPicsFiles = accommodationPics.length
+//       ? accommodationPics.map((file) => file.path) // Store local paths
+//       : req.body.accommodationPics || []; // Use existing URLs if no files uploaded
+
+//     // Get local file paths for room photos
+//     const updatedRooms = parsedRooms.map((room, index) => ({
+//       ...room,
+//       roomPhotos: roomPhotosFiles.length 
+//         ? roomPhotosFiles.map((file) => file.path) // Store local paths
+//         : room.roomPhotos || [], // Use provided URLs if no files uploaded
+//     }));
+
+//     // Create accommodation document
+//     const accommodation = await Accommodation.create({
+//       accommodationTitle,
+//       accommodationLocation,
+//       accommodationRating,
+//       accommodationDescription,
+//       accommodationFeatures: parsedAccommodationFeatures,
+//       accommodationAmenities: parsedAccommodationAmenities,
+//       rooms: updatedRooms,
+//       accommodationPics,
+//     });
+
+//     if (!accommodation) {
+//       res.status(500).json({ success: false, message: "Failed to create accommodation." });
+//       return;
+//     }
+
+//     res.status(201).json({ success: true, message: "Accommodation created successfully", accommodation });
+//   } catch (error) {
+//     console.error("Error creating accommodation:", error);
+//     res.status(500).json({ success: false, message: "Internal Server Error." });
+//   }
+// };
+
+// export default addAccommodation;
+
+
 import { Request, Response } from "express";
-import { uploadFile } from "../../utility/cloudinary.js";
 import { Express } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
 
@@ -221,6 +310,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       return;
     }
 
+    // Parse JSON fields if they come as strings
     const parsedAccommodationAmenities = typeof accommodationAmenities === "string"
       ? JSON.parse(accommodationAmenities)
       : accommodationAmenities || [];
@@ -230,30 +320,21 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       : accommodationFeatures || [];
 
     const parsedRooms = typeof rooms === "string" ? JSON.parse(rooms) : rooms || [];
-    
+
     if (!Array.isArray(parsedAccommodationAmenities) || !Array.isArray(parsedAccommodationFeatures) || !Array.isArray(parsedRooms)) {
       res.status(400).json({ success: false, message: "Features, amenities, and rooms must be arrays." });
       return;
     }
 
-    const accommodationPicsFiles = req?.files?.accommodationPics || [];
-    const uploadedAccommodationPics = accommodationPicsFiles.length
-      ? await Promise.all(accommodationPicsFiles.map((file) => uploadFile(file?.path || "", "tours/accommodation/images")))
-      : [];
+    // Handle file uploads using Multer
+    const accommodationPics = req.files?.accommodationPics?.map((file) => file.path) || req.body.accommodationPics || [];
 
-    const roomPhotosFiles = req?.files?.roomPhotos || [];
-    const uploadedRoomPhotos = roomPhotosFiles.length
-      ? await Promise.all(roomPhotosFiles.map((file) => uploadFile(file?.path || "", "tours/accommodation/rooms/images")))
-      : [];
+    const roomPhotos = req.files?.roomPhotos?.map((file) => file.path) || [];
 
-    // Extract file URLs from Cloudinary upload results
-    const accommodationPics = uploadedAccommodationPics.length
-      ? uploadedAccommodationPics.map((file) => file?.secure_url)
-      : req.body.accommodationPics || []; // Use existing URLs if no files uploaded
-
+    // Update rooms with room photos
     const updatedRooms = parsedRooms.map((room, index) => ({
       ...room,
-      roomPhotos: uploadedRoomPhotos.length ? uploadedRoomPhotos.map((file) => file?.secure_url) : room.roomPhotos || [],
+      roomPhotos: roomPhotos.length > 0 ? roomPhotos : room.roomPhotos || [],
     }));
 
     // Create accommodation document
@@ -281,4 +362,6 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
 };
 
 export default addAccommodation;
+
+
 

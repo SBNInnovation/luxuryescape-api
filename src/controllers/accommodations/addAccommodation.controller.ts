@@ -106,13 +106,17 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       return;
     }
 
-    if (!Array.isArray(accommodationFeatures) || !Array.isArray(accommodationAmenities)) {
+    const parsedAccommodationAmenities = accommodationAmenities? JSON.parse(accommodationAmenities) : []
+
+    const parsedAccommodationFeatures = accommodationFeatures? JSON.parse(accommodationFeatures) : [];
+
+    if (!Array.isArray(parsedAccommodationAmenities) || !Array.isArray(parsedAccommodationFeatures)) {
       res.status(400).json({ success: false, message: "Features and amenities must be arrays." });
       return;
     }
 
-    // const parsedRooms = rooms ? JSON.parse(rooms) : [];
-    const validRooms = Array.isArray(rooms)
+    const parsedRooms = rooms ? JSON.parse(rooms) : [];
+    const validRooms = Array.isArray(parsedRooms)
 
     // const validRooms = Array.isArray(parsedRooms) && parsedRooms.every((room) =>
     //   room.roomTitle && room.roomStandard && room.roomDescription && Array.isArray(room.roomFacilities)
@@ -165,10 +169,10 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       accommodationLocation,
       accommodationRating,
       accommodationDescription,
-      accommodationFeatures,
-      accommodationAmenities,
-      rooms,
-    //   rooms: parsedRooms,
+      accommodationFeatures : parsedAccommodationFeatures,
+      accommodationAmenities: parsedAccommodationAmenities,
+      // rooms,
+      rooms: parsedRooms,
       accommodationPics: uploadedAccommodationPics.map((file) => file?.secure_url) || [],
       roomPhotos: uploadedRoomPhotos.map((file) =>file?.secure_url) || [],
     });

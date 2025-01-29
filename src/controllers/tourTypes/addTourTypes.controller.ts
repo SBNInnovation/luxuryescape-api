@@ -31,6 +31,7 @@ const addTourTypes = async (req: MulterRequest, res: Response): Promise<void> =>
     const newTourType = await TourTypes.create({ 
         thumbnail: uploadedThumbnail?.secure_url || "",
         tourType ,
+        slug: tourType.toLowerCase().replace(/\s+/g, "-"),
         description,
     });
     console.log(newTourType)

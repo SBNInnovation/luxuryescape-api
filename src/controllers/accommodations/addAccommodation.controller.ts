@@ -327,19 +327,22 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
     }
 
     // Handle file uploads using Multer
-    const accommodationPics = req.files?.accommodationPics?.map((file) => file.path) || req.body.accommodationPics || [];
-
+    const accommodationPics = req.files?.accommodationPics?.map((file) => file.path) || [];
     const roomPhotos = req.files?.roomPhotos?.map((file) => file.path) || [];
 
     // Update rooms with room photos
-    const updatedRooms = parsedRooms.map((room, index) => ({
+    const updatedRooms = parsedRooms.map((room) => ({
       ...room,
       roomPhotos: roomPhotos.length > 0 ? roomPhotos : room.roomPhotos || [],
     }));
 
+    // Generate slug from title
+    const slug = accommodationTitle.toLowerCase().replace(/\s+/g, "-");
+
     // Create accommodation document
     const accommodation = await Accommodation.create({
       accommodationTitle,
+      slug,
       accommodationLocation,
       accommodationRating,
       accommodationDescription,
@@ -362,6 +365,3 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
 };
 
 export default addAccommodation;
-
-
-

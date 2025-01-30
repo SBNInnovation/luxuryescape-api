@@ -90,7 +90,7 @@ const addBlog = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error) {
        res.status(500).json({
         success: false,
-        message: error.message || "Internal Server Error",
+        message: error.message,
       });
       return
     }

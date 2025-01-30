@@ -7,27 +7,27 @@ const addBlogRouter = express.Router();
 
 
 // Multer setup for single file upload
-// const uploader = multer({
-//   storage: multer.diskStorage({
-//     destination: (req, file, cb) => {
-//       cb(null, "src/uploads/blogs"); // Adjust the folder name here as needed
-//     },
-//     filename: (req, file, cb) => {
-//       cb(null, `${Date.now()}-${file.originalname}`);
-//     },
-//   }),
-// });
-
 const uploader = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, path.join(__dirname, "../uploads/blogs")); // Matches your static folder
+      cb(null, "public/uploads/blogs"); // Store in public/uploads/blogs folder
     },
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}-${file.originalname}`);
     },
   }),
 });
+
+// const uploader = multer({
+//   storage: multer.diskStorage({
+//     destination: (req, file, cb) => {
+//       cb(null, path.join(__dirname, "../uploads/blogs")); // Matches your static folder
+//     },
+//     filename: (req, file, cb) => {
+//       cb(null, `${Date.now()}-${file.originalname}`);
+//     },
+//   }),
+// });
 
 
 // POST route for adding a blog

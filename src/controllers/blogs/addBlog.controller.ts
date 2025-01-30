@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import Blog from "../../models/blogs.models/blogs.js";
+import { MulterRequest } from "../tourTypes/addTourTypes.controller.js";
 
-const addBlog = async (req: Request, res: Response): Promise<void> => {
+const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
     const {
       title,

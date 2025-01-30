@@ -12,8 +12,11 @@ const addBlog = async (req: Request, res: Response): Promise<void> => {
 
     // Validate required fields
     if (!title || !description || !category) {
-      res.status(400).json({ success: false, message: "Please fill all the fields" });
-      return;
+       res.status(400).json({
+        success: false,
+        message: "Please fill all the required fields (title, description, and category).",
+      });
+      return
     }
 
     // Parse links if it's in string form
@@ -21,27 +24,33 @@ const addBlog = async (req: Request, res: Response): Promise<void> => {
     try {
       parsedLink = JSON.parse(link);
     } catch (error) {
-      res.status(400).json({ success: false, message: "Invalid link format" });
-      return;
+       res.status(400).json({ success: false, message: "Invalid link format." });
+       return
     }
 
     if (!Array.isArray(parsedLink)) {
-      res.status(400).json({ success: false, message: "Please enter a valid array of links" });
-      return;
+       res.status(400).json({
+        success: false,
+        message: "Links should be in the form of an array.",
+      });
+      return
     }
 
     // Handle file uploads using Multer
     const thumbnail = req.file?.path || "";
     if (!thumbnail) {
-      res.status(400).json({ success: false, message: "Please upload a thumbnail" });
-      return;
+       res.status(400).json({ success: false, message: "Thumbnail image is required." });
+       return
     }
 
     // Check if the blog already exists
     const checkExistingBlog = await Blog.findOne({ title });
     if (checkExistingBlog) {
-      res.status(409).json({ success: false, message: "Blog already exists" });
-      return;
+       res.status(409).json({
+        success: false,
+        message: "A blog with this title already exists. Please choose a different title.",
+      });
+      return
     }
 
     // Calculate read time (rough estimate of number of words / 200 words per minute)
@@ -55,24 +64,44 @@ const addBlog = async (req: Request, res: Response): Promise<void> => {
       description,
       category,
       link: parsedLink,
-    //   link,
-      thumbnail : thumbnail || "",
+      thumbnail: thumbnail || "",
       readTime: generateReadTime > 0 ? `${generateReadTime} min read` : "Less than a minute",
     });
 
     if (!createBlog) {
-      res.status(500).json({ success: false, message: "Failed to create blog" });
-      return;
+       res.status(500).json({
+        success: false,
+        message: "An error occurred while creating the blog. Please try again.",
+      });
+      return
     }
 
     // Respond with success
-    res.status(201).json({ success: true, message: "Blog created successfully", data: createBlog });
+     res.status(201).json({
+      success: true,
+      message: "Blog created successfully.",
+      data: createBlog,
+    });
+
   } catch (error) {
     console.error("Error creating blog:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+
+    // Check for specific errors or handle generic errors
+    if (error instanceof Error) {
+       res.status(500).json({
+        success: false,
+        message: error.message || "Internal Server Error",
+      });
+      return
+    }
+
+    // Fallback for any unknown errors
+     res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred. Please try again.",
+    });
+    return
   }
 };
 
 export default addBlog;
-
-

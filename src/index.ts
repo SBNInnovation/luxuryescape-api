@@ -1,6 +1,12 @@
 import express, { Request, Response, urlencoded } from "express";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url"; // Import for fixing __dirname issue
 dotenv.config()
+
+// Fix __dirname issue for ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import addTourRouter from "./routes/tours.routes/addtours.routes.js";
 import signupRouter from "./routes/login&signup/signupRouter.js";
@@ -31,6 +37,9 @@ const port = process.env.PORT || 4000;  // Use PORT from .env or default to 4000
 app.use(express.json());
 app.use(urlencoded({extended:true}))
 app.use(cookieParser())
+
+// Middleware to serve static files (make uploaded images accessible)
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 // app.use(cors({
 //     origin: ["http://localhost:3000","https://luxuryescape-admin.vercel.app"],
 //     methods: ["GET", "POST", "PUT","PATCH", "DELETE"],

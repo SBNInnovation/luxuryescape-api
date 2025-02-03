@@ -156,7 +156,7 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
        return
     }
 
-    // Upload the thumbnail to cloud storage (like Cloudinary)
+    // Upload the thumbnail to cloudinary
     const uploadedThumbnail = await uploadFile(thumbnail.path, "blogs/thumbnail");
 
     // If the upload fails or s an error
@@ -188,8 +188,9 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
       slug: title.toLowerCase().replace(/\s+/g, "-"),
       description,
       category,
-      link: parsedLink,
-      thumbnail: uploadedThumbnail?.secure_url || "", // Save the URL of the uploaded image
+      // link: parsedLink,
+      link,
+      thumbnail: uploadedThumbnail?.secure_url || "", 
       readTime: generateReadTime > 0 ? `${generateReadTime} min read` : "Less than a minute",
     });
 

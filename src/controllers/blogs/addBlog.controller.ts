@@ -110,8 +110,11 @@
 
 import { Request, Response } from "express";
 import Blog from "../../models/blogs.models/blogs.js";
-import { MulterRequest } from "../tourTypes/addTourTypes.controller.js";
 import { uploadFile } from "../../utility/cloudinary.js";
+
+export interface MulterRequest extends Request {
+  file?: Express.Multer.File; // Represents the single file uploaded using multer.single()
+}
 
 const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
   try {

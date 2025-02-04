@@ -1,8 +1,7 @@
 import express from "express";
 import path from "path"
 import multer from "multer";
-import addBlog from "../../controllers/blogs/addBlog.controller.js";
-import { MulterRequest } from "../../controllers/tourTypes/addTourTypes.controller.js"; // Make sure this is the correct path
+import addBlog, { MulterRequest } from "../../controllers/blogs/addBlog.controller.js";
 const addBlogRouter = express.Router();
 
 

@@ -16,7 +16,7 @@ const blogSchema = new Schema({
     thumbnail:{type:String},
     category:{type:mongoose.Schema.Types.ObjectId,ref:"TourTypes"},
     description:{type:String,required:true, min:100},
-    link:[linkSchema], default:[],
+    link:[linkSchema],
     isFeatured:{type:Boolean, default:false},
     isActivate: {type: Boolean, default:true},
     readTime : {type:String, default:""}

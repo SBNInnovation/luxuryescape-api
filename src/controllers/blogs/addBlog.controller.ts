@@ -188,8 +188,8 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
       slug: title.toLowerCase().replace(/\s+/g, "-"),
       description,
       category,
-      // link: parsedLink,
-      link,
+      link: parsedLink,
+      // link,
       thumbnail: uploadedThumbnail?.secure_url || "", 
       readTime: generateReadTime > 0 ? `${generateReadTime} min read` : "Less than a minute",
     });

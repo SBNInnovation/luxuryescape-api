@@ -11,6 +11,11 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY, 
     api_secret: process.env.CLOUDINARY_API_SECRET 
 });
+console.log("Cloudinary Env Variables:", {
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
 
 if(!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
     console.error('Cloudinary config not found');
@@ -32,10 +37,7 @@ const uploadFile = async (file:string,folder:string) => {
     }
 }
 
-
-
 // delete file
-
 const deleteFile = async (public_id:string) => {
     // console.log(public_id);
     try {

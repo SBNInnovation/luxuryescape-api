@@ -150,22 +150,17 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
 
     // Handle file uploads using Multer
     const thumbnail = req.file;
-
     if (!thumbnail) {
-       res.status(400).json({ success: false, message: "Thumbnail image is required." });
-       return
+      res.status(400).json({ success: false, message: "Thumbnail image is required." });
+      return;
     }
 
-    // Upload the thumbnail to cloudinary
+    // Upload to Cloudinary using the file path
     const uploadedThumbnail = await uploadFile(thumbnail.path, "blogs/thumbnail");
 
-    // If the upload fails or s an error
-    if (!uploadedThumbnail || !uploadedThumbnail.url) {
-       res.status(500).json({
-        success: false,
-        message: "Failed to upload thumbnail image.",
-      });
-      return
+    if (!uploadedThumbnail || !uploadedThumbnail.secure_url) {
+      res.status(500).json({ success: false, message: "Failed to upload thumbnail image." });
+      return;
     }
 
     // Check if the blog already exists

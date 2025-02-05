@@ -227,7 +227,8 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
 
     let uploadedThumbnailUrl = ""; // Default empty string if no image is uploaded
     if (req.file) {
-      const uploadedThumbnail = await uploadFile(req.file.path, "blogs/thumbnail");
+      // const uploadedThumbnail = await uploadFile(req.file.path, "blogs/thumbnail");
+      const uploadedThumbnail = await uploadFile(`${req.file.path}`, "blogs/thumbnail");  //Multer stores files locally (public/uploads/blogs), but Cloudinary needs an absolute path.
       if (uploadedThumbnail?.secure_url) {
         uploadedThumbnailUrl = uploadedThumbnail.secure_url;
       }

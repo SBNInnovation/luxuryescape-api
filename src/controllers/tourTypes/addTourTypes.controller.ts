@@ -25,7 +25,9 @@ const addTourTypes = async (req: MulterRequest, res: Response): Promise<void> =>
     const thumbnail = req?.file ||""; 
   
     const uploadedThumbnail = thumbnail
-      ? await uploadFile(thumbnail.path || "", "tours/tourTypes/images")
+      ? 
+      // await uploadFile(thumbnail.path || "", "tours/tourTypes/images")
+      await uploadFile(`${req.file?.path}` || "", "tours/tourTypes/images")
       : null;
 
     const newTourType = await TourTypes.create({ 
@@ -34,17 +36,24 @@ const addTourTypes = async (req: MulterRequest, res: Response): Promise<void> =>
         slug: tourType.toLowerCase().replace(/\s+/g, "-"),
         description,
     });
-    console.log(newTourType)
 
     res.status(201).json({
       success: true,
       message: "Tour type added successfully.",
       newTourType,
     });
-  } catch (error) {
-    console.error("Error adding tour type:", error);
-    res.status(500).json({ success: false, message: "Internal server error." });
+  } catch (error: unknown) {
+    console.error("Error creating blog:", error);
+  
+    let errorMessage = "An unexpected error occurred.";
+  
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+  
+    res.status(500).json({ success: false, message: errorMessage });
   }
+  
 };
 
 export default addTourTypes;

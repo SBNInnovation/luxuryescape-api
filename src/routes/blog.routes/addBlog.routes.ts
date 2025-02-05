@@ -5,10 +5,23 @@ import addBlog, { MulterRequest } from "../../controllers/blogs/addBlog.controll
 
 const addBlogRouter = express.Router();
 
+import path from "path";
+import fs from "fs";
+
+const __filename = new URL(import.meta.url).pathname;
+const __dirname = path.dirname(__filename);
+
+const uploadPath = path.resolve(process.cwd(),"public/uploads/blogs");
+
+if(!fs.existsSync(uploadPath)){
+  console.log("creating directory", uploadPath);
+  fs.mkdirSync(uploadPath, {recursive:true});
+}
+
 const uploader = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "public/uploads/blogs");
+      cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}-${file.originalname}`);

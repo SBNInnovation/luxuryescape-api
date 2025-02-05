@@ -1,15 +1,14 @@
+// routes/blogs/addBlog.routes.js
 import express from "express";
-import path from "path"
 import multer from "multer";
 import addBlog, { MulterRequest } from "../../controllers/blogs/addBlog.controller.js";
+
 const addBlogRouter = express.Router();
 
-
-// Multer setup for single file upload
 const uploader = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "public/uploads/blogs"); // Store in public/uploads/blogs folder
+      cb(null, "public/uploads/blogs");
     },
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}-${file.originalname}`);
@@ -17,28 +16,9 @@ const uploader = multer({
   }),
 });
 
-// const uploader = multer({
-//   storage: multer.diskStorage({
-//     destination: (req, file, cb) => {
-//       cb(null, path.join(__dirname, "../uploads/blogs")); // Matches your static folder
-//     },
-//     filename: (req, file, cb) => {
-//       cb(null, `${Date.now()}-${file.originalname}`);
-//     },
-//   }),
-// });
-
-
-// POST route for adding a blog
-addBlogRouter.post(
-  "/blog/add-blog",
-  uploader.single("thumbnail"), // Correct method for handling single file upload
-  (req, res) => {
-    console.log(req.file); // Debug to see what is received
-    addBlog(req as MulterRequest, res); // Explicit type assertion for MulterRequest
-  }
-);
+addBlogRouter.post("/blog/add-blog", uploader.single("thumbnail"), (req, res) => {
+  console.log(req.file);
+  addBlog(req as MulterRequest, res);
+});
 
 export default addBlogRouter;
-
-

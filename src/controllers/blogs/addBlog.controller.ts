@@ -108,13 +108,98 @@
 // export default addBlog;
 
 
+
+
+
+
+
 // controllers/blogs/addBlog.controller.js
+// import { Request, Response } from "express";
+// import Blog from "../../models/blogs.models/blogs.js";
+// import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
+
+// export interface MulterRequest extends Request {
+//   file?: Express.Multer.File;
+// }
+
+// const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
+//   try {
+//     const { title, description, category, link } = req.body;
+
+//     if (!title || !description || !category) {
+//       res.status(400).json({ success: false, message: "Please fill all required fields." });
+//       return;
+//     }
+
+//     let parsedLink = [];
+//     if (link) {
+//       try {
+//         parsedLink = JSON.parse(link);
+//         if (!Array.isArray(parsedLink)) {
+//           res.status(400).json({ success: false, message: "Links should be an array." });
+//           return;
+//         }
+//       } catch (error) {
+//         res.status(400).json({ success: false, message: "Invalid link format." });
+//         return;
+//       }
+//     }
+
+//     const thumbnail = req.file || "";
+//     if (!thumbnail) {
+//       res.status(400).json({ success: false, message: "Thumbnail image is required." });
+//       return;
+//     }
+
+//     const uploadedThumbnail = await uploadFile(thumbnail.path, "blogs/thumbnail");
+//     if (!uploadedThumbnail || !uploadedThumbnail.secure_url) {
+//       res.status(500).json({ success: false, message: "Failed to upload thumbnail image." });
+//       return;
+//     }
+
+//     let slug = title.toLowerCase().replace(/\s+/g, "-");
+//     let existingSlug = await Blog.findOne({ slug });
+//     let count = 1;
+//     while (existingSlug) {
+//       slug = `${slug}-${count}`;
+//       existingSlug = await Blog.findOne({ slug });
+//       count++;
+//     }
+
+//     const wordCount = description.split(" ").length;
+//     const generateReadTime = Math.floor(wordCount / 200);
+
+//     try {
+//       const createBlog = await Blog.create({
+//         title,
+//         slug,
+//         description,
+//         category,
+//         link: parsedLink,
+//         thumbnail: uploadedThumbnail.secure_url || "",
+//         readTime: generateReadTime > 0 ? `${generateReadTime} min read` : "Less than a minute",
+//       });
+
+//       res.status(201).json({ success: true, message: "Blog created successfully.", data: createBlog });
+//     } catch (error) {
+//       await deleteFile(uploadedThumbnail.public_id);
+//       res.status(500).json({ success: false, message: "An error occurred while creating the blog." });
+//     }
+//   } catch (error) {
+//     console.error("Error creating blog:", error);
+//     res.status(500).json({ success: false, message: "An unexpected error occurred." });
+//   }
+// };
+// export default addBlog;
+
+
+
 import { Request, Response } from "express";
 import Blog from "../../models/blogs.models/blogs.js";
-import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
+import { uploadFile } from "../../utility/cloudinary.js";
 
 export interface MulterRequest extends Request {
-  file?: Express.Multer.File;
+  file?: Express.Multer.File | undefined;
 }
 
 const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
@@ -140,16 +225,12 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
       }
     }
 
-    const thumbnail = req.file;
-    if (!thumbnail) {
-      res.status(400).json({ success: false, message: "Thumbnail image is required." });
-      return;
-    }
-
-    const uploadedThumbnail = await uploadFile(thumbnail.path, "blogs/thumbnail");
-    if (!uploadedThumbnail || !uploadedThumbnail.secure_url) {
-      res.status(500).json({ success: false, message: "Failed to upload thumbnail image." });
-      return;
+    let uploadedThumbnailUrl = ""; // Default empty string if no image is uploaded
+    if (req.file) {
+      const uploadedThumbnail = await uploadFile(req.file.path, "blogs/thumbnail");
+      if (uploadedThumbnail?.secure_url) {
+        uploadedThumbnailUrl = uploadedThumbnail.secure_url;
+      }
     }
 
     let slug = title.toLowerCase().replace(/\s+/g, "-");
@@ -164,25 +245,21 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
     const wordCount = description.split(" ").length;
     const generateReadTime = Math.floor(wordCount / 200);
 
-    try {
-      const createBlog = await Blog.create({
-        title,
-        slug,
-        description,
-        category,
-        link: parsedLink,
-        thumbnail: uploadedThumbnail.secure_url,
-        readTime: generateReadTime > 0 ? `${generateReadTime} min read` : "Less than a minute",
-      });
+    const createBlog = await Blog.create({
+      title,
+      slug,
+      description,
+      category,
+      link: parsedLink,
+      thumbnail: uploadedThumbnailUrl, // Store the uploaded URL or keep it empty
+      readTime: generateReadTime > 0 ? `${generateReadTime} min read` : "Less than a minute",
+    });
 
-      res.status(201).json({ success: true, message: "Blog created successfully.", data: createBlog });
-    } catch (error) {
-      await deleteFile(uploadedThumbnail.public_id);
-      res.status(500).json({ success: false, message: "An error occurred while creating the blog." });
-    }
+    res.status(201).json({ success: true, message: "Blog created successfully.", data: createBlog });
   } catch (error) {
     console.error("Error creating blog:", error);
     res.status(500).json({ success: false, message: "An unexpected error occurred." });
   }
 };
+
 export default addBlog;

@@ -26,6 +26,7 @@ import addTourTypesRouter from "./routes/tourTypes.routes/addTourTypes.routes.js
 import getAllTourTypesRouter from "./routes/tourTypes.routes/getAllTourTypes.route.js";
 import getAllAccommodationRouter from "./routes/accommodation.routes/getAllAccommodation.routes.js";
 import addBlogRouter from "./routes/blog.routes/addBlog.routes.js";
+import getAllBlogRouter from "./routes/blog.routes/getAllBlog.routes.js";
 
 const app = express();
 
@@ -77,7 +78,8 @@ app.use(
     getAllAccommodationRouter,
 
     //for blogs
-    addBlogRouter
+    addBlogRouter,
+    getAllBlogRouter
 )
 
 

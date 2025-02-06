@@ -27,8 +27,11 @@ import getAllTourTypesRouter from "./routes/tourTypes.routes/getAllTourTypes.rou
 import getAllAccommodationRouter from "./routes/accommodation.routes/getAllAccommodation.routes.js";
 import addBlogRouter from "./routes/blog.routes/addBlog.routes.js";
 import getAllBlogRouter from "./routes/blog.routes/getAllBlog.routes.js";
+import editTourTypesRouter from "./routes/tourTypes.routes/editTourTypes.route.js";
+import deleteTourTypeRouter from "./routes/tourTypes.routes/deleteTourTypes.routes.js";
 
 const app = express();
+
 
 // Connect to database
 dbConnection();
@@ -72,6 +75,8 @@ app.use(
     //for tourtypes
     addTourTypesRouter,
     getAllTourTypesRouter,
+    editTourTypesRouter,
+    deleteTourTypeRouter,
 
     // for accommodation
     addAccommodationRouter,

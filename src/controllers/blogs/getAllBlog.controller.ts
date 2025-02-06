@@ -1,49 +1,58 @@
-import { Request, Response } from "express"
+import { Request, Response } from "express";
 import Blog from "../../models/blogs.models/blogs.js";
 
-const getAllBlogs = async(req:Request, res:Response):Promise<void> => {
-    try {
-         // Parse pagination parameters
+const getAllBlogs = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Parse pagination parameters
     const page: number = parseInt(req.query.page as string, 10) || 1;
     const limit: number = parseInt(req.query.limit as string, 10) || 10;
-    const search = req.query.search as string || ""?.toLowerCase().trim(); 
+    const search = (req.query.search as string || "").toLowerCase().trim();
+    const filter = (req.query.filter as string || "").toLowerCase().trim();
+    const sort = (req.query.sort as string || "").toLowerCase().trim();
 
-    if(page < 1 || limit <10){
-         res.status(404).json({success:false,message:"Invalid page or limit"})
-         return
+    if (page < 1 || limit < 1) {
+      res.status(400).json({ success: false, message: "Invalid page or limit." });
+      return;
     }
 
-    const skip = (page-1)*limit;
+    const skip = (page - 1) * limit;
 
-    const query = search
-    ? {
-        $or: [
-          { title: { $regex: search, $options: "i" } },
-          { category: { $regex: search, $options: "i" } },
-        ],
-      }
-    : {};
-
-    const getAll = await Blog.find(query).skip(skip).limit(limit).sort({createdAt: -1})
-    if(!getAll){
-         res.status(404).json({success:false,message:"No blogs found"})
-         return
+    // Combine search and filter queries
+    let query: any = {};
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
+    }
+    if (filter) {
+      query.category = { $regex: filter, $options: "i" };
     }
 
-     // Fetch total count of matching documents (for pagination metadata)
+    // Sorting logic (default: newest first)
+    let sortQuery: any = { createdAt: -1 };
+    if (sort === "asc") {
+      sortQuery = { createdAt: 1 };
+    } else if (sort === "desc") {
+      sortQuery = { createdAt: -1 };
+    }
+
+    // Fetch blogs with pagination & sorting
+    const blogs = await Blog.find(query).skip(skip).limit(limit).sort(sortQuery);
+
+    // Fetch total count for pagination metadata
     const total = await Blog.countDocuments(query);
 
-    // Check if blog exist
-    if (!getAll.length) {
+    if (blogs.length === 0) {
       res.status(404).json({ success: false, message: "No blogs found." });
-      return
+      return;
     }
 
     res.status(200).json({
       success: true,
-      message: "blogs fetched successfully.",
+      message: "Blogs fetched successfully.",
       data: {
-        getAll,
+        blogs,
         pagination: {
           total,
           page,
@@ -60,6 +69,6 @@ const getAllBlogs = async(req:Request, res:Response):Promise<void> => {
       error: error instanceof Error ? error.message : "Unknown error",
     });
   }
-}
+};
 
-export default getAllBlogs
+export default getAllBlogs;

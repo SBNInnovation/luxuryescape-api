@@ -20,10 +20,7 @@ const getAllBlogs = async (req: Request, res: Response): Promise<void> => {
     // Combine search and filter queries
     let query: any = {};
     if (search) {
-      query.$or = [
-        { title: { $regex: search, $options: "i" } },
-        { category: { $regex: search, $options: "i" } },
-      ];
+      query.title = { $regex: search, $options: "i" };
     }
     if (filter) {
       query.category = { $regex: filter, $options: "i" };

@@ -13,7 +13,7 @@ const blogDelete = async(req:Request,res:Response):Promise<void> =>{
             res.status(404).json({message:"Blog not found"});
             return;
         }
-        res.status(200).json({success:false,message:"Blog deleted successfully"});
+        res.status(200).json({success:true,message:"Blog deleted successfully"});
     } catch (error) {
         console.log(error);
         if(error instanceof(Error)){

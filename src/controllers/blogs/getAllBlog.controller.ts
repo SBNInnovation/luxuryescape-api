@@ -39,7 +39,7 @@ const getAllBlogs = async (req: Request, res: Response): Promise<void> => {
 
     // Fetch blogs with pagination & sorting
     const blogs = await Blog.find(query)
-        .populate("category", "tourType") // ✅ Corrected populate
+        .populate("category", "tourType")
         .skip(skip)
         .limit(limit)
         .sort(sortQuery);

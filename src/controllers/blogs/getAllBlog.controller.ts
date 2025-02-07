@@ -38,7 +38,12 @@ const getAllBlogs = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Fetch blogs with pagination & sorting
-    const blogs = await Blog.find(query).skip(skip).limit(limit).sort(sortQuery);
+    const blogs = await Blog.find(query)
+        .populate("category", "tourType") // ✅ Corrected populate
+        .skip(skip)
+        .limit(limit)
+        .sort(sortQuery);
+
 
     // Fetch total count for pagination metadata
     const total = await Blog.countDocuments(query);

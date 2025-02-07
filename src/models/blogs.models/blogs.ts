@@ -15,6 +15,7 @@ const blogSchema = new Schema({
     description: { type: String, required: true, min: 100 },
     link: [linkSchema],
     isActive: { type: Boolean, default: true },
+    isFeature:{type:Boolean, default:false},
     readTime: { type: String, default: "" }
 }, { timestamps: true });
 

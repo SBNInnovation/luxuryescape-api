@@ -3,6 +3,6 @@ import updateActiveStatus from "../../controllers/blogs/updateIsActive.controlle
 
 const updateActiveBlogStatus = express.Router();
 
-updateActiveBlogStatus.route("/blog/update-status").patch(updateActiveStatus);
+updateActiveBlogStatus.route("/blog/update-status/:blogId").patch(updateActiveStatus);
 
 export default updateActiveBlogStatus;

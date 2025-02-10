@@ -4,6 +4,6 @@ import updateFeatureStatus from "../../controllers/blogs/updateIsFeature.control
 
 const updateFeatureBlogStatus = express.Router();
 
-updateFeatureBlogStatus.route("/blog/update-status").patch(updateFeatureStatus);
+updateFeatureBlogStatus.route("/blog/update-status/:blogId").patch(updateFeatureStatus);
 
 export default updateFeatureBlogStatus;

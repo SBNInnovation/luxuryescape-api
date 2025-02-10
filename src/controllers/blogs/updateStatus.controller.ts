@@ -1,23 +1,23 @@
 import { Request, Response } from "express";
 import Blog from "../../models/blogs.models/blogs.js";
 
-const updateActiveStatus = async (req: Request, res: Response): Promise<void> => {
+const updateStatus = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { isActive } = req.query; // Query param from request
+        const { isActive,isFeature } = req.query; // Query param from request
         const { blogId } = req.params;  // Blog ID from URL params
-
+    
         if (!blogId) {
             res.status(400).json({ success: false, message: "Blog ID is required" });
             return;
         }
 
-        if (isActive === undefined) {
-            res.status(400).json({ success: false, message: "isActive query parameter is required" });
+        if (!isActive && !isFeature ) {
+            res.status(400).json({ success: false, message: "status query parameter is required" });
             return;
         }
 
         // Convert query param to boolean properly
-        const isActiveBool = isActive === "true";
+        // const isActiveBool = isActive === "true";
 
         const findBlog = await Blog.findById(blogId);
         if (!findBlog) {
@@ -25,11 +25,28 @@ const updateActiveStatus = async (req: Request, res: Response): Promise<void> =>
             return;
         }
 
-        const updateStatus = await Blog.findByIdAndUpdate(
-            blogId,
-            { $set: { isActive: isActiveBool } },
-            { new: true }
-        );
+        let updateStatus ;
+         if(isActive){
+            updateStatus = await Blog.findByIdAndUpdate(
+                blogId,
+                { $set:
+                     {
+                         isActive: isActive,
+                     }
+             },
+                { new: true }
+            );
+         }else{
+            updateStatus = await Blog.findByIdAndUpdate(
+                blogId,
+                { $set:
+                     {
+                         isFeature: isFeature,
+                     }
+             },
+                { new: true }
+            );
+         }
 
         if (!updateStatus) {
             res.status(400).json({ success: false, message: "Failed to update status" });
@@ -38,8 +55,7 @@ const updateActiveStatus = async (req: Request, res: Response): Promise<void> =>
 
         res.status(200).json({ 
             success: true, 
-            message: `Blog status updated to ${isActiveBool ? "Active" : "Inactive"}`, 
-            data: updateStatus 
+            message: `Blog status updated`
         });
 
     } catch (error) {
@@ -51,4 +67,4 @@ const updateActiveStatus = async (req: Request, res: Response): Promise<void> =>
     }
 };
 
-export default updateActiveStatus;
+export default updateStatus;

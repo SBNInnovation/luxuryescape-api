@@ -284,6 +284,7 @@
 import { Request, Response } from "express";
 import { Express } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
+import { uploadFile } from "../../utility/cloudinary.js";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -327,14 +328,41 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
     }
 
     // Handle file uploads using Multer
-    const accommodationPics = req.files?.accommodationPics?.map((file) => file.path) || [];
-    const roomPhotos = req.files?.roomPhotos?.map((file) => file.path) || [];
+    const accommodationPics = req?.files?.accommodationPics || [];
+    const roomPhotos = req?.files?.roomPhotos || [];
 
-    // Update rooms with room photos
-    const updatedRooms = parsedRooms.map((room) => ({
-      ...room,
-      roomPhotos: roomPhotos.length > 0 ? roomPhotos : room.roomPhotos || [],
-    }));
+    // Upload photos to Cloudinary and store URLs
+    const uploadedAccommodationPics = accommodationPics.length
+      ? await Promise.all(
+          accommodationPics.map(async (file) => {
+            try {
+              const uploaded = await uploadFile(file?.path || "", "tours/accommodation/images");
+              return uploaded?.secure_url || null;
+            } catch (error) {
+              console.error("Error uploading accommodation pic:", error);
+              return null;
+            }
+          })
+        )
+      : [];
+
+    const uploadedRoomPhotos = roomPhotos.length
+      ? await Promise.all(
+          roomPhotos.map(async (file) => {
+            try {
+              const uploaded = await uploadFile(file?.path || "", "tours/accommodation/rooms/images");
+              return uploaded?.secure_url || null;
+            } catch (error) {
+              console.error("Error uploading room photo:", error);
+              return null;
+            }
+          })
+        )
+      : [];
+
+    // Remove null values (if any upload failed)
+    const filteredAccommodationPics = uploadedAccommodationPics.filter((url) => url !== null);
+    const filteredRoomPhotos = uploadedRoomPhotos.filter((url) => url !== null);
 
     // Generate slug from title
     const slug = accommodationTitle.toLowerCase().replace(/\s+/g, "-");
@@ -348,8 +376,9 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       accommodationDescription,
       accommodationFeatures: parsedAccommodationFeatures,
       accommodationAmenities: parsedAccommodationAmenities,
-      rooms: updatedRooms,
-      accommodationPics,
+      rooms: parsedRooms,
+      roomPhotos:filteredRoomPhotos,
+      accommodationPics: filteredAccommodationPics,
     });
 
     if (!accommodation) {

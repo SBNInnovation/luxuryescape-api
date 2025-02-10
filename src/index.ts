@@ -32,6 +32,8 @@ import deleteTourTypeRouter from "./routes/tourTypes.routes/deleteTourTypes.rout
 import getSpecificBlogRouter from "./routes/blog.routes/getSpecificBlog.routes.js";
 import editBlogRouter from "./routes/blog.routes/editBlog.routes.js";
 import deleteBlogRouter from "./routes/blog.routes/deleteBlog.routes.js";
+import updateActiveBlogStatus from "./routes/blog.routes/updateActive.routes.js";
+import updateFeatureBlogStatus from "./routes/blog.routes/updateFeature.routes.js";
 
 const app = express();
 
@@ -90,7 +92,9 @@ app.use(
     getAllBlogRouter,
     getSpecificBlogRouter,
     editBlogRouter,
-    deleteBlogRouter
+    deleteBlogRouter,
+    updateActiveBlogStatus,
+    updateFeatureBlogStatus
 )
 
 

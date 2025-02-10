@@ -34,6 +34,7 @@ import editBlogRouter from "./routes/blog.routes/editBlog.routes.js";
 import deleteBlogRouter from "./routes/blog.routes/deleteBlog.routes.js";
 import updateActiveBlogStatus from "./routes/blog.routes/updateActive.routes.js";
 import updateFeatureBlogStatus from "./routes/blog.routes/updateFeature.routes.js";
+import getSpecificAccommodationRouter from "./routes/accommodation.routes/getSpecificAccommodation.routes.js";
 
 const app = express();
 
@@ -86,6 +87,7 @@ app.use(
     // for accommodation
     addAccommodationRouter,
     getAllAccommodationRouter,
+    getSpecificAccommodationRouter,
 
     //for blogs
     addBlogRouter,

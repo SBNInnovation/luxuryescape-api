@@ -3,15 +3,13 @@ import { uploadFile } from "../../utility/cloudinary.js";
 import Tour from "../../models/tours.models/tours.js";
 import { Express } from "express";
 
-interface MulterRequest extends Request {
+export interface MulterRequest extends Request {
   files?: {
     thumbnail?:Express.Multer.File[];
     gallery?: Express.Multer.File[];
     destinationPhoto?: Express.Multer.File[];
     highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
-    accommodationPics?: Express.Multer.File[];
-    roomPhotos?: Express.Multer.File[];
   };
 }
 
@@ -29,8 +27,8 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       keyHighlights,
       tourHighlights,
       tourInclusion,
-      tourItinerary,
       accommodation,
+      tourItinerary,
       faq,
       location,
       country,
@@ -49,8 +47,8 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
         !keyHighlights ||
         !tourInclusion ||
         !tourHighlights ||
-        !tourItinerary ||
         !accommodation ||
+        !tourItinerary ||
         !faq ||
         !location ||
         !country
@@ -85,11 +83,11 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
         : null;
 
     // Parsing JSON fields
-    // const parsedDestination = JSON.parse(destination);
-    // const parsedKeyHighlights = JSON.parse(keyHighlights);
-    // const parsedTourHighlights = JSON.parse(tourHighlights);
-    // const parsedTourItinerary = JSON.parse(tourItinerary);
-    // const parsedFaq = JSON.parse(faq);
+    const parsedDestination = JSON.parse(destination);
+    const parsedKeyHighlights = JSON.parse(keyHighlights);
+    const parsedTourHighlights = JSON.parse(tourHighlights);
+    const parsedTourItinerary = JSON.parse(tourItinerary);
+    const parsedFaq = JSON.parse(faq);
 
     // Creating the tour
     const createTour = await Tour.create({
@@ -102,21 +100,17 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       idealTime,
       cost,
       tourTypes,
-      // destination: parsedDestination,
-      destination,
+      destination: parsedDestination,
       destinationPhoto: uploadedDestinationPhoto?.secure_url,
       tourOverview,
-      // keyHighlights: parsedKeyHighlights,
-      keyHighlights,
-      // tourHighlights: parsedTourHighlights,
-      tourHighlights,
+      keyHighlights: parsedKeyHighlights,
+      tourHighlights: parsedTourHighlights,
       highlightPicture: uploadedHighlightPicture?.secure_url,
       tourInclusion,
-      // tourItinerary: parsedTourItinerary,
-      tourItinerary,
+      accommodation,
+      tourItinerary: parsedTourItinerary,
       itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
-      // faq: parsedFaq,
-      faq,
+      faq: parsedFaq,
       gallery: uploadedGallery?.map((file)=> file?.secure_url),
     });
 

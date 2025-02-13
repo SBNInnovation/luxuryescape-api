@@ -76,7 +76,7 @@ const tourSchema = new Schema(
       default: [],
     },
     isRecommend: { type: Boolean, default: false },
-    isActivate: { type: Boolean, default: false },
+    isActivate: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

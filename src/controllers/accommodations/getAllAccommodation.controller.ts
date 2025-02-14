@@ -6,7 +6,8 @@ const getAllAccommodation = async (req: Request, res: Response): Promise<void> =
     // Parse pagination parameters
     const page: number = parseInt(req.query.page as string, 10) || 1;
     const limit: number = parseInt(req.query.limit as string, 10) || 10;
-    const search = req.query.search as string || ""?.toLowerCase().trim(); 
+    const search = req.query.search as string || ""?.toLowerCase().trim();
+    const location = req.query.locationFilter as string || ""?.toLowerCase().trim(); 
 
     // Validate pagination values
     if (page < 1 || limit < 1) {
@@ -17,15 +18,19 @@ const getAllAccommodation = async (req: Request, res: Response): Promise<void> =
     // Calculate documents to skip
     const skip = (page - 1) * limit;
 
-    // Build query based on the search keyword
-    const query = search
-      ? {
-          $or: [
-            { accommodationTitle: { $regex: search, $options: "i" } },
-            { accommodationLocation: { $regex: search, $options: "i" } },
-          ],
-        }
-      : {};
+    // Build query based on the search keyword and location
+    const query: any = {};
+
+    if (search) {
+      query.$or = [
+        { accommodationTitle: { $regex: search, $options: "i" } },
+        { accommodationLocation: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    if (location) {
+      query.accommodationLocation = { $regex: location, $options: "i"}
+    }
 
     // Fetch accommodations with pagination and sorting
     const accommodations = await Accommodation.find(query)

@@ -21,7 +21,7 @@ const getAllBlogs = async (req: Request, res: Response): Promise<void> => {
     let query: any = {};
     if (search) {
       query.title = { $regex: search, $options: "i" };
-    }
+    } 
     if (filter) {
       query.category = { $regex: filter, $options: "i" };
     }

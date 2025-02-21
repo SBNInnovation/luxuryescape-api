@@ -120,7 +120,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourTypes,
       tourOverview,
       keyHighlights,
-      tourHighlights,
+      // tourHighlights,
       tourInclusion,
       tourItinerary,
       faq,
@@ -138,7 +138,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     if (!tourOverview) missingFields.push("tourOverview");
     if (!keyHighlights) missingFields.push("keyHighlights");
     if (!tourInclusion) missingFields.push("tourInclusion");
-    if (!tourHighlights) missingFields.push("tourHighlights");
+    // if (!tourHighlights) missingFields.push("tourHighlights");
     if (!tourItinerary) missingFields.push("tourItinerary");
     if (!faq) missingFields.push("faq");
     if (!location) missingFields.push("location");
@@ -187,7 +187,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
 
     const parsedIdealTime = parseJsonSafe(idealTime, "idealTime");
     const parsedKeyHighlights = parseJsonSafe(keyHighlights, "keyHighlights");
-    const parsedTourHighlights = parseJsonSafe(tourHighlights, "tourHighlights");
+    // const parsedTourHighlights = parseJsonSafe(tourHighlights, "tourHighlights");
     const parsedTourItinerary = parseJsonSafe(tourItinerary, "tourItinerary");
     const parsedFaq = parseJsonSafe(faq, "faq");
     const parsedTourInclusion = parseJsonSafe(tourInclusion, "tourInclusion");
@@ -205,7 +205,15 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourTypes,
       tourOverview,
       keyHighlights: parsedKeyHighlights,
-      tourHighlights: parsedTourHighlights,
+      tourHighlights: [
+        {
+          highlightsTitle: "Hello",
+          highlightPicture: "https://images.png"
+        },{
+          highlightsTitle: "World",
+          highlightPicture: "https://images.png"
+        }
+      ],
       highlightPicture: uploadedHighlightPicture?.secure_url,
       tourInclusion: parsedTourInclusion,
       tourItinerary: parsedTourItinerary,

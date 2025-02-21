@@ -7,7 +7,6 @@ export interface MulterRequest extends Request {
   files?: {
     thumbnail?:Express.Multer.File[];
     gallery?: Express.Multer.File[];
-    destinationPhoto?: Express.Multer.File[];
     highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
   };
@@ -42,7 +41,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
         !keyHighlights ||
         !tourInclusion ||
         !tourHighlights ||
-        !accommodation ||
         !tourItinerary ||
         !faq ||
         !location ||
@@ -98,7 +96,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourHighlights: parsedTourHighlights,
       highlightPicture: uploadedHighlightPicture?.secure_url,
       tourInclusion:parsedTourInclusion,
-      accommodation,
       tourItinerary: parsedTourItinerary,
       itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
       faq: parsedFaq,
@@ -108,7 +105,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     res.status(201).json({ success: true, message: "Tour added successfully", createTour });
   } catch (error) {
     console.error("Error adding tour:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    if(error instanceof(Error)){
+      res.status(500).json({ success: false, message: error.message });
+    }
   }
 };
 

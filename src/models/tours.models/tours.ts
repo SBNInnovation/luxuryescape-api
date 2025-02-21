@@ -3,8 +3,8 @@ import mongoose, { Schema } from "mongoose";
 // Links Schema
 const linksSchema = new Schema(
   {
-    linkTitle: { type: String, required: true, trim: true },
-    linkUrl: {
+    key: { type: String, required: true, trim: true },
+    value: {
       type: String,
       required: true,
       trim: true,
@@ -41,7 +41,12 @@ const tourSchema = new Schema(
     cost: { type: Number, required: true, min: 0 },
     tourTypes: { type: mongoose.Schema.Types.ObjectId, ref:"TourTypes"},
     tourOverview: { type: String, required: true, trim: true, minLength: 10 },
-    keyHighlights: { type: [String], default: [] },
+    keyHighlights: { type: [
+                    {
+                      content: { type: String, required: true, trim: true },
+                      links: { type: [linksSchema], default: [] }
+                    }
+                  ], default: [] },
     tourHighlights: {
       type: [
         {

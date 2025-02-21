@@ -226,6 +226,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
 
   } catch (error) {
     console.error("Error adding tour:", error);
+    if(error instanceof(Error)){
+      res.status(500).json({ success: false, message: error.message });
+    }
     res.status(500).json({ success: false, message: "Server error" });
   }
 };

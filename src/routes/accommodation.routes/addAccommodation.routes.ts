@@ -150,8 +150,7 @@ const uploader = multer({
 
 // Define file upload fields
 const upload = [
-  { name: "accommodationPics", maxCount: 5 },
-  { name: "roomPhotos", maxCount: 5 },
+  { name: "accommodationPics", maxCount: 5 }
 ];
 
 // Define the route for adding accommodations

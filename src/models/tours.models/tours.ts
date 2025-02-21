@@ -40,17 +40,6 @@ const tourSchema = new Schema(
     idealTime: { type: String, required: true, trim: true },
     cost: { type: Number, required: true, min: 0 },
     tourTypes: { type: mongoose.Schema.Types.ObjectId, ref:"TourTypes"},
-    destination: {
-      type: [
-        {
-          destinationDays: { type: Number, required: true, min: 1 },
-          destinationPlace: { type: String, required: true, trim: true },
-          destinationPhoto: { type: String, default: "" },
-          _id:false
-        },
-      ],
-      default: [],
-    },
     tourOverview: { type: String, required: true, trim: true, minLength: 10 },
     keyHighlights: { type: [String], default: [] },
     tourHighlights: {

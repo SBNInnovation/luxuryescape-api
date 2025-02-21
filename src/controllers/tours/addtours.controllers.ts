@@ -15,14 +15,12 @@ export interface MulterRequest extends Request {
 
 const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
-   
     const {
       tourName,
       duration,
       idealTime,
       cost,
       tourTypes,
-      destination,
       tourOverview,
       keyHighlights,
       tourHighlights,
@@ -42,7 +40,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
         !idealTime ||
         !cost ||
         !tourTypes ||
-        !destination ||
         !tourOverview ||
         !keyHighlights ||
         !tourInclusion ||
@@ -60,7 +57,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       // Check for files in the request, but allow them to be optional
       const thumbnail = req?.files?.thumbnail ||[]; 
       const gallery = req?.files?.gallery || [];
-      const destinationPhoto = req?.files?.destinationPhoto || [];
       const highlightPicture = req?.files?.highlightPicture || [];
       const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
       
@@ -72,9 +68,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       const uploadedGallery = gallery.length
         ? await Promise.all(gallery.map((file) => uploadFile(file?.path || "", "tours/gallery/images")))
         : [];
-      const uploadedDestinationPhoto = destinationPhoto.length
-        ? await uploadFile(destinationPhoto[0]?.path || "", "tours/destination/images")
-        : null;
       const uploadedHighlightPicture = highlightPicture.length
         ? await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images")
         : null;
@@ -83,7 +76,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
         : null;
 
     // Parsing JSON fields
-    const parsedDestination = JSON.parse(destination);
     const parsedKeyHighlights = JSON.parse(keyHighlights);
     const parsedTourHighlights = JSON.parse(tourHighlights);
     const parsedTourItinerary = JSON.parse(tourItinerary);
@@ -100,8 +92,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       idealTime,
       cost,
       tourTypes,
-      destination: parsedDestination,
-      destinationPhoto: uploadedDestinationPhoto?.secure_url,
       tourOverview,
       keyHighlights: parsedKeyHighlights,
       tourHighlights: parsedTourHighlights,

@@ -37,7 +37,7 @@ const tourSchema = new Schema(
     country: { type: String, enum: ["Nepal", "Bhutan", "Tibet"], required: true },
     location: { type: String, required: true, trim: true },
     duration: { type: String, required: true, trim: true },
-    idealTime: { type: String, required: true, trim: true },
+    idealTime: { type: [String], required: true, trim: true },
     cost: { type: Number, required: true, min: 0 },
     tourTypes: { type: mongoose.Schema.Types.ObjectId, ref:"TourTypes"},
     tourOverview: { type: String, required: true, trim: true, minLength: 10 },
@@ -45,7 +45,7 @@ const tourSchema = new Schema(
     tourHighlights: {
       type: [
         {
-          highlightsTitle: { type: String, required: true, trim: true },
+          highlightsTitle: { type: String, trim: true },
           highlightPicture: { type: String, default: "" },
           _id:false
         }

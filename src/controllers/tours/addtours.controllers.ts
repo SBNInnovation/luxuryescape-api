@@ -29,9 +29,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourItinerary,
       faq,
       location,
-      country,
-      // isRecommend,
-      // isActivate,
+      country
     } = req.body;
 
       if (
@@ -76,10 +74,13 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
         : null;
 
     // Parsing JSON fields
+    const parsedIdealTime = JSON.parse(idealTime);
     const parsedKeyHighlights = JSON.parse(keyHighlights);
     const parsedTourHighlights = JSON.parse(tourHighlights);
     const parsedTourItinerary = JSON.parse(tourItinerary);
     const parsedFaq = JSON.parse(faq);
+    const parsedTourInclusion = JSON.parse(tourInclusion);
+
 
     // Creating the tour
     const createTour = await Tour.create({
@@ -89,14 +90,14 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       country,
       location,
       duration,
-      idealTime,
-      cost,
+      idealTime:parsedIdealTime,
+      cost:Number(cost),
       tourTypes,
       tourOverview,
       keyHighlights: parsedKeyHighlights,
       tourHighlights: parsedTourHighlights,
       highlightPicture: uploadedHighlightPicture?.secure_url,
-      tourInclusion,
+      tourInclusion:parsedTourInclusion,
       accommodation,
       tourItinerary: parsedTourItinerary,
       itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,

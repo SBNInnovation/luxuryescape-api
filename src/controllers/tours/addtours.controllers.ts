@@ -8,7 +8,7 @@ export interface MulterRequest extends Request {
   files?: {
     thumbnail?:Express.Multer.File[];
     gallery?: Express.Multer.File[];
-    highlightPicture?: Express.Multer.File[];
+    // highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
   };
 }
@@ -158,7 +158,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
      // Check for files in the request, but allow them to be optional
       const thumbnail = req?.files?.thumbnail ||[]; 
       const gallery = req?.files?.gallery || [];
-      const highlightPicture = req?.files?.highlightPicture || [];
+      // const highlightPicture = req?.files?.highlightPicture || [];
       const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
       
       // Upload files only if they are provided
@@ -169,9 +169,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       const uploadedGallery = gallery.length
         ? await Promise.all(gallery.map((file) => uploadFile(file?.path || "", "tours/gallery/images")))
         : [];
-      const uploadedHighlightPicture = highlightPicture.length
-        ? await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images")
-        : null;
+      // const uploadedHighlightPicture = highlightPicture.length
+      //   ? await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images")
+      //   : null;
       const uploadedItineraryDayPhoto = itineraryDayPhoto.length
         ? await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images")
         : null;
@@ -214,7 +214,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
           highlightPicture: "https://images.png"
         }
       ],
-      highlightPicture: uploadedHighlightPicture?.secure_url,
+      // highlightPicture: uploadedHighlightPicture?.secure_url,
       tourInclusion: parsedTourInclusion,
       tourItinerary: parsedTourItinerary,
       itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
@@ -229,7 +229,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     if(error instanceof(Error)){
       res.status(500).json({ success: false, message: error.message });
     }
-    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 

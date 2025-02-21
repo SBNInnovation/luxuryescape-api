@@ -161,42 +161,55 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       // const highlightPicture = req?.files?.highlightPicture || [];
       const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
       
-      // Upload files only if they are provided
       const uploadedThumbnail = thumbnail.length
       ? await uploadFile(thumbnail[0]?.path || "", "tours/thumbnail/images")
-      :null;
-
+      : null;
+      const uploadedThumbnailUrl = uploadedThumbnail ? uploadedThumbnail.secure_url : null;
+      
       const uploadedGallery = gallery.length
         ? await Promise.all(gallery.map((file) => uploadFile(file?.path || "", "tours/gallery/images")))
         : [];
-      // const uploadedHighlightPicture = highlightPicture.length
-      //   ? await uploadFile(highlightPicture[0]?.path || "", "tours/highlight/images")
-      //   : null;
+      const uploadedGalleryUrls = uploadedGallery.map(file => file?.secure_url);
+      
       const uploadedItineraryDayPhoto = itineraryDayPhoto.length
         ? await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images")
         : null;
+      const uploadedItineraryDayPhotoUrl = uploadedItineraryDayPhoto ? uploadedItineraryDayPhoto.secure_url : null;
+    
 
-    // JSON Parsing (with error handling)
-    const parseJsonSafe = (data: string, fieldName: string) => {
+    // Helper function to safely parse JSON or return the original value if it's already an array
+    const parseJsonSafe = (data: any, fieldName: string) => {
+      if (Array.isArray(data)) {
+        return data;  
+      }
+
       try {
-         JSON.parse(data);
+        return JSON.parse(data);  // Attempt to parse the string as JSON
       } catch (error) {
-         res.status(400).json({ success: false, message: `Invalid JSON format in ${fieldName}` });
+        res.status(400).json({ success: false, message: `Invalid JSON format in ${fieldName}` });
+        return [];  // Return empty array on error
       }
     };
 
     const parsedIdealTime = parseJsonSafe(idealTime, "idealTime");
     const parsedKeyHighlights = parseJsonSafe(keyHighlights, "keyHighlights");
-    // const parsedTourHighlights = parseJsonSafe(tourHighlights, "tourHighlights");
     const parsedTourItinerary = parseJsonSafe(tourItinerary, "tourItinerary");
     const parsedFaq = parseJsonSafe(faq, "faq");
     const parsedTourInclusion = parseJsonSafe(tourInclusion, "tourInclusion");
+
+
+    // const parsedIdealTime = parseJsonSafe(idealTime, "idealTime");
+    // const parsedKeyHighlights = parseJsonSafe(keyHighlights, "keyHighlights");
+    // // const parsedTourHighlights = parseJsonSafe(tourHighlights, "tourHighlights");
+    // const parsedTourItinerary = parseJsonSafe(tourItinerary, "tourItinerary");
+    // const parsedFaq = parseJsonSafe(faq, "faq");
+    // const parsedTourInclusion = parseJsonSafe(tourInclusion, "tourInclusion");
 
     // Create Tour
     const createTour = await Tour.create({
       tourName,
       slug: slugify(tourName, { lower: true }),
-      thumbnail: uploadedThumbnail,
+      thumbnail: uploadedThumbnailUrl,
       country,
       location,
       duration,
@@ -217,9 +230,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       // highlightPicture: uploadedHighlightPicture?.secure_url,
       tourInclusion: parsedTourInclusion,
       tourItinerary: parsedTourItinerary,
-      itineraryDayPhoto: uploadedItineraryDayPhoto?.secure_url,
+      itineraryDayPhoto: uploadedItineraryDayPhotoUrl,
       faq: parsedFaq,
-      gallery: uploadedGallery.map(file => file?.secure_url),
+      gallery: uploadedGalleryUrls,
     });
 
     res.status(201).json({ success: true, message: "Tour added successfully", createTour });

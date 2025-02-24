@@ -71,6 +71,7 @@ const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     // Verify if the OTP matches
     if (user.otp !== otp) {
       res.status(400).json({ success: false, message: "Invalid OTP" });
+      return
     }
 
     // Clear OTP after successful verification
@@ -84,14 +85,11 @@ const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ success: true, message: "OTP verified successfully", token: newPasswordToken });
     return
   } catch (error) {
-    console.error(error);
-    if(error instanceof(Error)){
-      res.status(500).json({ success: false, message: error.message });
-    }
+    console.error(error);  // Log the error to the console
+    res.status(500).json({ success: false, message: "Internal server error", error});
+    return
   }
 };
-
-export default verifyOtp;
 
 
 const generatePassword = async (req: Request, res: Response): Promise<void> => {

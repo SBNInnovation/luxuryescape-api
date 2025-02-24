@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Express } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
 import { uploadFile } from "../../utility/cloudinary.js";
+import slugify from "slugify";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -62,7 +63,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
     const filteredAccommodationPics = uploadedAccommodationPics.filter((url) => url !== null);
 
     // Generate slug from title
-    const slug = accommodationTitle.toLowerCase().replace(/\s+/g, "-");
+    const slug = slugify(accommodationTitle) ;
 
     // Create accommodation document
     const accommodation = await Accommodation.create({

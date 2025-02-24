@@ -320,7 +320,7 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
     }
 
     // Generate unique slug
-    const baseSlug = slugify(title)
+    const baseSlug = slugify(title,{ lower: true })
     let slug = baseSlug;
     let count = 1;
     while (await Blog.findOne({ slug })) {

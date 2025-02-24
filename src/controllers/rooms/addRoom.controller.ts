@@ -51,7 +51,7 @@ const addRoom = async(req:MulterRequest,res:Response):Promise<void> =>{
         const filteredRoomPhotos = uploadedRoomPhotos.filter((url) => url !== null);
 
         // Generate slug from title
-         const slug = slugify(roomTitle);
+         const slug = slugify(roomTitle,{ lower: true });
 
          const  checkExistingRoom = await Room.findOne({roomTitle:roomTitle});
          if(checkExistingRoom){

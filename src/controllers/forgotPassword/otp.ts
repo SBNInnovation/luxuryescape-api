@@ -41,45 +41,58 @@ const sendotp = async (req: Request, res: Response): Promise<void> => {
 };
 
 
+const verifyOtp = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { otp } = req.body;
+    const { fpwToken } = req.query;
 
-const verifyOtp = async(req:Request,res:Response):Promise<void> =>{
+    // Check if OTP and fpwToken are provided
+    if (!otp || !fpwToken || typeof fpwToken !== 'string') {
+      res.status(400).json({ success: false, message: "OTP and token are required" });
+      return
+    }
+
+    // Decode and verify the token
+    let decodedToken: JwtPayload;
     try {
-        const { otp } = req.body;
-        const { fpwToken } = req.query;
+      decodedToken = jwt.verify(fpwToken, process.env.FPW_SECRET_KEY as string) as JwtPayload;
+    } catch (error) {
+      res.status(401).json({ success: false, message: "Invalid or expired token" });
+      return
+    }
 
-        if (!otp || !fpwToken || typeof fpwToken !== 'string') {
-        res.status(400).json({ success: false, message: "OTP and token are required" });
-        return;
-        }
+    // Find user by email (decoded from the token)
+    const user = await Register.findOne({ email: decodedToken.email });
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return
+    }
 
-        let decodedToken: JwtPayload;
-        try {
-        decodedToken = jwt.verify(fpwToken, process.env.FPW_SECRET_KEY as string) as JwtPayload;
-        } catch (error) {
-        res.status(401).json({ success: false, message: "Invalid or expired token" });
-        return;
-        }
-        const user = await Register.findOne({ email: decodedToken.email });
-        if (!user) {
-        res.status(404).json({ success: false, message: "User not found" });
-        return;
-        }
+    // Verify if the OTP matches
+    if (user.otp !== otp) {
+      res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
 
-        if (user.otp !== otp) {
-        res.status(400).json({ success: false, message: "Invalid OTP" });
-        return;
-        }
+    // Clear OTP after successful verification
+    user.otp = "";
+    await user.save();
 
-        const newPasswordToken = jwt.sign({email:user.email},process.env.NEW_PASSWORD_KEY as string)
-        // Clear the OTP after successful verification
-        user.otp = "";
-        await user.save();
+    // Generate a new token for password reset
+    const newPasswordToken = jwt.sign({ email: user.email }, process.env.NEW_PASSWORD_KEY as string, { expiresIn: '1h' });
+    console.log(process.env.NEW_PASSWORD_KEY)
 
-        res.status(200).json({ success: true, message: "OTP verified successfully", token:newPasswordToken });
-        } catch (error) {
-            res.status(400).json({success:false, message:"Internal server error",error})
-        }
-}
+    // Send success response with new token
+    res.status(200).json({ success: true, message: "OTP verified successfully", token: newPasswordToken });
+  } catch (error) {
+    console.error(error);
+    if(error instanceof(Error)){
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+};
+
+export default verifyOtp;
+
 
 const generatePassword = async (req: Request, res: Response): Promise<void> => {
     try {

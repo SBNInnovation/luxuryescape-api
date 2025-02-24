@@ -4,6 +4,6 @@ import getAllRoom from "../../controllers/rooms/getAllRoom.controller.js";
 
 const getAllRoomRouter = express.Router();
 
-getAllRoomRouter.route("/accommodation/get-all-accommodation").get(getAllRoom)
+getAllRoomRouter.route("/room/get-all-room").get(getAllRoom)
 
 export default getAllRoomRouter;

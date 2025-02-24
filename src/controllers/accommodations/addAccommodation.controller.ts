@@ -63,7 +63,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
     const filteredAccommodationPics = uploadedAccommodationPics.filter((url) => url !== null);
 
     // Generate slug from title
-    const slug = slugify(accommodationTitle) ;
+    const slug = slugify(accommodationTitle,{ lower: true }) ;
 
     // Create accommodation document
     const accommodation = await Accommodation.create({

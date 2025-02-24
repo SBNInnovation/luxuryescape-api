@@ -70,11 +70,12 @@ const verifyOtp = async(req:Request,res:Response):Promise<void> =>{
         return;
         }
 
+        const newPasswordToken = jwt.sign({email:user.email},process.env.NEW_PASSWORD_KEY as string)
         // Clear the OTP after successful verification
         user.otp = "";
         await user.save();
 
-        res.status(200).json({ success: true, message: "OTP verified successfully" });
+        res.status(200).json({ success: true, message: "OTP verified successfully", token:newPasswordToken });
         } catch (error) {
             res.status(400).json({success:false, message:"Internal server error",error})
         }
@@ -83,16 +84,16 @@ const verifyOtp = async(req:Request,res:Response):Promise<void> =>{
 const generatePassword = async (req: Request, res: Response): Promise<void> => {
     try {
       const { password } = req.body;
-      const { fpwToken } = req.query;
+      const { token } = req.query;
   
-      if (!password || !fpwToken || typeof fpwToken !== 'string') {
+      if (!password || !token || typeof token !== 'string') {
         res.status(400).json({ success: false, message: "Password and token are required" });
         return;
       }
   
       let decodedToken: JwtPayload;
       try {
-        decodedToken = jwt.verify(fpwToken, process.env.FPW_SECRET_KEY as string) as JwtPayload;
+        decodedToken = jwt.verify(token, process.env.FPW_SECRET_KEY as string) as JwtPayload;
       } catch (error) {
         res.status(401).json({ success: false, message: "Invalid or expired token" });
         return;

@@ -79,10 +79,10 @@ const verifyOtp = async (req: Request, res: Response): Promise<void> => {
 
     // Generate a new token for password reset
     const newPasswordToken = jwt.sign({ email: user.email }, process.env.NEW_PASSWORD_KEY as string, { expiresIn: '1h' });
-    console.log(process.env.NEW_PASSWORD_KEY)
 
     // Send success response with new token
     res.status(200).json({ success: true, message: "OTP verified successfully", token: newPasswordToken });
+    return
   } catch (error) {
     console.error(error);
     if(error instanceof(Error)){

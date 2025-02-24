@@ -19,7 +19,7 @@ const sendotp = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const otp = generateOtp(6);
+    const otp = generateOtp(4);
     if (!otp) {
       res.status(500).json({ success: false, message: "Failed to generate OTP" });
       return;

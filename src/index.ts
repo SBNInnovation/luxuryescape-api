@@ -59,7 +59,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 
 app.use(
     cors({
-      origin: ["http://localhost:3000", "https://luxuryescape-admin.vercel.app"],
+      origin: ["http://localhost:3000", "https://luxuryescape-admin.vercel.app", "https://luxuryescape-frontend.vercel.app"],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
       credentials: true, // Allow cookies
     })

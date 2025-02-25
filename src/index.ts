@@ -37,6 +37,7 @@ import updateBlogStatusRouter from "./routes/blog.routes/updateStatus.routes.js"
 import addRoomRouter from "./routes/room.routes/addRoom.routes.js";
 import getAllRoomRouter from "./routes/room.routes/getAllRoom.routes.js";
 import getAllAccommodationWithRoomRouter from "./routes/accommodation.routes/getAllAccommodationWithRoom.routes.js";
+import getSpecificAccommodationWithRoomRouter from "./routes/accommodation.routes/getSpecificAccommodationWithRoom.routes.js";
 
 const app = express();
 
@@ -91,6 +92,7 @@ app.use(
     getAllAccommodationRouter,
     getSpecificAccommodationRouter,
     getAllAccommodationWithRoomRouter,
+    getSpecificAccommodationWithRoomRouter,
 
     //for blogs
     addBlogRouter,

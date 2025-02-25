@@ -29,7 +29,7 @@ const getAllTours = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const totalTours = await Tour.countDocuments(query); // Count only filtered tours
+    const totalTours = await Tour.countDocuments(query); 
 
     res.status(200).json({
       success: true,

@@ -3,12 +3,12 @@ import Tour from "../../models/tours.models/tours.js";
 
 const getSpecifictour = async(req:Request,res:Response):Promise<void> =>{
     try {
-        const tourId = req.params.tourId;
-        if(!tourId){
-             res.status(404).json({success:false, message:"tourId is required"});
+        const slug = req.params.slug;
+        if(!slug){
+             res.status(404).json({success:false, message:"slug is required"});
              return
         }
-        const specificTour = await Tour.findById(tourId);
+        const specificTour = await Tour.findOne({slug});
         if(!specificTour){
              res.status(404).json({success:false, message:"tour not found"});
              return

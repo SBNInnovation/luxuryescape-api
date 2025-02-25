@@ -3,6 +3,6 @@ import getSpecifictour from "../../controllers/tours/getSpecifictour.controller.
 
 const getSpecifictourRouter = express.Router();
 
-getSpecifictourRouter.route("/get-specific-tour/:tourId").get(getSpecifictour)
+getSpecifictourRouter.route("/tour/specific/:slug").get(getSpecifictour)
 
 export default getSpecifictourRouter;

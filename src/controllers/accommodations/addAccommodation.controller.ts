@@ -93,6 +93,94 @@
 
 
 
+// import { Request, Response } from "express";
+// import { Express } from "express";
+// import Accommodation from "../../models/accommodation.models/Accommodation.js";
+// import slugify from "slugify";
+
+// // Add Multer types for file fields
+// export interface MulterRequest extends Request {
+//   files?: {
+//     accommodationPics?: Express.Multer.File[];
+//   };
+// }
+
+// const addAccommodation = async (req: MulterRequest, res: Response): Promise<void> => {
+//   try {
+//     const {
+//       accommodationTitle,
+//       accommodationLocation,
+//       accommodationRating,
+//       accommodationDescription,
+//       accommodationFeatures,
+//       accommodationAmenities,
+//     } = req.body;
+
+//     // Validate required fields
+//     if (!accommodationTitle || !accommodationLocation || !accommodationRating || !accommodationDescription) {
+//       res.status(400).json({ success: false, message: "Missing required fields." });
+//       return;
+//     }
+
+//     // Parse JSON fields if they come as strings
+//     const parsedAccommodationAmenities = typeof accommodationAmenities === "string"
+//       ? JSON.parse(accommodationAmenities)
+//       : accommodationAmenities || [];
+
+//     const parsedAccommodationFeatures = typeof accommodationFeatures === "string"
+//       ? JSON.parse(accommodationFeatures)
+//       : accommodationFeatures || [];
+
+//     if (!Array.isArray(parsedAccommodationAmenities) || !Array.isArray(parsedAccommodationFeatures)) {
+//       res.status(400).json({ success: false, message: "Features, amenities, and rooms must be arrays." });
+//       return;
+//     }
+
+//     // Handle file uploads using Multer
+//     const accommodationPics = req?.files?.accommodationPics || [];
+
+//     // If no pictures were uploaded, send a default response or handle it
+//     if (accommodationPics.length === 0) {
+//       res.status(400).json({ success: false, message: "No accommodation pictures uploaded." });
+//       return;
+//     }
+
+//     // Store file paths locally or process as needed
+//     const savedAccommodationPics = accommodationPics.map((file) => file.path); // File paths will be stored locally
+
+//     // Generate slug from title
+//     const slug = slugify(accommodationTitle, { lower: true });
+
+//     // Create accommodation document
+//     const accommodation = await Accommodation.create({
+//       accommodationTitle,
+//       slug,
+//       accommodationLocation,
+//       accommodationRating,
+//       accommodationDescription,
+//       accommodationFeatures: parsedAccommodationFeatures,
+//       accommodationAmenities: parsedAccommodationAmenities,
+//       accommodationPics: savedAccommodationPics, // Save the file paths here
+//     });
+
+//     if (!accommodation) {
+//       res.status(500).json({ success: false, message: "Failed to create accommodation." });
+//       return;
+//     }
+
+//     res.status(201).json({ success: true, message: "Accommodation created successfully", data: accommodation });
+//   } catch (error) {
+//     console.error("Error creating accommodation:", error);
+//     res.status(500).json({ success: false, message: "Internal Server Error." });
+//   }
+// };
+
+// export default addAccommodation;
+
+
+
+
+
 import { Request, Response } from "express";
 import { Express } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
@@ -145,8 +233,8 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       return;
     }
 
-    // Store file paths locally or process as needed
-    const savedAccommodationPics = accommodationPics.map((file) => file.path); // File paths will be stored locally
+    // Save only the relative file paths (URLs) for the images
+    const savedAccommodationPics = accommodationPics.map((file) => `/uploads/accommodation/${file.filename}`);
 
     // Generate slug from title
     const slug = slugify(accommodationTitle, { lower: true });
@@ -160,7 +248,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       accommodationDescription,
       accommodationFeatures: parsedAccommodationFeatures,
       accommodationAmenities: parsedAccommodationAmenities,
-      accommodationPics: savedAccommodationPics, // Save the file paths here
+      accommodationPics: savedAccommodationPics, // Save the relative file paths here
     });
 
     if (!accommodation) {
@@ -176,6 +264,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
 };
 
 export default addAccommodation;
+
 
 
 

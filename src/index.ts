@@ -52,7 +52,8 @@ app.use(urlencoded({extended:true}))
 app.use(cookieParser())
 
 // Middleware to serve static files (make uploaded images accessible)
-app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
+// Serve static files from the "public" directory
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 // app.use(cors({
 //     origin: ["http://localhost:3000","https://luxuryescape-admin.vercel.app"],
 //     methods: ["GET", "POST", "PUT","PATCH", "DELETE"],

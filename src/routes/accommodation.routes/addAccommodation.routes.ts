@@ -125,7 +125,7 @@ const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
 // Define the absolute upload path
-const uploadPath = path.resolve(process.cwd(), "public/uploads/accommodation");
+const uploadPath = path.resolve("public/uploads/accommodation");
 
 // Log the resolved upload path for debugging
 console.log("Resolved Upload Path:", uploadPath);

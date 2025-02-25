@@ -102,7 +102,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
 
 
     // // const parsedTourHighlights = parseJsonSafe(tourHighlights, "tourHighlights");
-    const checkExistingTour = await Tour.findOne(tourName)
+    const checkExistingTour = await Tour.findOne({tourName})
     if (checkExistingTour) {
       res.status(400).json({ success: false, message: "Tour already exists" });
       return;

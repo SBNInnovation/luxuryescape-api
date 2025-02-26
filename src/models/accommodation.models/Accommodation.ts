@@ -11,6 +11,12 @@ const accommodationDetailsSchema = new Schema({
   accommodationDescription: { type: String, required: true, trim: true, minLength: 10 },
   accommodationFeatures: { type: [String], default: [] },
   accommodationAmenities: { type: [String], default: [] },
+  policies :{
+    checkInTime : {type : String},
+    checkOutTime : {type : String},
+    cancellationPolicy : {type : String},
+    pets: {type: String}
+  }
 },{
   timestamps:true
 });

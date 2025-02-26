@@ -38,6 +38,7 @@ import addRoomRouter from "./routes/room.routes/addRoom.routes.js";
 import getAllRoomRouter from "./routes/room.routes/getAllRoom.routes.js";
 import getAllAccommodationWithRoomRouter from "./routes/accommodation.routes/getAllAccommodationWithRoom.routes.js";
 import getSpecificAccommodationWithRoomRouter from "./routes/accommodation.routes/getSpecificAccommodationWithRoom.routes.js";
+import addContactRouter from "./routes/contact.routes/addContact.routes.js";
 
 const app = express();
 
@@ -105,7 +106,10 @@ app.use(
 
     //for Rooms,
     addRoomRouter,
-    getAllRoomRouter
+    getAllRoomRouter,
+
+    //for contact
+    addContactRouter
 )
 
 

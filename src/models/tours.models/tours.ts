@@ -41,12 +41,12 @@ const tourSchema = new Schema(
     cost: { type: Number, required: true, min: 0 },
     tourTypes: { type: mongoose.Schema.Types.ObjectId, ref:"TourTypes"},
     tourOverview: { type: String, required: true, trim: true, minLength: 10 },
-    keyHighlights: { type: [
-                    {
-                      content: { type: String, required: true, trim: true },
-                      links: { type: [linksSchema], default: [] }
-                    }
-                  ], default: [] },
+    // keyHighlights: { type: [
+    //                 {
+    //                   content: { type: String, required: true, trim: true },
+    //                   links: { type: [linksSchema], default: [] }
+    //                 }
+    //               ], default: [] },
     tourHighlights: {
       type: [
         {

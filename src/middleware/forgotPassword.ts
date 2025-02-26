@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   
   export function sendOtpEmail(to: string, otp: string) {
     const mailOptions = {
-      from: process.env.EMAIL as string,
+      from:`LUX <${process.env.EMAIL as string}>`,
       to: to,
       subject: 'Your OTP Code',
       text: `Your OTP code is ${otp}`,

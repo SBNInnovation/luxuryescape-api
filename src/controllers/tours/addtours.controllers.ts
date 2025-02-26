@@ -74,9 +74,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       const uploadedGalleryUrls = uploadedGallery.map(file => file?.secure_url);
       
       const uploadedItineraryDayPhoto = itineraryDayPhoto.length
-        ? await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images")
-        : null;
-      const uploadedItineraryDayPhotoUrl = uploadedItineraryDayPhoto ? uploadedItineraryDayPhoto.secure_url : null;
+      ? await Promise.all(itineraryDayPhoto.map((file) => uploadFile(file?.path || "", "tours/gallery/images")))
+      : [];
+      const uploadedItineraryDayPhotoUrl = uploadedItineraryDayPhoto.map(file => file?.secure_url);
 
       const uploadedHighlightPicture = highlightPicture.length? 
       await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "tours/highlightPicture/images"))):[];

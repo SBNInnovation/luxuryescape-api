@@ -20,7 +20,6 @@ const itineraryDetailsSchema = new Schema(
     day: { type: String, required: true, trim:true }, 
     title: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true, minLength: 10 },
-    itineraryDayPhoto: { type: String, default: "" },
     accommodation: [{ type: mongoose.Schema.Types.ObjectId, ref: "Accommodation" }],
     links: { type: [linksSchema], default: [] },
   },
@@ -59,6 +58,7 @@ const tourSchema = new Schema(
     },
     tourInclusion: { type: [String], default: [] },
     tourItinerary: { type: [itineraryDetailsSchema], default: [] },
+    itineraryDayPhoto: { type: [String], default: [] },
     faq: {
       type: [
         {

@@ -39,6 +39,8 @@ import getAllRoomRouter from "./routes/room.routes/getAllRoom.routes.js";
 import getAllAccommodationWithRoomRouter from "./routes/accommodation.routes/getAllAccommodationWithRoom.routes.js";
 import getSpecificAccommodationWithRoomRouter from "./routes/accommodation.routes/getSpecificAccommodationWithRoom.routes.js";
 import addContactRouter from "./routes/contact.routes/addContact.routes.js";
+import getSelectedDataRouter from "./routes/tours.routes/getSelectedData.routes.js";
+import getSelectedAccommodationDataRouter from "./routes/accommodation.routes/getSelectedAccomodationData.routes.js";
 
 const app = express();
 
@@ -62,7 +64,7 @@ app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 app.use(
     cors({
-      origin: ["http://localhost:3000", "https://luxuryescape-admin.vercel.app", "https://luxuryescape-frontend.vercel.app"],
+      origin: ["http://localhost:3000", "https://luxuryescape-admin.vercel.app", "https://www.nepalluxuryescapes.com"],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
       credentials: true, // Allow cookies
     })
@@ -82,6 +84,7 @@ app.use(
     getActivateTourRouter,
     getRecommendTourRouter,
     getSpecifictourRouter,
+    getSelectedDataRouter,
 
     //for tourtypes
     addTourTypesRouter,
@@ -95,6 +98,7 @@ app.use(
     getSpecificAccommodationRouter,
     getAllAccommodationWithRoomRouter,
     getSpecificAccommodationWithRoomRouter,
+    getSelectedAccommodationDataRouter,
 
     //for blogs
     addBlogRouter,

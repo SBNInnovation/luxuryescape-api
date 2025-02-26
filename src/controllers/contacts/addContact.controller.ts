@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import Contact from "../../models/contact.models/contact.js";
 import nodemailer from "nodemailer";
 
 const addContact = async (req: Request, res: Response): Promise<void> => {
@@ -8,13 +7,6 @@ const addContact = async (req: Request, res: Response): Promise<void> => {
 
         if (!name || !email || !number || !message) {
             res.status(400).json({ success: false, message: "Please fill all fields." });
-            return;
-        }
-
-        const contact = await Contact.create({ name, email, number, message });
-
-        if (!contact) {
-            res.status(400).json({ success: false, message: "Failed to add contact." });
             return;
         }
 
@@ -59,7 +51,7 @@ const addContact = async (req: Request, res: Response): Promise<void> => {
                 return;
             }
             console.log("Email sent: " + info.response);
-            res.status(200).json({ success: true, message: "Contact added successfully.", data: contact });
+            res.status(200).json({ success: true, message: "Contact added successfully."});
         });
 
     } catch (error) {

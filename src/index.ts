@@ -41,6 +41,12 @@ import getSpecificAccommodationWithRoomRouter from "./routes/accommodation.route
 import addContactRouter from "./routes/contact.routes/addContact.routes.js";
 import getSelectedDataRouter from "./routes/tours.routes/getSelectedData.routes.js";
 import getSelectedAccommodationDataRouter from "./routes/accommodation.routes/getSelectedAccomodationData.routes.js";
+import addQuoteRouter from "./routes/qoute.routes/addQuote.routes.js";
+import getAllQuoteRouter from "./routes/qoute.routes/getAllQuote.routes.js";
+import getSpecificQuoteRouter from "./routes/qoute.routes/getSpecificQuote.routes.js";
+import replyQuoteRouter from "./routes/qoute.routes/replyQuote.routes.js";
+import deleteQuoteRouter from "./routes/qoute.routes/deleteQuote.routes.js";
+import deleteAllQuoteRouter from "./routes/qoute.routes/deleteAllQuote.routes.js";
 
 const app = express();
 
@@ -48,7 +54,7 @@ const app = express();
 // Connect to database
 dbConnection();
 
-const port = process.env.PORT || 4000;  // Use PORT from .env or default to 4000
+const port = process.env.PORT || 4000; 
 
 app.use(express.json());
 app.use(urlencoded({extended:true}))
@@ -57,10 +63,6 @@ app.use(cookieParser())
 // Middleware to serve static files (make uploaded images accessible)
 // Serve static files from "public/uploads" directory
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
-// app.use(cors({
-//     origin: ["http://localhost:3000","https://luxuryescape-admin.vercel.app"],
-//     methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
-// }))
 
 app.use(
     cors({
@@ -113,7 +115,15 @@ app.use(
     getAllRoomRouter,
 
     //for contact
-    addContactRouter
+    addContactRouter,
+
+    //for quote
+    addQuoteRouter,
+    getAllQuoteRouter,
+    getSpecificQuoteRouter,
+    replyQuoteRouter,
+    deleteQuoteRouter,
+    deleteAllQuoteRouter
 )
 
 

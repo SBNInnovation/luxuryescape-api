@@ -19,6 +19,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       accommodationDescription,
       accommodationFeatures,
       accommodationAmenities,
+      policies
     } = req.body;
 
     // Validate required fields
@@ -35,6 +36,9 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
     const parsedAccommodationFeatures = typeof accommodationFeatures === "string"
       ? JSON.parse(accommodationFeatures)
       : accommodationFeatures || [];
+
+      const parsedPolicies = typeof policies === "string" ?
+      JSON.parse(policies) : policies || {};
 
     if (!Array.isArray(parsedAccommodationAmenities) || !Array.isArray(parsedAccommodationFeatures)) {
       res.status(400).json({ success: false, message: "Features, amenities, and rooms must be arrays." });
@@ -75,6 +79,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       accommodationFeatures: parsedAccommodationFeatures,
       accommodationAmenities: parsedAccommodationAmenities,
       accommodationPics: filteredAccommodationPics,
+      policies: parsedPolicies
     });
 
     if (!accommodation) {

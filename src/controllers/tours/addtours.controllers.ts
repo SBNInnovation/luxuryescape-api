@@ -8,7 +8,7 @@ export interface MulterRequest extends Request {
   files?: {
     thumbnail?:Express.Multer.File[];
     gallery?: Express.Multer.File[];
-    // highlightPicture?: Express.Multer.File[];
+    highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
   };
 }
@@ -22,8 +22,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       cost,
       tourTypes,
       tourOverview,
-      keyHighlights,
-      // tourHighlights,
+      tourHighlights,
       tourInclusion,
       tourItinerary,
       faq,
@@ -39,9 +38,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     if (!cost) missingFields.push("cost");
     if (!tourTypes) missingFields.push("tourTypes");
     if (!tourOverview) missingFields.push("tourOverview");
-    if (!keyHighlights) missingFields.push("keyHighlights");
+    // if (!keyHighlights) missingFields.push("keyHighlights");
     if (!tourInclusion) missingFields.push("tourInclusion");
-    // if (!tourHighlights) missingFields.push("tourHighlights");
+    if (!tourHighlights) missingFields.push("tourHighlights");
     if (!tourItinerary) missingFields.push("tourItinerary");
     if (!faq) missingFields.push("faq");
     if (!location) missingFields.push("location");
@@ -61,7 +60,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
      // Check for files in the request, but allow them to be optional
       const thumbnail = req?.files?.thumbnail ||[]; 
       const gallery = req?.files?.gallery || [];
-      // const highlightPicture = req?.files?.highlightPicture || [];
+      const highlightPicture = req?.files?.highlightPicture || [];
       const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
       
       const uploadedThumbnail = thumbnail.length
@@ -78,6 +77,11 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
         ? await uploadFile(itineraryDayPhoto[0]?.path || "", "tours/itinerary/images")
         : null;
       const uploadedItineraryDayPhotoUrl = uploadedItineraryDayPhoto ? uploadedItineraryDayPhoto.secure_url : null;
+
+      const uploadedHighlightPicture = highlightPicture.length? 
+      await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "tours/highlightPicture/images"))):[];
+
+      const uploadedHighlightPictureUrls = uploadedHighlightPicture.map(file => file?.secure_url);
     
 
     // Helper function to safely parse JSON or return the original value if it's already an array
@@ -95,13 +99,12 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     };
 
     const parsedIdealTime = parseJsonSafe(idealTime, "idealTime");
-    const parsedKeyHighlights = parseJsonSafe(keyHighlights, "keyHighlights");
+    // const parsedKeyHighlights = parseJsonSafe(keyHighlights, "keyHighlights");
     const parsedTourItinerary = parseJsonSafe(tourItinerary, "tourItinerary");
     const parsedFaq = parseJsonSafe(faq, "faq");
     const parsedTourInclusion = parseJsonSafe(tourInclusion, "tourInclusion");
+    const parsedTourHighlights = parseJsonSafe(tourHighlights, "tourHighlights");
 
-
-    // // const parsedTourHighlights = parseJsonSafe(tourHighlights, "tourHighlights");
     const checkExistingTour = await Tour.findOne({tourName})
     if (checkExistingTour) {
       res.status(400).json({ success: false, message: "Tour already exists" });
@@ -120,17 +123,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       cost: Number(cost),
       tourTypes,
       tourOverview,
-      keyHighlights: parsedKeyHighlights,
-      tourHighlights: [
-        {
-          highlightsTitle: "Hello",
-          highlightPicture: "https://images.png"
-        },{
-          highlightsTitle: "World",
-          highlightPicture: "https://images.png"
-        }
-      ],
-      // highlightPicture: uploadedHighlightPicture?.secure_url,
+      // keyHighlights: parsedKeyHighlights,
+      tourHighlights: parsedTourHighlights,
+      highlightPicture: uploadedHighlightPictureUrls,
       tourInclusion: parsedTourInclusion,
       tourItinerary: parsedTourItinerary,
       itineraryDayPhoto: uploadedItineraryDayPhotoUrl,
@@ -138,7 +133,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       gallery: uploadedGalleryUrls,
     });
 
-    res.status(201).json({ success: true, message: "Tour added successfully", createTour });
+    res.status(201).json({ success: true, message: "Tour added successfully", data:createTour });
 
   } catch (error) {
     console.error("Error adding tour:", error);

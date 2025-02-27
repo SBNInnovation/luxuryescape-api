@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import nodemailer from "nodemailer";
 import TailorMade from "../../models/tailor-made.models/tailor-made.js";
 
 const addTailormade = async (req: Request, res: Response): Promise<void> => {
@@ -30,21 +31,23 @@ const addTailormade = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        const parsedDreamDestination = dreamDestination? JSON.parse(dreamDestination) : [];
-        const parsedTransportationPreferences = transportationPreferences? JSON.parse(transportationPreferences) : []
+        const parsedDreamDestination = dreamDestination ? JSON.parse(dreamDestination) : [];
+        const parsedTransportationPreferences = transportationPreferences ? JSON.parse(transportationPreferences) : [];
 
         if (!Array.isArray(parsedDreamDestination) || !Array.isArray(parsedTransportationPreferences)) {
             res.status(400).json({ success: false, message: "dreamDestination and transportationPreferences must be arrays" });
             return;
         }
 
+        // Create a new tailor-made travel document
         const tailorMadeRequest = new TailorMade({
             firstName,
             lastName,
             email,
             phone,
             country,
-            dreamDestination : parsedDreamDestination,
+            dreamDestination: parsedDreamDestination,
+            // dreamDestination,
             fixedDates,
             flexibleDates,
             travelDuration,
@@ -52,7 +55,8 @@ const addTailormade = async (req: Request, res: Response): Promise<void> => {
             experienceLevel,
             hotelStandard,
             hotelBrandPreference,
-            transportationPreferences : parsedTransportationPreferences,
+            transportationPreferences: parsedTransportationPreferences,
+            // transportationPreferences,
             mealPreferences,
             budget,
             dreamExperience
@@ -60,7 +64,46 @@ const addTailormade = async (req: Request, res: Response): Promise<void> => {
 
         await tailorMadeRequest.save();
 
-        res.status(201).json({ success: true, message: "Tailor-made request created successfully", data: tailorMadeRequest });
+        // Send email notification to Admin
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL as string, // Admin email
+                pass: process.env.PASSWORD as string
+            }
+        });
+
+        const mailOptions = {
+            from: `Nepal Luxury Escapes <${process.env.EMAIL}>`,
+            to: process.env.EMAIL,
+            subject: "New Tailor-Made Travel Request Received",
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border-radius: 10px; background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); border-left: 6px solid #E8B86D;">
+                    <h2 style="color: #333; text-align: center; border-bottom: 2px solid #E8B86D; padding-bottom: 10px;">New Tailor-Made Request</h2>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Client Name:</strong> ${firstName} ${lastName}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Email:</strong> ${email}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Phone:</strong> ${phone}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Country:</strong> ${country}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Dream Destination:</strong> ${parsedDreamDestination.join(", ")}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Travel Duration:</strong> ${travelDuration} days</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Travelers:</strong> Adults: ${travelers.adults}, Children: ${travelers.children}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Experience Level:</strong> ${experienceLevel}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Hotel Standard:</strong> ${hotelStandard}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Hotel Brand Preference:</strong> ${hotelBrandPreference}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Transportation Preferences:</strong> ${parsedTransportationPreferences.join(", ")}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Meal Preferences:</strong> ${mealPreferences}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Budget:</strong> ${budget}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Dream Experience:</strong> ${dreamExperience}</p>
+                    <p style="font-size: 16px; color: #777; margin-top: 10px;">
+                        <i>Please respond to the client as soon as possible.</i>
+                    </p>
+                </div>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.status(201).json({ success: true, message: "Tailor-made request created and email sent to admin.", data: tailorMadeRequest });
 
     } catch (error) {
         console.error("Error creating tailor-made request:", error);

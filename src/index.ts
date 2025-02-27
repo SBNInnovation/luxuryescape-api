@@ -49,6 +49,7 @@ import deleteQuoteRouter from "./routes/qoute.routes/deleteQuote.routes.js";
 import deleteAllQuoteRouter from "./routes/qoute.routes/deleteAllQuote.routes.js";
 import getToursByDestinationRouter from "./routes/tours.routes/getToursByDestination.routes.js";
 import addTailormadeRouter from "./routes/tailor-made.routes/addTailorMade.routes.js";
+import getAllTailormadeRouter from "./routes/tailor-made.routes/getAllTailor.routes.js";
 
 const app = express();
 
@@ -129,7 +130,8 @@ app.use(
     deleteAllQuoteRouter,
 
     //for tailor-made
-    addTailormadeRouter
+    addTailormadeRouter,
+    getAllTailormadeRouter
 )
 
 

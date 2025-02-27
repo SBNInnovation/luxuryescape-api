@@ -34,7 +34,8 @@ const tailorMadeSchema = new Schema({
     transportationPreferences: { type: [String], default: [] },
     mealPreferences: { type: String },
     budget: { type: String, required: true },
-    dreamExperience: { type: String, default: "" }
+    dreamExperience: { type: String, default: "" },
+    status:{type:String, default:"pending"}
 },{
     timestamps:true
 });

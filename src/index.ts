@@ -52,6 +52,7 @@ import addTailormadeRouter from "./routes/tailor-made.routes/addTailorMade.route
 import getAllTailormadeRouter from "./routes/tailor-made.routes/getAllTailor.routes.js";
 import getSpecificTailorRouter from "./routes/tailor-made.routes/getAllTailormade.routes.js";
 import replyTailerRouter from "./routes/tailor-made.routes/replyTailorMade.routes.js";
+import deleteTailorRouter from "./routes/tailor-made.routes/deleteSpecificTailor.routes.js";
 
 const app = express();
 
@@ -135,7 +136,8 @@ app.use(
     addTailormadeRouter,
     getAllTailormadeRouter,
     getSpecificTailorRouter,
-    replyTailerRouter
+    replyTailerRouter,
+    deleteTailorRouter
 )
 
 

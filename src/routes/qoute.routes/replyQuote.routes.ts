@@ -1,10 +1,16 @@
 import express from "express";
 import replyToClient from "../../controllers/customizeQuotes/replyQuote.controller.js";
 
-
 const replyQuoteRouter = express.Router();
 
-// Route for admin to reply to client
-replyQuoteRouter.post("/quote/reply-to-client", replyToClient);
+import multer from "multer";
 
-export default replyQuoteRouter;
+// Configure storage (memory storage for buffer)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// Apply middleware to your route
+replyQuoteRouter.post("/quote/reply-to-client", upload.single("attachments"), replyToClient);
+
+
+export default replyQuoteRouter

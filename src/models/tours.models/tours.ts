@@ -7,8 +7,7 @@ const linksSchema = new Schema(
     value: {
       type: String,
       required: true,
-      trim: true,
-      // match: /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]+)*\/?$/,
+      trim: true
     },
   },
   { _id: false }  
@@ -31,6 +30,7 @@ const tourSchema = new Schema(
   {
     tourName: { type: String, required: true, trim: true},
     slug: { type: String, required: true, unique: true, lowercase: true },
+    type:{type:String, default:"tour"},
     thumbnail: { type: String, default: "" },
     gallery: { type: [String], default: [] },
     country: { type: String, enum: ["Nepal", "Bhutan", "Tibet"], required: true },
@@ -40,22 +40,8 @@ const tourSchema = new Schema(
     cost: { type: Number, required: true, min: 0 },
     tourTypes: { type: mongoose.Schema.Types.ObjectId, ref:"TourTypes"},
     tourOverview: { type: String, required: true, trim: true, minLength: 10 },
-    // keyHighlights: { type: [
-    //                 {
-    //                   content: { type: String, required: true, trim: true },
-    //                   links: { type: [linksSchema], default: [] }
-    //                 }
-    //               ], default: [] },
-    tourHighlights: {
-      type: [
-        {
-          highlightsTitle: { type: String, trim: true },
-          highlightPicture: { type: String, default: "" },
-          _id:false
-        }
-      ],
-      default: [],
-    },
+    tourHighlights: {type: [String], trim: true, default: [] },
+    highlightPicture:{type:[String],default:[]},
     tourInclusion: { type: [String], default: [] },
     tourItinerary: { type: [itineraryDetailsSchema], default: [] },
     itineraryDayPhoto: { type: [String], default: [] },

@@ -50,8 +50,8 @@ const addTourRouter = express.Router();
 const upload = [
   { name:"thumbnail",maxCount:1},
   { name: "gallery", maxCount: 5 }, 
-  // { name: "highlightPicture", maxCount: 1 },
-  { name: "itineraryDayPhoto", maxCount: 1 },
+  { name: "highlightPicture", maxCount: 10 },
+  { name: "itineraryDayPhoto"}
 ];
 
 

@@ -10,7 +10,6 @@ const replyToClient = async (req: Request, res: Response): Promise<void> => {
                 return;
             }
 
-            console.log(req.body)
 
             // Email Configuration
             const transporter = nodemailer.createTransport({
@@ -23,8 +22,9 @@ const replyToClient = async (req: Request, res: Response): Promise<void> => {
 
             // Attachment setup
             const attachments = req.file
-                ? [{ filename: req.file.originalname, content: req.file.buffer }]
-                : [];
+            ? [{ filename: req.file.originalname, content: req.file.buffer }]
+            : [];
+    
 
             const mailOptions = {
                 from: `Nepal Luxury Escapes <${process.env.EMAIL}>`,

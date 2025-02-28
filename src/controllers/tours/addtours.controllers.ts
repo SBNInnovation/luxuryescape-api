@@ -38,7 +38,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     if (!cost) missingFields.push("cost");
     if (!tourTypes) missingFields.push("tourTypes");
     if (!tourOverview) missingFields.push("tourOverview");
-    // if (!keyHighlights) missingFields.push("keyHighlights");
     if (!tourInclusion) missingFields.push("tourInclusion");
     if (!tourHighlights) missingFields.push("tourHighlights");
     if (!tourItinerary) missingFields.push("tourItinerary");
@@ -99,7 +98,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     };
 
     const parsedIdealTime = parseJsonSafe(idealTime, "idealTime");
-    // const parsedKeyHighlights = parseJsonSafe(keyHighlights, "keyHighlights");
     const parsedTourItinerary = parseJsonSafe(tourItinerary, "tourItinerary");
     const parsedFaq = parseJsonSafe(faq, "faq");
     const parsedTourInclusion = parseJsonSafe(tourInclusion, "tourInclusion");
@@ -123,7 +121,6 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       cost: Number(cost),
       tourTypes,
       tourOverview,
-      // keyHighlights: parsedKeyHighlights,
       tourHighlights: parsedTourHighlights,
       highlightPicture: uploadedHighlightPictureUrls,
       tourInclusion: parsedTourInclusion,

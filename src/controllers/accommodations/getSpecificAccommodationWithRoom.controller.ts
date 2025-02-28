@@ -8,7 +8,7 @@ const getSpecificAccommodation = async (req: Request, res: Response): Promise<vo
     // Find accommodation by slug and populate related rooms
     const accommodation = await Accommodation.aggregate([
       {
-        $match: { slug }, // Match accommodation by slug (string)
+        $match: { slug }, 
       },
       {
         $lookup: {

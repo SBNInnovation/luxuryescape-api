@@ -75,7 +75,7 @@ const addTailormade = async (req: Request, res: Response): Promise<void> => {
 
         const mailOptions = {
             from: `Nepal Luxury Escapes <${process.env.EMAIL}>`,
-            to: process.env.EMAIL,
+            to: process.env.EMAIL, // Send email to Admin
             subject: "New Tailor-Made Travel Request Received",
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border-radius: 10px; background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); border-left: 6px solid #E8B86D;">
@@ -89,18 +89,20 @@ const addTailormade = async (req: Request, res: Response): Promise<void> => {
                     <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Travelers:</strong> Adults: ${travelers.adults}, Children: ${travelers.children}</p>
                     <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Experience Level:</strong> ${experienceLevel}</p>
                     <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Hotel Standard:</strong> ${hotelStandard}</p>
-                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Hotel Brand Preference:</strong> ${hotelBrandPreference}</p>
+                    <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Hotel Brand Preference:</strong> ${hotelBrandPreference || "Not specified"}</p>
                     <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Transportation Preferences:</strong> ${parsedTransportationPreferences.join(", ")}</p>
                     <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Meal Preferences:</strong> ${mealPreferences}</p>
                     <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Budget:</strong> ${budget}</p>
                     <p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Dream Experience:</strong> ${dreamExperience}</p>
+                    ${flexibleDates ? `<p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Flexible Dates:</strong> ${flexibleDates}</p>` : ""}
+                    ${fixedDates ? `<p style="font-size: 16px; color: #444; line-height: 1.6;"><strong>Fixed Dates:</strong> ${fixedDates}</p>` : ""}
                     <p style="font-size: 16px; color: #777; margin-top: 10px;">
                         <i>Please respond to the client as soon as possible.</i>
                     </p>
                 </div>
             `
         };
-
+        
         await transporter.sendMail(mailOptions);
 
         res.status(201).json({ success: true, message: "Tailor-made request created and email sent to admin.", data: tailorMadeRequest });

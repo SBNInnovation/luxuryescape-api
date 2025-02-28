@@ -11,7 +11,6 @@ const replyToClient = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Fetch the user by email and update the status
         const updateStatus = await CustomizeQuote.findOne({ email });
 
         if (!updateStatus) {
@@ -20,9 +19,8 @@ const replyToClient = async (req: Request, res: Response): Promise<void> => {
         }
 
         updateStatus.status = "mailed";
-        await updateStatus.save(); // Save the updated status
+        await updateStatus.save(); 
 
-        // Email Configuration
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -31,7 +29,7 @@ const replyToClient = async (req: Request, res: Response): Promise<void> => {
             },
         });
 
-        // Attachment setup (if using multer for file uploads)
+
         const attachments = req.file
             ? [{ filename: req.file.originalname, content: req.file.buffer }]
             : [];

@@ -5,7 +5,9 @@ import CustomizeQuote from "../../models/customizeQuote.models/customizeQuote.js
 const getAllQuote = async (req: Request, res: Response):Promise<void> => {
     try {
         const quotes = await CustomizeQuote.find({})
-            .sort({ createdAt: -1 }) 
+        .populate("tourId", "slug") // Correct reference field
+        // .populate("trekId", "slug") // Populate trek details if needed
+        .sort({ createdAt: -1 }) 
 
         if (!quotes || quotes.length === 0) {
             res.status(404).json({ success: false, message: "No quotes found" });

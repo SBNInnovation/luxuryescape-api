@@ -53,6 +53,11 @@ import getAllTailormadeRouter from "./routes/tailor-made.routes/getAllTailor.rou
 import getSpecificTailorRouter from "./routes/tailor-made.routes/getAllTailormade.routes.js";
 import replyTailerRouter from "./routes/tailor-made.routes/replyTailorMade.routes.js";
 import deleteTailorRouter from "./routes/tailor-made.routes/deleteSpecificTailor.routes.js";
+import addTrekRouter from "./routes/trek.routes/addTrek.routes.js";
+import getAllTrekRouter from "./routes/trek.routes/getAllTrek.routes.js";
+import getSpecificTrekRouter from "./routes/trek.routes/getSpecifictour.routes.js";
+import getSelectedDataForTrekRouter from "./routes/trek.routes/getSelectedTrekData.routes.js";
+import getTourByTourTypesRouter from "./routes/tours.routes/getTourByTourTypes.routes.js";
 
 const app = express();
 
@@ -94,6 +99,7 @@ app.use(
     getSpecifictourRouter,
     getSelectedDataRouter,
     getToursByDestinationRouter,
+    getTourByTourTypesRouter,
 
     //for tourtypes
     addTourTypesRouter,
@@ -137,7 +143,14 @@ app.use(
     getAllTailormadeRouter,
     getSpecificTailorRouter,
     replyTailerRouter,
-    deleteTailorRouter
+    deleteTailorRouter,
+
+
+    // for treks
+    addTrekRouter,
+    getAllTrekRouter,
+    getSpecificTrekRouter,
+    getSelectedDataForTrekRouter
 )
 
 

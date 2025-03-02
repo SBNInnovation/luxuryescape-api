@@ -9,8 +9,7 @@ const getSpecificTour = async (req: Request, res: Response): Promise<void> => {
             res.status(400).json({ success: false, message: "Slug is required." });
             return;
         }
-
-        // Corrected .populate() syntax
+        
         const specificTour = await Tour.findOne({ slug })
             .populate({
                 path: "tourItinerary.accommodation",

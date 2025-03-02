@@ -6,7 +6,7 @@ const getAllQuote = async (req: Request, res: Response):Promise<void> => {
     try {
         const quotes = await CustomizeQuote.find({})
         .populate("tourId", "slug") // Correct reference field
-        // .populate("trekId", "slug") // Populate trek details if needed
+        //  .populate("trekId", "slug") 
         .sort({ createdAt: -1 }) 
 
         if (!quotes || quotes.length === 0) {

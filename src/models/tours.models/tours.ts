@@ -33,7 +33,7 @@ const tourSchema = new Schema(
     type:{type:String, default:"tour"},
     thumbnail: { type: String, default: "" },
     gallery: { type: [String], default: [] },
-    country: { type: String, enum: ["Nepal", "Bhutan", "Tibet"], required: true },
+    country: { type: String, enum: ["Nepal", "Bhutan", "Tibet", "Multidestinations"], required: true },
     location: { type: String, required: true, trim: true },
     duration: { type: String, required: true, trim: true },
     idealTime: { type: [String], required: true, trim: true },

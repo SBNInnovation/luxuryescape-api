@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",                          /* Specifies the ECMAScript target version */
+    "module": "NodeNext",                        /* Correctly set module to NodeNext for Node.js 16+ compatibility */
+    "moduleResolution": "NodeNext",               /* Resolve modules in the Node.js manner, with support for Node 16+ */
+    // "esModuleInterop": true,                      /* Allow default import syntax for CommonJS modules */
+    "resolveJsonModule": true,                    /* Enable importing of JSON files as modules */
+    "strict": true,                               /* Enable all strict type-checking options */
+    // "forceConsistentCasingInFileNames": true,     /* Ensure file name casing is consistent */
+    // "skipLibCheck": true,                         /* Skip type checking of declaration files */
+    // "noImplicitAny": true,                        /* Raise an error when 'any' type is implicitly inferred */
+    // "noImplicitThis": true,                       /* Report an error when 'this' has an implicit 'any' type */
+    "strictNullChecks": true,                     /* Enable strict checking for null and undefined */
+    // "noUnusedLocals": true,                       /* Report an error when there are unused local variables */
+    // "noUnusedParameters": true,                   /* Report an error when there are unused function parameters */
+    // "noImplicitReturns": true,                    /* Report an error when not all code paths in a function return a value */
+    // "noFallthroughCasesInSwitch": true,           /* Report an error if a switch case falls through without a break or return */
+    "outDir": "./dist",                           /* Output directory for compiled files */
+    "rootDir": "./src",                           /* Root directory of TypeScript source files */
+    // "declaration": true,                          /* Generate .d.ts declaration files */
+    // "declarationMap": true,                       /* Generate map files for declarations */
+    "sourceMap": true,                            /* Generate .map files for source code debugging */
+    "removeComments": true,                       /* Remove comments from the output */
+    // "skipDefaultLibCheck": true                   /* Skip checking of default library files */
+  },
+  "include": [
+    "src"  /* Include all files inside the src folder */
+  ],
+  "exclude": [
+    "node_modules",  /* Exclude node_modules directory */
+    "dist"           /* Exclude dist directory from being compiled */
+  ]
+}

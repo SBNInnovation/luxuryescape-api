@@ -270,7 +270,8 @@
 import { Request, Response } from "express";
 import Blog from "../../models/blogs.models/blogs.js";
 import { uploadFile } from "../../utility/cloudinary.js";
-import slugify from "slugify";
+import slug from "slug";
+
 
 export interface MulterRequest extends Request {
   file?: Express.Multer.File | undefined;
@@ -320,11 +321,11 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
     }
 
     // Generate unique slug
-    const baseSlug = slugify(title,{ lower: true })
-    let slug = baseSlug;
+    const baseSlug = slug(title)
+    let slug1 = baseSlug;
     let count = 1;
-    while (await Blog.findOne({ slug })) {
-      slug = `${baseSlug}-${count}`;
+    while (await Blog.findOne({ slug1 })) {
+      slug1 = `${baseSlug}-${count}`;
       count++;
     }
 
@@ -335,7 +336,7 @@ const addBlog = async (req: MulterRequest, res: Response): Promise<void> => {
     // Create new blog entry
     const newBlog = await Blog.create({
       title,
-      slug,
+      slug:slug1,
       description,
       category,
       link: parsedLink,

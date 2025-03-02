@@ -5,7 +5,7 @@ import { fileURLToPath } from "url"; // Import for fixing __dirname issue
 dotenv.config()
 
 // Fix __dirname issue for ES Modules
-const __filename = fileURLToPath(import.meta.url);
+// const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 import addTourRouter from "./routes/tours.routes/addtours.routes.js";

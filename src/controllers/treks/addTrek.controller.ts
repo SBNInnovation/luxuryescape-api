@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { uploadFile } from "../../utility/cloudinary.js";
 import Trek from "../../models/trek.models/trek.js";
-import slugify from "slugify";
+import slugify from "@sindresorhus/slugify";
 
 
 export interface MulterRequest extends Request {
@@ -105,11 +105,11 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       res.status(400).json({ success: false, message: "Trek already exists" });
       return;
     }
-
+    const slug1 = slugify(trekName)
     // Create Trek
     const createTrek = await Trek.create({
       trekName,
-      slug: slugify(trekName, { lower: true }),
+      slug: slug1,
       thumbnail: uploadedThumbnailUrl,
       country,
       location,

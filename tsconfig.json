@@ -5,7 +5,8 @@
     "moduleResolution": "NodeNext",               /* Resolve modules in the Node.js manner, with support for Node 16+ */
     // "esModuleInterop": true,                      /* Allow default import syntax for CommonJS modules */
     "resolveJsonModule": true,                    /* Enable importing of JSON files as modules */
-    "strict": true,                               /* Enable all strict type-checking options */
+    "strict": true,  
+    "incremental": true,                             /* Enable all strict type-checking options */
     // "forceConsistentCasingInFileNames": true,     /* Ensure file name casing is consistent */
     // "skipLibCheck": true,                         /* Skip type checking of declaration files */
     // "noImplicitAny": true,                        /* Raise an error when 'any' type is implicitly inferred */

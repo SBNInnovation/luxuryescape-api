@@ -5,7 +5,7 @@
   "type": "module",
  "scripts": {
   "test": "echo \"Error: no test specified\" && exit 1",
-  "build": "tsc --noEmit false",
+ "build": "swc src -d dist",
   "start": "node --expose-gc --max-old-space-size=4096 dist/index.js",
   "dev": "nodemon --exec tsx src/index.ts",
   "stage": "tsc && git status && git add -p"

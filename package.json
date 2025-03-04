@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node --max-old-space-size=4096 dist/index.js",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec node --loader ts-node/esm src/index.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec node --max-old-space-size=4096 --loader ts-node/esm src/index.ts",
     "stage": "tsc && git status && git add ."
   },
   "keywords": [],

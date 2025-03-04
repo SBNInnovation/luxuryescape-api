@@ -1,12 +1,12 @@
 import express, { Request, Response, urlencoded } from "express";
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url"; // Import for fixing __dirname issue
+// import path from "path";
+// import { fileURLToPath } from "url"; // Import for fixing __dirname issue
 dotenv.config()
 
 // Fix __dirname issue for ES Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 import addTourRouter from "./routes/tours.routes/addtours.routes.js";
 import signupRouter from "./routes/login&signup/signupRouter.js";
@@ -73,7 +73,7 @@ app.use(cookieParser())
 
 // Middleware to serve static files (make uploaded images accessible)
 // Serve static files from "public/uploads" directory
-app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 app.use(
     cors({

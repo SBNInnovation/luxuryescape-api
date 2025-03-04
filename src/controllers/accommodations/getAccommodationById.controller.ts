@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
 
+
 const getSpecificAccommodation = async(req:Request,res:Response):Promise<void> =>{
     try {
         const accommodationId = req.params.accommodationId;

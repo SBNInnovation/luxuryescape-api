@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import Accommodation from "../../models/accommodation.models/Accommodation.js";
+
 import { uploadFile } from "../../utility/cloudinary.js";
 import slugify from "@sindresorhus/slugify";
+import Accommodation from "../../models/accommodation.models/Accommodation.js";
 
 export interface MulterRequest extends Request {
   files?: {

@@ -5,8 +5,8 @@
   "type": "module",
 "scripts": {
   "build": "tsc",
-  "start": "node --max-old-space-size=4096 dist/index.js", 
- "dev": "nodemon --max-old-space-size=4096 src/index.ts",
+  "start": "node --max-old-space-size=8192 --trace_gc dist/index.js", 
+  "dev": "nodemon --max-old-space-size=8192 --trace_gc src/index.ts",
   "stage": "tsc && git status && git add ."
 }
 ,

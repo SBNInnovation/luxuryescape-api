@@ -1,9 +1,10 @@
 import express from "express";
-import getTourByTourTypes from "../../controllers/tours/getTourByTourTypes.controller.js";
+import globalSearch from "../../controllers/tours/getTourByTourTypes.controller.js";
+
 
 
 const getTourByTourTypesRouter = express.Router();
 
-getTourByTourTypesRouter.route("/tour/get/by-type/:tourTypeSlug").get(getTourByTourTypes);
+getTourByTourTypesRouter.route("/all-search").get(globalSearch);
 
 export default getTourByTourTypesRouter;

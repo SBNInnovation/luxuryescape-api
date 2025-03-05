@@ -102,10 +102,10 @@ const globalSearch = async (req: Request, res: Response): Promise<void> => {
        // Combine all results and flatten into a single array
         const results = [tours, treks, matchingTourTypes, accommodations, rooms]
         .flat()
-        .map(item => ({
-            ...item.toObject(), // Convert Mongoose document to plain object
-            type: item.constructor.name // Get model name (Tour, Trek, etc.)
-        }));
+        // .map(item => ({
+        //     ...item.toObject(), // Convert Mongoose document to plain object
+        //     // type: item.constructor.name. // Get model name (Tour, Trek, etc.)
+        // }));
 
         res.status(200).json({ success: true, message: "Search results", data: results });
     } catch (error) {

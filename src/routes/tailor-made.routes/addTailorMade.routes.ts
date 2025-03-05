@@ -3,6 +3,6 @@ import addTailormade from "../../controllers/tailor-made/addTailor-made.controll
 
 const addTailormadeRouter = express.Router();
 
-addTailormadeRouter.route("/tailor-made/add").post(addTailormade);
+addTailormadeRouter.route("/tailor-made/add-tailor").post(addTailormade);
 
 export default addTailormadeRouter

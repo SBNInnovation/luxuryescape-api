@@ -6,6 +6,7 @@ const accommodationDetailsSchema = new Schema({
   accommodationPics: { type: [String], default: [] },
   accommodationTitle: { type: String, required: true, trim: true },
   slug: { type: String, required: true, unique: true, lowercase: true , index: true},
+  type:{type:String, default:"accommodation"},
   country:{type:String, required:true, trim:true},
   accommodationLocation: { type: String, required: true, trim: true },
   accommodationRating: { type: Number, min: 0, max: 5 }, // Ratings typically range 0-5

@@ -58,6 +58,8 @@ import getAllTrekRouter from "./routes/trek.routes/getAllTrek.routes.js";
 import getSpecificTrekRouter from "./routes/trek.routes/getSpecifictrek.routes.js";
 import getSelectedDataForTrekRouter from "./routes/trek.routes/getSelectedTrekData.routes.js";
 import getTourByTourTypesRouter from "./routes/tours.routes/getTourByTourTypes.routes.js";
+import deleteAccommodationRouter from "./routes/accommodation.routes/deleteAccommodation.routes.js";
+import deleteRoomRouter from "./routes/room.routes/deleteRoom.routes.js";
 
 const app = express();
 
@@ -114,6 +116,7 @@ app.use(
     getAllAccommodationWithRoomRouter,
     getSpecificAccommodationWithRoomRouter,
     getSelectedAccommodationDataRouter,
+    deleteAccommodationRouter,
 
     //for blogs
     addBlogRouter,
@@ -126,6 +129,7 @@ app.use(
     //for Rooms,
     addRoomRouter,
     getAllRoomRouter,
+    deleteRoomRouter,
 
     //for contact
     addContactRouter,

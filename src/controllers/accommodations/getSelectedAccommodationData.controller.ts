@@ -3,7 +3,34 @@ import Accommodation from "../../models/accommodation.models/Accommodation.js";
 
 const getSelectedAccommodationData = async (req: Request, res: Response): Promise<void> => {
     try {
-        const getAllSelectedData = await Accommodation.find({})
+         // Parse pagination parameters
+        const page: number = parseInt(req.query.page as string, 10) || 1;
+        const limit: number = parseInt(req.query.limit as string, 10) || 10;
+        const search = req.query.search as string || ""?.toLowerCase().trim();
+        const location = req.query.locationFilter as string || ""?.toLowerCase().trim(); 
+         // Validate pagination values
+        if (page < 1 || limit < 1) {
+            res.status(400).json({ success: false, message: "Invalid page or limit value." });
+            return;
+        }
+    
+        // Calculate documents to skip
+        const skip = (page - 1) * limit;
+    
+        // Build query based on the search keyword and location
+        const query: any = {};
+    
+        if (search) {
+            query.$or = [
+            { accommodationTitle: { $regex: search, $options: "i" } },
+            { accommodationLocation: { $regex: search, $options: "i" } },
+            ];
+        }
+    
+        if (location) {
+            query.accommodationLocation = { $regex: location, $options: "i"}
+        }
+        const getAllSelectedData = await Accommodation.find(query)
             .select("accommodationLocation accommodationTitle accommodationDescription accommodationRating accommodationPics")
             .lean(); // Improves performance by returning plain JavaScript objects
 

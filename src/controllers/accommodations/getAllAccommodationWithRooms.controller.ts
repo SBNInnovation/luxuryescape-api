@@ -1,65 +1,63 @@
 import { Request, Response } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
 
-export const getAllAccommodationsWithRooms = async (req: Request, res: Response):Promise<void> => {
+export const getAllAccommodationsWithRooms = async (req: Request, res: Response): Promise<void> => {
   try {
     // Parse query parameters for page, limit, and location filter
-    const page: number = parseInt(req.query.page as string, 10) || 1;
-    const limit: number = parseInt(req.query.limit as string, 10) || 10;
-    const location = req.query.locationFilter as string || "";
-
-    // Validate pagination values
-    if (page < 1 || limit < 1) {
-        res.status(400).json({ success: false, message: "Invalid page or limit value." });
-        return
-    }
+    const page: number = Math.max(1, parseInt(req.query.page as string, 10) || 1);
+    const limit: number = Math.max(1, parseInt(req.query.limit as string, 10) || 10);
+    const location: string = (req.query.locationFilter as string) || "";
 
     // Calculate documents to skip for pagination
     const skip = (page - 1) * limit;
 
     // Build the aggregation pipeline
     const pipeline: any[] = [
-      // Match location filter if provided
       ...(location
-        ? [
-            {
-              $match: {
-                accommodationLocation: { $regex: location, $options: "i" }, // Case-insensitive match
-              },
-            },
-          ]
-        : []),
-      // Look up related rooms
+        ? [{ $match: { country: { $regex: location, $options: "i" } } }]
+        : []
+      ),
       {
         $lookup: {
-          from: "rooms", // Name of the Room collection
-          localField: "_id", // Field in Accommodation schema
-          foreignField: "accommodation", // Field in Room schema that references Accommodation
-          as: "rooms", // The resulting field name in the response
+          from: "rooms",
+          localField: "_id",
+          foreignField: "accommodation",
+          as: "rooms",
         },
       },
-      // Sort by the newest accommodation first
-      {
-        $sort: { createdAt: -1 },
-      },
-      // Pagination: Skip and Limit
-      {
-        $skip: skip,
-      },
-      {
-        $limit: limit,
-      },
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
     ];
 
     // Execute the aggregation query
     const accommodations = await Accommodation.aggregate(pipeline);
 
-    //  the result
-    res.status(200).json({success:true, data:accommodations});
+    // Fetch total count of matching accommodations
+    const total = await Accommodation.countDocuments(
+      location ? { accommodationLocation: { $regex: location, $options: "i" } } : {}
+    );
+
+    // Send response
+    res.status(200).json({
+      success: true,
+      data: {
+        accommodations,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      },
+    });
+
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: "Server error", error: error.message });
-    }
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 };
 

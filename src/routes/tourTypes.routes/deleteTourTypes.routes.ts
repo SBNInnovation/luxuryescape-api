@@ -3,6 +3,6 @@ import deleteTourType from "../../controllers/tourTypes/deleteTourTypes.controll
 
 const deleteTourTypeRouter = express.Router();
 
-deleteTourTypeRouter.route("tour/delete-tour-type").delete(deleteTourType)
+deleteTourTypeRouter.route("/tour-type/delete/:tourTypeId").delete(deleteTourType)
 
 export default deleteTourTypeRouter;

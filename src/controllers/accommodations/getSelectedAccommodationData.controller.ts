@@ -44,7 +44,18 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
             accommodationPics: item.accommodationPics?.length ? [item.accommodationPics[0]] : [] // Returns only the first image
         }));
 
-        res.status(200).json({ success: true, data: formattedData });
+         // Fetch total count of matching documents (for pagination metadata)
+            const total = await Accommodation.countDocuments(query);
+
+        res.status(200).json({ success: true,   data: {
+        formattedData,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        }
+    }});
     } catch (error) {
         console.error("Error fetching selected accommodation data:", error);
         res.status(500).json({ success: false, message: error instanceof Error ? error.message : "Server error" });

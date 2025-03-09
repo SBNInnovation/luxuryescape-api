@@ -9,7 +9,7 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         const search = req.query.search as string || ""?.toLowerCase().trim();
         const location = req.query.locationFilter as string || ""?.toLowerCase().trim(); 
         const sort = (req.query.sort as string || "").toLowerCase().trim();
-        const rating = (req.query.rating as string || "").toLowerCase().trim();
+        const rating = req.query.rating?.toString().trim();
         
          // Validate pagination values
         if (page < 1 || limit < 1) {
@@ -33,7 +33,12 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         if (location) {
             query.country = { $regex: location, $options: "i"}
         }
-        let intRating = parseInt(rating)
+
+        const intRating = Number(rating); 
+
+        if (!isNaN(intRating)) {  
+            query.accommodationRating = intRating; 
+        }
         if(intRating){
             query.accommodationRating = { $regex: intRating, $options: "i" }
         }
@@ -47,7 +52,7 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         }
 
         const getAllSelectedData = await Accommodation.find(query)
-            .select("accommodationLocation accommodationTitle accommodationDescription accommodationRating accommodationPics").sort(sortQuery).limit(limit).skip(skip)
+            .select("accommodationLocation accommodationTitle accommodationDescription accommodationRating accommodationPics country").sort(sortQuery).limit(limit).skip(skip)
             .lean(); // Improves performance by returning plain JavaScript objects
 
         if (!getAllSelectedData || getAllSelectedData.length === 0) {

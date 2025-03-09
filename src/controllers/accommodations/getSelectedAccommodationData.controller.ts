@@ -40,7 +40,7 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
             query.accommodationRating = intRating; 
         }
         if(intRating){
-            query.accommodationRating = { $regex: intRating, $options: "i" }
+            query.accommodationRating = intRating;
         }
 
             // Sorting logic (default: newest first)

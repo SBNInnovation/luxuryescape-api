@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Room from "../../models/rooms.models/room.js";
 
 
+
 const deleteRoom = async(req:Request, res:Response):Promise<void> =>{
     try {
         const roomId = req.params.roomId;

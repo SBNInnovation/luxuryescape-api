@@ -1,5 +1,5 @@
 import express from "express";
-import deleteRoom from "../../controllers/rooms/delete.room.controller";
+import deleteRoom from "../../controllers/rooms/delete.room.controller.js";
 
 const deleteRoomRouter = express.Router();
 

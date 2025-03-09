@@ -8,7 +8,7 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         const page: number = parseInt(req.query.page as string, 10) || 1;
         const limit: number = parseInt(req.query.limit as string, 10) || 10;
         const search = req.query.search ? req.query.search.toString().trim().toLowerCase() : "";
-        const location = req.query.locationFilter ? req.query.locationFilter.toString().trim().toLowerCase() : "";
+        const location = req.query.location ? req.query.location.toString().trim().toLowerCase() : "";
         const sort = req.query.sort ? req.query.sort.toString().trim().toLowerCase() : "";
         const rating = req.query.rating ? req.query.rating.toString().trim() : "";
 

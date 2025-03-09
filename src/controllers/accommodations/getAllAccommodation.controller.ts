@@ -8,6 +8,7 @@ const getAllAccommodation = async (req: Request, res: Response): Promise<void> =
     const limit: number = parseInt(req.query.limit as string, 10) || 10;
     const search = req.query.search as string || ""?.toLowerCase().trim();
     const location = req.query.locationFilter as string || ""?.toLowerCase().trim(); 
+    const sort = (req.query.sort as string || "").toLowerCase().trim();
 
     // Validate pagination values
     if (page < 1 || limit < 1) {
@@ -32,12 +33,21 @@ const getAllAccommodation = async (req: Request, res: Response): Promise<void> =
       query.accommodationLocation = { $regex: location, $options: "i"}
     }
 
+      // Sorting logic (default: newest first)
+      let sortQuery: any = { createdAt: -1 };
+      if (sort === "asc") {
+        sortQuery = { createdAt: 1 };
+      } else if (sort === "desc") {
+        sortQuery = { createdAt: -1 };
+      }
+        
+
     // Fetch accommodations with pagination and sorting
     const accommodations = await Accommodation.find(query)
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 }); // Sort by creation date (newest first)
-
+      .sort(sortQuery)
+    
     // Fetch total count of matching documents (for pagination metadata)
     const total = await Accommodation.countDocuments(query);
 

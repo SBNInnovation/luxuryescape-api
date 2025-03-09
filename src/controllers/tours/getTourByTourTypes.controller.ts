@@ -3,43 +3,7 @@ import TourTypes from "../../models/tourTypes.models/tourTypes.js";
 import Tour from "../../models/tours.models/tours.js";
 import Trek from "../../models/trek.models/trek.js";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
-import Room from "../../models/rooms.models/room.js";
-// import TourTypes from "../../models/tourTypes.models/tourTypes.js";
 
-
-
-// const getTourByTourTypes = async (req: Request, res: Response): Promise<void> => {
-//     try {
-//         const { tourTypeSlug } = req.params;
-
-
-//         if (!tourTypeSlug) {
-//             res.status(400).json({ success: false, message: "Tour Type Slug is required" });
-//             return
-//         }
-
-//         const tourType = await TourTypes.findOne({ slug: tourTypeSlug });
-
-//         if (!tourType) {
-//             res.status(404).json({ success: false, message: "Tour type not found" });
-//             return
-//         }
-
-//         const tours = await Tour.find({ tourTypes: tourType._id });
-
-//         if (tours.length === 0) {
-//             res.status(404).json({ success: false, message: "No tours found for the specified type" });
-//             return
-//         }
-
-//         res.status(200).json({ success: true, message: "Tours found", data: tours });
-//     } catch (error) {
-//         console.error("Error fetching tours by type slug:", error);
-//         res.status(500).json({ success: false, message: "Internal Server Error" });
-//     }
-// };
-
-// export default getTourByTourTypes;
 
 
 
@@ -136,12 +100,7 @@ const globalSearch = async (req: Request, res: Response): Promise<void> => {
         // Parse query parameters
         const page: number = Math.max(1, parseInt(req.query.page as string, 10) || 1);
         const limit: number = Math.max(1, parseInt(req.query.limit as string, 10) || 10);
-        const q: string | undefined = req.query.q?.toString();
-
-        if (!q) {
-            res.status(400).json({ success: false, message: "Search query is required" });
-            return;
-        }
+        const q: string | undefined = req.query.q? req.query.q.toString() : "";
 
         // Define regex search
         const searchRegex = { $regex: q, $options: "i" };
@@ -197,7 +156,7 @@ const globalSearch = async (req: Request, res: Response): Promise<void> => {
                 .sort({ createdAt: -1 })
                 .skip((page - 1) * limit)
                 .limit(limit)
-                .select("_id accommodationTitle slug accommodationLocation accommodationRating thumbnail"),
+                .select("_id accommodationTitle slug accommodationLocation accommodationRating thumbnail type"),
 
             // Get total count of all matching results (without pagination)
             Promise.all([
@@ -226,7 +185,7 @@ const globalSearch = async (req: Request, res: Response): Promise<void> => {
         ]);
 
         // Combine all results
-        const results = [...tours, ...treks, ...matchingTourTypes, ...accommodations];
+        const results = [...tours, ...treks, ...accommodations];
 
         // Send response with pagination
         res.status(200).json({

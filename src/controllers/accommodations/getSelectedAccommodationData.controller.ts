@@ -35,7 +35,7 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         }
         let intRating = parseInt(rating)
         if(intRating){
-            query.accommodationRating = { $regex: rating, $options: "i" }
+            query.accommodationRating = { $regex: intRating, $options: "i" }
         }
 
             // Sorting logic (default: newest first)

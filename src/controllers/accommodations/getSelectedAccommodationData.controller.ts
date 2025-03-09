@@ -10,6 +10,7 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         const location = req.query.locationFilter as string || ""?.toLowerCase().trim(); 
         const sort = (req.query.sort as string || "").toLowerCase().trim();
         const rating = (req.query.rating as string || "").toLowerCase().trim();
+        
          // Validate pagination values
         if (page < 1 || limit < 1) {
             res.status(400).json({ success: false, message: "Invalid page or limit value." });
@@ -32,7 +33,8 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         if (location) {
             query.country = { $regex: location, $options: "i"}
         }
-        if(rating){
+        let intRating = parseInt(rating)
+        if(intRating){
             query.accommodationRating = { $regex: rating, $options: "i" }
         }
 

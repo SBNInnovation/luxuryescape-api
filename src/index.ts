@@ -13,11 +13,7 @@ import signupRouter from "./routes/login&signup/signupRouter.js";
 import loginRouter from "./routes/login&signup/loginRoutes.js";
 import cookieParser from "cookie-parser";
 import otpRouter from "./routes/otp/otpRoutes.js";
-import getActivateTourRouter from "./routes/tours.routes/getActivateTours.routes.js";
-import getAllTourRouter from "./routes/tours.routes/getAllTours.routes.js";
 import activeteTourRouter from "./routes/tours.routes/activateTours.routes.js";
-import getRecommendTourRouter from "./routes/tours.routes/getRecommendTours.routes.js";
-import recommendTourRouter from "./routes/tours.routes/recommendTours.routes.js";
 import dbConnection from "./connectDB.js";
 import getSpecifictourRouter from "./routes/tours.routes/getSpecifictour.routes.js";
 import cors from "cors"
@@ -47,7 +43,6 @@ import getSpecificQuoteRouter from "./routes/qoute.routes/getSpecificQuote.route
 import replyQuoteRouter from "./routes/qoute.routes/replyQuote.routes.js";
 import deleteQuoteRouter from "./routes/qoute.routes/deleteQuote.routes.js";
 import deleteAllQuoteRouter from "./routes/qoute.routes/deleteAllQuote.routes.js";
-import getToursByDestinationRouter from "./routes/tours.routes/getToursByDestination.routes.js";
 import addTailormadeRouter from "./routes/tailor-made.routes/addTailorMade.routes.js";
 import getAllTailormadeRouter from "./routes/tailor-made.routes/getAllTailor.routes.js";
 import getSpecificTailorRouter from "./routes/tailor-made.routes/getAllTailormade.routes.js";
@@ -94,14 +89,9 @@ app.use(
 
     //for tours
     addTourRouter,
-    getAllTourRouter,
     activeteTourRouter,
-    recommendTourRouter,
-    getActivateTourRouter,
-    getRecommendTourRouter,
     getSpecifictourRouter,
     getSelectedDataRouter,
-    getToursByDestinationRouter,
     getTourByTourTypesRouter,
 
     //for tourtypes

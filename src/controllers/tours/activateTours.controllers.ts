@@ -14,14 +14,25 @@ const activateTours = async(req:Request, res:Response)=>{
         //     res.status(404).json({success:false, message: "Unauthorized"});
         //     return;
         // }
-        const tourId = req.query;
+        const {tourId} = req.query;
+        const activation = req.body;
+        
+        if(!activation){
+            res.status(404).json({success:false, message: "Activation data is required"});
+            return;
+        }
 
-        const activateTours = await Tour.findByIdAndUpdate(tourId,{isActivate:""},{new:true}) ;
+        const checkTour = await Tour.findById(tourId)
+        if(!checkTour){
+            res.status(404).json({success:false, message: "Tour not found"});
+            return;
+        }
+        const activateTours = await Tour.findByIdAndUpdate(tourId,{isActivate:activation},{new:true});
         if(!activateTours){
             res.status(404).json({success:false, message: "Unable to update"});
             return
         }
-        res.status(200).json({success:true, message:"Activated the tour successfully",activateTours})
+        res.status(200).json({success:true, message:"Activated the tour successfully",data:activateTours})
     } catch (error) {
         console.log(error)
         res.status(500).json({success:false, message:"Internal server error"})

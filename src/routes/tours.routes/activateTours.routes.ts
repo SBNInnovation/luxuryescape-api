@@ -4,6 +4,6 @@ import activateTours from "../../controllers/tours/activateTours.controllers.js"
 
 const activeteTourRouter = express.Router();
 
-activeteTourRouter.route("/activate-tour").post(authenticate,activateTours)
+activeteTourRouter.route("/tour/activate-tour").post(activateTours)
 
 export default activeteTourRouter;

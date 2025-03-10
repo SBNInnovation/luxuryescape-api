@@ -3,8 +3,8 @@ import mongoose, { Schema } from "mongoose";
 // Links Schema
 const linksSchema = new Schema(
   {
-    key: { type: String, required: true, trim: true },
-    value: {
+    text: { type: String, required: true, trim: true },
+    url: {
       type: String,
       required: true,
       trim: true

@@ -4,8 +4,8 @@ import mongoose from "mongoose";
 // Links Schema
 const linksSchema = new Schema(
   {
-    key: { type: String, required: true, trim: true },
-    value: { type: String, required: true, trim: true },
+    text: { type: String, required: true, trim: true },
+    url: { type: String, required: true, trim: true },
   },
   { _id: false }
 );

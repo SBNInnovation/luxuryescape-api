@@ -3,9 +3,49 @@ import Tour from "../../models/tours.models/tours.js";
 
 const getSelectedData = async (req: Request, res: Response): Promise<void> => {
     try {
-        const getAllSelectedData = await Tour.find({}).select("idealTime thumbnail tourName tourOverview cost");
+        const page: number = Math.max(parseInt(req.query.page as string) || 1, 1); 
+        const limit: number = Math.max(parseInt(req.query.limit as string) || 10, 1); 
+        const country = req.query.country?.toString();
+        const sort = req.query.sort?.toString();
+        const price = req.query.price?.toString();
+        const search = req.query.search?.toString();
 
-        if (!getAllSelectedData || getAllSelectedData.length === 0) {
+        const skip = (page - 1) * limit;
+
+        let query: any = {};
+        if (search) {
+            query.$or = [
+                { tourName: { $regex: search, $options: "i" } },
+                { location: { $regex: search, $options: "i" } }
+            ];
+        }
+        if (country) {
+            query.country = country;
+        }
+        
+          let sortQuery: any = {};
+          if (price) {
+              sortQuery.cost = price === "asc" ? 1 : -1;
+          } else if (sort) {
+              sortQuery.createdAt = sort === "asc" ? 1 : -1;
+          } else {
+              sortQuery.createdAt = -1;
+          }
+
+        if (price === "asc") {
+            sortQuery.cost = 1;
+        } else if (price === "desc") {
+            sortQuery.cost = -1;
+        }
+
+        // Fetch data with sorting, pagination, and selected fields
+        const getAllSelectedData = await Tour.find(query)
+            .select("idealTime thumbnail tourName tourOverview cost")
+            .sort(sortQuery)
+            .limit(limit)
+            .skip(skip);
+
+        if (!getAllSelectedData.length) {
             res.status(404).json({ success: false, message: "No data found" });
             return;
         }

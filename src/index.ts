@@ -55,6 +55,7 @@ import getSelectedDataForTrekRouter from "./routes/trek.routes/getSelectedTrekDa
 import getTourByTourTypesRouter from "./routes/tours.routes/getTourByTourTypes.routes.js";
 import deleteAccommodationRouter from "./routes/accommodation.routes/deleteAccommodation.routes.js";
 import deleteRoomRouter from "./routes/room.routes/deleteRoom.routes.js";
+import deleteTourRouter from "./routes/tours.routes/deleteTours.routes.js";
 
 
 const app = express();
@@ -93,6 +94,7 @@ app.use(
     getSpecifictourRouter,
     getSelectedDataRouter,
     getTourByTourTypesRouter,
+    deleteTourRouter,
 
     //for tourtypes
     addTourTypesRouter,

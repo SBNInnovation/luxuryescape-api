@@ -52,7 +52,7 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
 
         // Fetch accommodations
         const getAllSelectedData = await Accommodation.find(query)
-            .select("accommodationLocation accommodationTitle accommodationDescription accommodationRating accommodationPics country")
+            .select("accommodationLocation accommodationTitle accommodationDescription accommodationRating accommodationPics country slug")
             .sort(sortQuery)
             .limit(limit)
             .skip(skip)

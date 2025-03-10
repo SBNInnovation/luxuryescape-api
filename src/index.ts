@@ -56,6 +56,7 @@ import getTourByTourTypesRouter from "./routes/tours.routes/getTourByTourTypes.r
 import deleteAccommodationRouter from "./routes/accommodation.routes/deleteAccommodation.routes.js";
 import deleteRoomRouter from "./routes/room.routes/deleteRoom.routes.js";
 import deleteTourRouter from "./routes/tours.routes/deleteTours.routes.js";
+import deleteTrekRouter from "./routes/trek.routes/deleteTrek.routes.js";
 
 
 const app = express();
@@ -147,7 +148,8 @@ app.use(
     addTrekRouter,
     getAllTrekRouter,
     getSpecificTrekRouter,
-    getSelectedDataForTrekRouter
+    getSelectedDataForTrekRouter,
+    deleteTrekRouter
 )
 
 

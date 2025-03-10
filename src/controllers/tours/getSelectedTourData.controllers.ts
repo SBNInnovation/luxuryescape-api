@@ -31,11 +31,13 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
           } else {
               sortQuery.createdAt = -1;
           }
-        if (price === "asc") {
-            sortQuery.cost = 1;
-        } else if (price === "desc") {
-            sortQuery.cost = -1;
-        }
+
+          
+        // if (price === "asc") {
+        //     sortQuery.cost = 1;
+        // } else if (price === "desc") {
+        //     sortQuery.cost = -1;
+        // }
     
         // let sortQuery:any = sort ? { cost: sort === "asc" ? 1 : -1 } : { createdAt: -1 };
 
@@ -43,7 +45,7 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
 
         // Fetch data with sorting, pagination, and selected fields
         const getAllSelectedData = await Tour.find(query)
-            .select("idealTime thumbnail tourName tourOverview cost createdAt isActivate")
+            .select("idealTime thumbnail tourName tourOverview cost createdAt isActivate country location")
             .sort(sortQuery)
             .limit(limit)
             .skip(skip);
@@ -53,7 +55,17 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        res.status(200).json({ success: true, data: getAllSelectedData });
+        const totalTours = await Tour.countDocuments(query)
+
+        res.status(200).json({ success: true, data: {
+            tours: getAllSelectedData,
+            pagination: {
+                totalTours,
+                currentPage: page,
+                totalPages: Math.ceil(totalTours / limit),
+                limit,
+              } 
+        }});
     } catch (error) {
         console.error("Error fetching selected data:", error);
         res.status(500).json({ success: false, message: error instanceof Error ? error.message : "Server error" });

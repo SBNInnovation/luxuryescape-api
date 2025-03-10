@@ -23,7 +23,7 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
             query.country = country;
         }
         
-          let sortQuery: any = {};
+        let sortQuery: any = {};
           if (price) {
               sortQuery.cost = price === "asc" ? 1 : -1;
           } else if (sort) {
@@ -31,16 +31,19 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
           } else {
               sortQuery.createdAt = -1;
           }
-
         if (price === "asc") {
             sortQuery.cost = 1;
         } else if (price === "desc") {
             sortQuery.cost = -1;
         }
+    
+        // let sortQuery:any = sort ? { cost: sort === "asc" ? 1 : -1 } : { createdAt: -1 };
+
+
 
         // Fetch data with sorting, pagination, and selected fields
         const getAllSelectedData = await Tour.find(query)
-            .select("idealTime thumbnail tourName tourOverview cost")
+            .select("idealTime thumbnail tourName tourOverview cost createdAt isActivate")
             .sort(sortQuery)
             .limit(limit)
             .skip(skip);

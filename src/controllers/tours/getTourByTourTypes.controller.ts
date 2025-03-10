@@ -130,7 +130,7 @@ const globalSearch = async (req: Request, res: Response): Promise<void> => {
                 .sort({ createdAt: -1 }) // Sorting at the DB level
                 .skip((page - 1) * limit)
                 .limit(limit)
-                .select("_id tourName slug thumbnail cost type"),
+                .select("_id tourName slug thumbnail cost type country"),
 
             Trek.find({
                 $or: [
@@ -143,7 +143,7 @@ const globalSearch = async (req: Request, res: Response): Promise<void> => {
                 .sort({ createdAt: -1 })
                 .skip((page - 1) * limit)
                 .limit(limit)
-                .select("_id trekName slug thumbnail cost difficultyLevel type"),
+                .select("_id trekName slug thumbnail cost difficultyLevel type country"),
 
             Accommodation.find({
                 $or: [
@@ -156,7 +156,7 @@ const globalSearch = async (req: Request, res: Response): Promise<void> => {
                 .sort({ createdAt: -1 })
                 .skip((page - 1) * limit)
                 .limit(limit)
-                .select("_id accommodationTitle slug accommodationLocation accommodationRating thumbnail type"),
+                .select("_id accommodationTitle slug accommodationLocation accommodationRating thumbnail type country accommodationPics"),
 
             // Get total count of all matching results (without pagination)
             Promise.all([
@@ -181,7 +181,7 @@ const globalSearch = async (req: Request, res: Response): Promise<void> => {
                     { accommodationLocation: searchRegex },
                     { accommodationDescription: searchRegex }
                 ]})
-            ]).then(counts => counts.reduce((acc, count) => acc + count, 0)) // Summing total matching docs
+            ]).then(counts => counts.reduce((acc, count) => acc + count, 0)) 
         ]);
 
         // Combine all results

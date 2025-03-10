@@ -7,7 +7,6 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
         const limit: number = Math.max(parseInt(req.query.limit as string) || 10, 1); 
         const country = req.query.country?.toString();
         const sort = req.query.sort?.toString();
-        const price = req.query.price?.toString();
         const search = req.query.search?.toString();
 
         const skip = (page - 1) * limit;
@@ -24,24 +23,17 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
         }
         
         let sortQuery: any = {};
-          if (price) {
-              sortQuery.cost = price === "asc" ? 1 : -1;
-          } else if (sort) {
-              sortQuery.createdAt = sort === "asc" ? 1 : -1;
-          } else {
-              sortQuery.createdAt = -1;
-          }
-
-          
-        // if (price === "asc") {
-        //     sortQuery.cost = 1;
-        // } else if (price === "desc") {
-        //     sortQuery.cost = -1;
-        // }
-    
-        // let sortQuery:any = sort ? { cost: sort === "asc" ? 1 : -1 } : { createdAt: -1 };
-
-
+        if (sort === "createdAtasc"){
+            sortQuery.createdAt = 1
+        }else if(sort === "createdAtdesc"){
+            sortQuery.createdAt = -1
+        }else if(sort === "asc"){
+            sortQuery.price = 1
+        }else if(sort === "desc"){
+            sortQuery.price = -1
+        }else{
+            sortQuery.createdAt = -1
+        }
 
         // Fetch data with sorting, pagination, and selected fields
         const getAllSelectedData = await Tour.find(query)

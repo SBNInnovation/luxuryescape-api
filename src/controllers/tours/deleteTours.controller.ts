@@ -30,8 +30,9 @@
 // export default deleteTours;
 
 import { Request, Response } from "express";
-import Tour from "../../models/tours.models/tours";
-import { deleteFile } from "../../utility/cloudinary";
+import Tour from "../../models/tours.models/tours.js";
+import { deleteFile } from "../../utility/cloudinary.js";
+
 
 const deleteTour = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -104,7 +105,7 @@ const deleteTour = async (req: Request, res: Response): Promise<void> => {
     return
     }
 
-    res.status(200).json({ success: true, message: "Tour and associated images deleted successfully" });
+    res.status(200).json({ success: true, message: "Tour deleted successfully" });
   } catch (error) {
     console.error("Error deleting tour and images:", error);
     res.status(500).json({ success: false, message: "Internal server error" });

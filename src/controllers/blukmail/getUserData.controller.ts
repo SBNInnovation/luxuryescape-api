@@ -46,6 +46,7 @@ const getAllUserData = async (req: Request, res: Response): Promise<void> => {
 
         // Convert TailorMade data to match structure of other collections
         const tailorMadeFormatted = getTailormadeUser.map(user => ({
+            _id: user._id,
             name: `${user.firstName} ${user.lastName}`,
             email: user.email,
             number: user.phone,

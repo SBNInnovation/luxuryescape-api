@@ -62,6 +62,7 @@ import getAgentRouter from "./routes/bluk.routes/getAllUserData.routes.js";
 import addAgentRouter from "./routes/bluk.routes/addAgent.routes.js";
 import bulkmailRouter from "./routes/bluk.routes/sendBulkMail.routes.js";
 import deleteUserRouter from "./routes/bluk.routes/deleteUser.routes.js";
+import editAgentRouter from "./routes/bluk.routes/editAgent.routes.js";
 
 
 const app = express();
@@ -163,7 +164,8 @@ app.use(
     getAgentRouter,
     addAgentRouter,
     bulkmailRouter,
-    deleteUserRouter
+    deleteUserRouter,
+    editAgentRouter
 )
 
 

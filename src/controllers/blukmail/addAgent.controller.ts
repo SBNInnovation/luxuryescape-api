@@ -11,6 +11,13 @@ const addAgent = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
+        const checkUser = await Agent.find({email})
+        if(checkUser.length > 0){
+            res.status(400).json({ success: false, message: "Email already exists." });
+            return;
+            
+        }
+
         const agent = await Agent.create({
             name,
             email,

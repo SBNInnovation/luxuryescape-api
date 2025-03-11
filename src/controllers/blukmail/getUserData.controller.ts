@@ -26,8 +26,8 @@ const getAllUserData = async (req: Request, res: Response): Promise<void> => {
                 { email: { $regex: search, $options: 'i' } },
                 { phone: { $regex: search, $options: 'i' } },
                 { number: { $regex: search, $options: 'i' } },
-                {company: {$regex: search, $options: "i"}},
-                {address: {$regex: search, $options: "i"}}
+                { company: { $regex: search, $options: "i" } },
+                { address: { $regex: search, $options: "i" } }
             ];
         }
 
@@ -58,14 +58,19 @@ const getAllUserData = async (req: Request, res: Response): Promise<void> => {
         // Merge all data into a single array
         const mergedData = [...getQuoteUser, ...tailorMadeFormatted, ...getAgentdata];
 
+        // ✅ Remove duplicate emails and keep only the first occurrence
+        const uniqueUsers = Array.from(
+            new Map(mergedData.map(user => [user.email, user])).values()
+        );
+
         res.status(200).json({
             success: true,
-            data: mergedData,
+            data: uniqueUsers,
             pagination: {
                 page,
                 limit,
-                total,
-                totalPages: Math.ceil(total / limit),
+                total: uniqueUsers.length,
+                totalPages: Math.ceil(uniqueUsers.length / limit),
             }
         });
     } catch (error) {

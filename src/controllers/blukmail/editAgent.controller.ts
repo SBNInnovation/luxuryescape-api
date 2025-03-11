@@ -5,11 +5,14 @@ import Agent from "../../models/agent.models/Agent.js";
 const editAgent = async (req: Request, res: Response): Promise<void> => {
     try {
         const {agentId} = req.params;
-        const { name, email, number,country } = req.body;
+        const { name, email, number,country, company, address } = req.body;
+
+        let lowerCountry = country.toLowerCase()
+        let lowerAddress = address.toLowerCase();
 
         const agent = await Agent.findByIdAndUpdate(agentId,{
             $set:{
-                name, email, number,country
+                name, email, number,country:lowerCountry,company,address:lowerAddress
             }
         },{
             new:true

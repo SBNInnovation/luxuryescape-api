@@ -26,6 +26,8 @@ const getAllUserData = async (req: Request, res: Response): Promise<void> => {
                 { email: { $regex: search, $options: 'i' } },
                 { phone: { $regex: search, $options: 'i' } },
                 { number: { $regex: search, $options: 'i' } },
+                {company: {$regex: search, $options: "i"}},
+                {address: {$regex: search, $options: "i"}}
             ];
         }
 

@@ -4,12 +4,15 @@ import Agent from "../../models/agent.models/Agent.js";
 
 const addAgent = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { name, email, number,country } = req.body;
+        const { name, email, number,country, company , address} = req.body;
 
-        if (!name || !email || !number || !country) {
+        if (!name || !email || !number || !country || !company || !address) {
             res.status(400).json({ success: false, message: "Please fill all required fields." });
             return;
         }
+
+        let lower = country.toLowerCase();
+        let lowerAddress = address.toLowerCase();
 
         const checkUser = await Agent.find({email})
         if(checkUser.length > 0){
@@ -22,7 +25,9 @@ const addAgent = async (req: Request, res: Response): Promise<void> => {
             name,
             email,
             number,
-            country,
+            country:lower,
+            company,
+            address:lowerAddress
         });
 
         if (!agent) {

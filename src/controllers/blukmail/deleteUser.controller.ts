@@ -17,7 +17,7 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
         // Search and delete from CustomizeQuote
         const quoteUser = await Agent.findOneAndDelete({ _id:agentId });
         if (quoteUser) {
-            deletedUser = { schema: "CustomizeQuote", user: quoteUser };
+            deletedUser = { schema: "Agent", user: quoteUser };
         }
 
         // // If not found, search and delete from TailorMade

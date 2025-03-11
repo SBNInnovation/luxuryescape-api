@@ -10,14 +10,33 @@ interface MulterRequest extends Request {
 
 const bulkMailing = async (req: MulterRequest, res: Response) => {
   try {
-    const { emails, subject, message } = req.body
-    const attachments = req.files?.attachments || []
+    let { emails, subject, message } = req.body;  // ✅ Use "let" instead of "const"
+    const attachments = req.files?.attachments || [];
 
     if (!emails || emails.length === 0 || !subject || !message) {
       return res.status(400).json({
         success: false,
         message: "Please provide emails, subject, and message.",
-      })
+      });
+    }
+
+    // ✅ Ensure emails is an array
+    if (typeof emails === "string") {
+      try {
+        emails = JSON.parse(emails);
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid email format. Ensure it's a valid JSON array.",
+        });
+      }
+    }
+
+    if (!Array.isArray(emails)) {
+      return res.status(400).json({
+        success: false,
+        message: "Emails should be an array.",
+      });
     }
 
     const uploadedFiles: string[] = []
@@ -77,8 +96,9 @@ const bulkMailing = async (req: MulterRequest, res: Response) => {
       `
     }
 
+
     await sendBulkEmail(
-      JSON.parse(emails),
+      emails,
       subject,
       createMailContent(message, uploadedFiles)
     )

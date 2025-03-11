@@ -23,7 +23,7 @@ const getDetailsForDashboard = async (req: Request, res: Response):Promise<void>
             Blog.countDocuments(),
             TailorMade.find({})
                 .sort({ createdAt: -1 })
-                .limit(3)
+                .limit(2)
                 .select("firstname lastname email country experienceLevel budget status createdAt"),
             CustomizeQuote.find({})
                 .sort({ createdAt: -1 })

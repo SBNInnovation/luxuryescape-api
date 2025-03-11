@@ -57,6 +57,9 @@ import deleteAccommodationRouter from "./routes/accommodation.routes/deleteAccom
 import deleteRoomRouter from "./routes/room.routes/deleteRoom.routes.js";
 import deleteTourRouter from "./routes/tours.routes/deleteTours.routes.js";
 import deleteTrekRouter from "./routes/trek.routes/deleteTrek.routes.js";
+import getDashboardDataRouter from "./routes/dashboard.routes/getDashboardData.routes.js";
+import getAgentRouter from "./routes/bluk.routes/getAllUserData.routes.js";
+import addAgentRouter from "./routes/bluk.routes/addAgent.routes.js";
 
 
 const app = express();
@@ -88,6 +91,9 @@ app.use(
     signupRouter,
     loginRouter,
     otpRouter,
+
+    //dashboard
+    getDashboardDataRouter,
 
     //for tours
     addTourRouter,
@@ -149,7 +155,11 @@ app.use(
     getAllTrekRouter,
     getSpecificTrekRouter,
     getSelectedDataForTrekRouter,
-    deleteTrekRouter
+    deleteTrekRouter,
+
+    //bulk mail
+    getAgentRouter,
+    addAgentRouter
 )
 
 

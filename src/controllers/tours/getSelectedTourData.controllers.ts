@@ -45,7 +45,7 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
 
         
         const getAllSelectedData = await Tour.find(query)
-            .select("idealTime thumbnail tourName tourOverview cost createdAt isActivate country location")
+            .select("idealTime thumbnail tourName slug tourOverview cost createdAt isActivate country location")
             .sort(sortQuery)
             .limit(limit)
             .skip(skip);

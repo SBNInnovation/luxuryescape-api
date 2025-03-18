@@ -73,8 +73,10 @@ import multer from "multer";
 import addTour, { MulterRequest } from "../../controllers/tours/addtours.controllers.js";
 import fs from "fs";
 import path from "path";
+import editTour from "../../controllers/tours/editTours.controller.js";
 
 const addTourRouter = express.Router();
+const editTourRouter = express.Router();
 
 // Define the absolute upload path using process.cwd()
 const uploadPath = path.resolve(process.cwd(), "public/uploads/tours");
@@ -119,4 +121,13 @@ addTourRouter.post(
   }
 );
 
-export default addTourRouter;
+editTourRouter.post(
+  "/tour/edit/:tourId",
+  uploader.fields(upload), // Handle multiple fields for uploads
+  (req: Request, res: Response) => {
+    console.log("Uploaded files:", req.files); // Log the uploaded files for debugging
+    editTour(req as MulterRequest, res); // Call your controller function
+  }
+);
+
+export default {addTourRouter, editTourRouter};

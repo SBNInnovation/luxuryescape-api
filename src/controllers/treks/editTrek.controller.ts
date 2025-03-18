@@ -1,0 +1,125 @@
+import { Request, Response } from "express";
+import { uploadFile } from "../../utility/cloudinary.js";
+import Trek from "../../models/trek.models/trek.js";
+import slugify from "@sindresorhus/slugify";
+
+export interface MulterRequest extends Request {
+  files?: {
+    thumbnail?: Express.Multer.File[];
+    gallery?: Express.Multer.File[];
+    highlightPicture?: Express.Multer.File[];
+    itineraryDayPhoto?: Express.Multer.File[];
+  };
+}
+
+const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
+  try {
+    const { trekId } = req.params;
+    const {
+      trekName,
+      duration,
+      idealTime,
+      cost,
+      difficultyLevel,
+      trekOverview,
+      trekHighlights,
+      trekInclusion,
+      trekItinerary,
+      faq,
+      location,
+      country,
+    } = req.body;
+
+    if (!trekId) {
+      res.status(400).json({ success: false, message: "Trek ID is required" });
+      return;
+    }
+
+    const existingTrek = await Trek.findById(trekId);
+    if (!existingTrek) {
+      res.status(404).json({ success: false, message: "Trek not found" });
+      return;
+    }
+
+    if (cost && (isNaN(cost) || cost <= 0)) {
+      res.status(400).json({ success: false, message: "Cost must be a valid positive number" });
+      return;
+    }
+
+    const thumbnail = req?.files?.thumbnail || [];
+    const gallery = req?.files?.gallery || [];
+    const highlightPicture = req?.files?.highlightPicture || [];
+    const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
+
+    const uploadedThumbnail = thumbnail.length
+      ? await uploadFile(thumbnail[0]?.path || "", "treks/thumbnail/images")
+      : null;
+    const uploadedThumbnailUrl = uploadedThumbnail ? uploadedThumbnail.secure_url : existingTrek.thumbnail;
+
+    const uploadedGallery = gallery.length
+      ? await Promise.all(gallery.map((file) => uploadFile(file?.path || "", "treks/gallery/images")))
+      : [];
+    const uploadedGalleryUrls = uploadedGallery.length > 0 ? uploadedGallery.map(file => file?.secure_url) : existingTrek.gallery;
+
+    const uploadedItineraryDayPhoto = itineraryDayPhoto.length
+      ? await Promise.all(itineraryDayPhoto.map((file) => uploadFile(file?.path || "", "treks/gallery/images")))
+      : [];
+    const uploadedItineraryDayPhotoUrls = uploadedItineraryDayPhoto.length > 0 ? uploadedItineraryDayPhoto.map(file => file?.secure_url) : existingTrek.itineraryDayPhoto;
+
+    const uploadedHighlightPicture = highlightPicture.length
+      ? await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "treks/highlightPicture/images")))
+      : [];
+    const uploadedHighlightPictureUrls = uploadedHighlightPicture.length > 0 ? uploadedHighlightPicture.map(file => file?.secure_url) : existingTrek.highlightPicture;
+
+    const parseJsonSafe = (data: any, fieldName: string) => {
+      if (Array.isArray(data)) return data;
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        res.status(400).json({ success: false, message: `Invalid JSON format in ${fieldName}` });
+        return null;
+      }
+    };
+
+    const parsedIdealTime = idealTime ? parseJsonSafe(idealTime, "idealTime") : existingTrek.idealTime;
+    const parsedTrekItinerary = trekItinerary ? parseJsonSafe(trekItinerary, "trekItinerary") : existingTrek.trekItinerary;
+    const parsedFaq = faq ? parseJsonSafe(faq, "faq") : existingTrek.faq;
+    const parsedTrekInclusion = trekInclusion ? parseJsonSafe(trekInclusion, "trekInclusion") : existingTrek.trekInclusion;
+    const parsedTrekHighlights = trekHighlights ? parseJsonSafe(trekHighlights, "trekHighlights") : existingTrek.trekHighlights;
+
+    const slug1 = trekName ? slugify(trekName) : existingTrek.slug;
+
+    const updatedTrek = await Trek.findByIdAndUpdate(
+      trekId,
+      {
+        trekName,
+        slug: slug1,
+        thumbnail: uploadedThumbnailUrl,
+        country,
+        location,
+        duration,
+        idealTime: parsedIdealTime,
+        cost: cost ? Number(cost) : existingTrek.cost,
+        difficultyLevel,
+        trekOverview,
+        trekHighlights: parsedTrekHighlights,
+        highlightPicture: uploadedHighlightPictureUrls,
+        trekInclusion: parsedTrekInclusion,
+        trekItinerary: parsedTrekItinerary,
+        itineraryDayPhoto: uploadedItineraryDayPhotoUrls,
+        faq: parsedFaq,
+        gallery: uploadedGalleryUrls,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, message: "Trek updated successfully", data: updatedTrek });
+  } catch (error) {
+    console.error("Error editing trek:", error);
+    if (error instanceof Error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+};
+
+export default editTrek;

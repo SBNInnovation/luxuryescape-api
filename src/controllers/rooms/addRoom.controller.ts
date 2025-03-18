@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 // import { Express } from "express";
 import { uploadFile } from "../../utility/cloudinary.js";
 import Room from "../../models/rooms.models/room.js";
-import slugify from "@sindresorhus/slugify";
 import slug from "slug";
 
 

@@ -53,8 +53,10 @@ import { Express } from "express";
 import fs from "fs";
 import path from "path";
 import addTrek, { MulterRequest } from "../../controllers/treks/addTrek.controller.js";
+import editTrek from "../../controllers/treks/editTrek.controller.js";
 
 const addTrekRouter = express.Router();
+const editTrekRouter = express.Router();
 
 // Define the absolute upload path using process.cwd() to get the project root
 const uploadPath = path.resolve(process.cwd(), "public/uploads/treks");
@@ -93,5 +95,8 @@ const upload = [
 addTrekRouter.post("/trek/add-trek", uploader.fields(upload), (req, res) => {
   addTrek(req as MulterRequest, res); // Explicit type assertion for the request
 });
+editTrekRouter.post("/trek/edit/:trekId", uploader.fields(upload), (req, res) => {
+  editTrek(req as MulterRequest, res); // Explicit type assertion for the request
+});
 
-export default addTrekRouter;
+export {addTrekRouter, editTrekRouter};

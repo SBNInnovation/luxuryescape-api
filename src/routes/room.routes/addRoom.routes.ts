@@ -60,8 +60,10 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import addRoom, { MulterRequest } from "../../controllers/rooms/addRoom.controller.js";
+import editRoom from "../../controllers/rooms/editRoom.controller.js";
 
 const addRoomRouter = express.Router();
+const editRoomRouter = express.Router();
 
 // Define the absolute upload path using process.cwd()
 const uploadPath = path.resolve(process.cwd(), "public/uploads/rooms");
@@ -103,4 +105,13 @@ addRoomRouter.post(
   }
 );
 
-export default addRoomRouter;
+editRoomRouter.patch(
+  "/room/edit/:roomId", 
+  uploader.fields(upload), // Handle multiple files with the "roomPhotos" field
+  (req: Request, res: Response) => {
+    console.log("Uploaded files:", req.files); // Debugging the uploaded files
+    editRoom(req as MulterRequest, res); // Ensure MulterRequest type is used
+  }
+);
+
+export {addRoomRouter,editRoomRouter};

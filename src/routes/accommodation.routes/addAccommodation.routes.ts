@@ -171,9 +171,11 @@ import addAccomodation from "../../controllers/accommodations/addAccommodation.c
 import { MulterRequest } from "../../controllers/accommodations/addAccommodation.controller.js";
 import fs from "fs";
 import path from "path";
+import editAccommodation from "../../controllers/accommodations/editAccommodation.controller.js";
 
 // Setup router
 const addAccommodationRouter = express.Router();
+const editAccommodationRouter = express.Router();
 
 // Define the upload directory path
 const uploadPath = path.resolve("public/uploads/accommodation");
@@ -213,5 +215,15 @@ addAccommodationRouter.post(
   }
 );
 
-export default addAccommodationRouter;
+// Route to edit existing accommodation
+editAccommodationRouter.put(
+  "/accommodation/edit/:accommodationId",
+  uploader.fields(upload),
+  (req: Request, res: Response) => {
+    console.log("Uploaded files for edit:", req.files); // Debugging
+    editAccommodation(req as MulterRequest, res);
+  }
+);
+
+export {addAccommodationRouter,editAccommodationRouter};
 

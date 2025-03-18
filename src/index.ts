@@ -8,7 +8,7 @@ dotenv.config()
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
 
-import addTourRouter from "./routes/tours.routes/addtours.routes.js";
+import {addTourRouter, editTourRouter} from "./routes/tours.routes/addtours.routes.js";
 import signupRouter from "./routes/login&signup/signupRouter.js";
 import loginRouter from "./routes/login&signup/loginRoutes.js";
 import cookieParser from "cookie-parser";
@@ -17,7 +17,7 @@ import activeteTourRouter from "./routes/tours.routes/activateTours.routes.js";
 import dbConnection from "./connectDB.js";
 import getSpecifictourRouter from "./routes/tours.routes/getSpecifictour.routes.js";
 import cors from "cors"
-import addAccommodationRouter from "./routes/accommodation.routes/addAccommodation.routes.js";
+import {addAccommodationRouter, editAccommodationRouter} from "./routes/accommodation.routes/addAccommodation.routes.js";
 import addTourTypesRouter from "./routes/tourTypes.routes/addTourTypes.routes.js";
 import getAllTourTypesRouter from "./routes/tourTypes.routes/getAllTourTypes.route.js";
 import getAllAccommodationRouter from "./routes/accommodation.routes/getAllAccommodation.routes.js";
@@ -30,7 +30,7 @@ import editBlogRouter from "./routes/blog.routes/editBlog.routes.js";
 import deleteBlogRouter from "./routes/blog.routes/deleteBlog.routes.js";
 import getSpecificAccommodationRouter from "./routes/accommodation.routes/getSpecificAccommodation.routes.js";
 import updateBlogStatusRouter from "./routes/blog.routes/updateStatus.routes.js";
-import addRoomRouter from "./routes/room.routes/addRoom.routes.js";
+import {addRoomRouter, editRoomRouter} from "./routes/room.routes/addRoom.routes.js";
 import getAllRoomRouter from "./routes/room.routes/getAllRoom.routes.js";
 import getAllAccommodationWithRoomRouter from "./routes/accommodation.routes/getAllAccommodationWithRoom.routes.js";
 import getSpecificAccommodationWithRoomRouter from "./routes/accommodation.routes/getSpecificAccommodationWithRoom.routes.js";
@@ -48,7 +48,7 @@ import getAllTailormadeRouter from "./routes/tailor-made.routes/getAllTailor.rou
 import getSpecificTailorRouter from "./routes/tailor-made.routes/getAllTailormade.routes.js";
 import replyTailerRouter from "./routes/tailor-made.routes/replyTailorMade.routes.js";
 import deleteTailorRouter from "./routes/tailor-made.routes/deleteSpecificTailor.routes.js";
-import addTrekRouter from "./routes/trek.routes/addTrek.routes.js";
+import {addTrekRouter,editTrekRouter} from "./routes/trek.routes/addTrek.routes.js";
 import getAllTrekRouter from "./routes/trek.routes/getAllTrek.routes.js";
 import getSpecificTrekRouter from "./routes/trek.routes/getSpecifictrek.routes.js";
 import getSelectedDataForTrekRouter from "./routes/trek.routes/getSelectedTrekData.routes.js";
@@ -105,6 +105,7 @@ app.use(
     getSelectedDataRouter,
     getTourByTourTypesRouter,
     deleteTourRouter,
+    editTourRouter,
 
     //for tourtypes
     addTourTypesRouter,
@@ -120,6 +121,7 @@ app.use(
     getSpecificAccommodationWithRoomRouter,
     getSelectedAccommodationDataRouter,
     deleteAccommodationRouter,
+    editAccommodationRouter,
 
     //for blogs
     addBlogRouter,
@@ -133,6 +135,7 @@ app.use(
     addRoomRouter,
     getAllRoomRouter,
     deleteRoomRouter,
+    editRoomRouter,
 
     //for contact
     addContactRouter,
@@ -159,6 +162,7 @@ app.use(
     getSpecificTrekRouter,
     getSelectedDataForTrekRouter,
     deleteTrekRouter,
+    editTrekRouter,
 
     //bulk mail
     getAgentRouter,

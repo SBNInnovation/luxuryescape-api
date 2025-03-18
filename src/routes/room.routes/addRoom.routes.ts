@@ -62,6 +62,7 @@ import path from "path";
 import addRoom, { MulterRequest } from "../../controllers/rooms/addRoom.controller.js";
 import editRoom from "../../controllers/rooms/editRoom.controller.js";
 
+
 const addRoomRouter = express.Router();
 const editRoomRouter = express.Router();
 

@@ -70,10 +70,11 @@
 
 import express, { Request, Response } from "express";
 import multer from "multer";
-import addTour, { MulterRequest } from "../../controllers/tours/addtours.controllers.js";
 import fs from "fs";
 import path from "path";
+import addTour, { MulterRequest } from "../../controllers/tours/addtours.controllers.js";
 import editTour from "../../controllers/tours/editTours.controller.js";
+
 
 const addTourRouter = express.Router();
 const editTourRouter = express.Router();
@@ -130,4 +131,4 @@ editTourRouter.post(
   }
 );
 
-export default {addTourRouter, editTourRouter};
+export {addTourRouter, editTourRouter};

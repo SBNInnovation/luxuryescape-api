@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { uploadFile } from "../../utility/cloudinary.js";
-import Trek from "../../models/trek.models/trek.js";
 import slugify from "@sindresorhus/slugify";
+import Trek from "../../models/trek.models/trek.js";
+import { uploadFile } from "../../utility/cloudinary.js";
 
 export interface MulterRequest extends Request {
   files?: {

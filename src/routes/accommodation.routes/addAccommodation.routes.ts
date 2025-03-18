@@ -167,11 +167,12 @@
 
 import express, { Request, Response } from "express"; 
 import multer from "multer";
-import addAccomodation from "../../controllers/accommodations/addAccommodation.controller.js";
-import { MulterRequest } from "../../controllers/accommodations/addAccommodation.controller.js";
 import fs from "fs";
 import path from "path";
+import addAccommodation, { MulterRequest } from "../../controllers/accommodations/addAccommodation.controller.js";
 import editAccommodation from "../../controllers/accommodations/editAccommodation.controller.js";
+
+
 
 // Setup router
 const addAccommodationRouter = express.Router();
@@ -211,7 +212,7 @@ addAccommodationRouter.post(
     console.log("Uploaded files:", req.files); // Debugging
 
     // Call the accommodation controller function
-    addAccomodation(req as MulterRequest, res);
+    addAccommodation(req as MulterRequest, res);
   }
 );
 

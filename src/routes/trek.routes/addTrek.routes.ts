@@ -55,6 +55,7 @@ import path from "path";
 import addTrek, { MulterRequest } from "../../controllers/treks/addTrek.controller.js";
 import editTrek from "../../controllers/treks/editTrek.controller.js";
 
+
 const addTrekRouter = express.Router();
 const editTrekRouter = express.Router();
 

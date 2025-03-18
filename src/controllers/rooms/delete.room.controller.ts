@@ -33,7 +33,8 @@
 
 import { Request, Response } from "express";
 import Room from "../../models/rooms.models/room.js";
-import { deleteFile } from "../../utility/cloudinary.js"; // Ensure you have a deleteFile function in your Cloudinary utility
+import { deleteFile } from "../../utility/cloudinary.js";
+
 
 const deleteRoom = async (req: Request, res: Response): Promise<void> => {
     try {

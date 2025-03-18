@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { uploadFile } from "../../utility/cloudinary.js";
 import slug from "slug";
+import { uploadFile } from "../../utility/cloudinary.js";
 import Room from "../../models/rooms.models/room.js";
 
 export interface MulterRequest extends Request {

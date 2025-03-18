@@ -1,12 +1,12 @@
 // routes/blogs/addBlog.routes.js
 import express from "express";
 import multer from "multer";
-import { MulterRequest } from "../../controllers/blogs/addBlog.controller.js";
 
 const editBlogRouter = express.Router();
 
 import path from "path";
 import fs from "fs";
+import { MulterRequest } from "../../controllers/blogs/addBlog.controller.js";
 import editBlog from "../../controllers/blogs/editBlog.controller.js";
 
 const __filename = new URL(import.meta.url).pathname;

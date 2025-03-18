@@ -5,7 +5,7 @@ import { uploadFile } from "../../utility/cloudinary.js";
 
 const editBlog = async (req: Request, res: Response): Promise<void> => {
     try {
-        const slug = req.params.slug;
+        const blogId = req.params.blogId;
         const { title, description, category, link } = req.body;
 
         if (!title || !description || !category) {
@@ -14,7 +14,7 @@ const editBlog = async (req: Request, res: Response): Promise<void> => {
         }
 
         // Find the existing blog
-        const findPreviousData = await Blog.findOne({ slug });
+        const findPreviousData = await Blog.findOne({ _id:blogId });
         if (!findPreviousData) {
             res.status(404).json({ success: false, message: "Blog not found" });
             return;
@@ -51,7 +51,7 @@ const editBlog = async (req: Request, res: Response): Promise<void> => {
 
         // Update the blog
         const updatedBlog = await Blog.findOneAndUpdate(
-            { slug },
+            { _id:blogId },
             {
                 $set: {
                     title,

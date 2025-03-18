@@ -30,7 +30,7 @@ const uploader = multer({
   }),
 });
 
-editBlogRouter.post("/blog/edit-blog/:slug", uploader.single("thumbnail"), (req, res) => {
+editBlogRouter.patch("/blog/edit/:blogId", uploader.single("thumbnail"), (req, res) => {
   console.log(req.file);
   editBlog(req as MulterRequest, res);
 });

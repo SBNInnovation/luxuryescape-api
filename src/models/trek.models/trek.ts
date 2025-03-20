@@ -40,6 +40,7 @@ const trekSchema = new Schema(
     trekHighlights: { type: [String], trim: true, default: [] },
     highlightPicture: { type: [String], default: [] },
     trekInclusion: { type: [String], default: [] },
+    trekExclusion: { type: [String], default: [] },
     trekItinerary: { type: [itineraryDetailsSchema], default: [] },
     itineraryDayPhoto: { type: [String], default: [] },
     faq: {

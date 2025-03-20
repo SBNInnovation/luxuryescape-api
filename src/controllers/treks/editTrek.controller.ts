@@ -24,6 +24,7 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       trekOverview,
       trekHighlights,
       trekInclusion,
+      trekExclusion,
       trekItinerary,
       faq,
       location,
@@ -85,6 +86,7 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     const parsedTrekItinerary = trekItinerary ? parseJsonSafe(trekItinerary, "trekItinerary") : existingTrek.trekItinerary;
     const parsedFaq = faq ? parseJsonSafe(faq, "faq") : existingTrek.faq;
     const parsedTrekInclusion = trekInclusion ? parseJsonSafe(trekInclusion, "trekInclusion") : existingTrek.trekInclusion;
+    const parsedTrekExclusion = trekExclusion ? parseJsonSafe(trekExclusion, "trekExclusion"): existingTrek.trekExclusion;
     const parsedTrekHighlights = trekHighlights ? parseJsonSafe(trekHighlights, "trekHighlights") : existingTrek.trekHighlights;
 
     const slug1 = trekName ? slugify(trekName) : existingTrek.slug;
@@ -105,6 +107,7 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
         trekHighlights: parsedTrekHighlights,
         highlightPicture: uploadedHighlightPictureUrls,
         trekInclusion: parsedTrekInclusion,
+        trekExclusion: parsedTrekExclusion,
         trekItinerary: parsedTrekItinerary,
         itineraryDayPhoto: uploadedItineraryDayPhotoUrls,
         faq: parsedFaq,

@@ -24,6 +24,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       trekOverview,
       trekHighlights,
       trekInclusion,
+      trekExclusion,
       trekItinerary,
       faq,
       location,
@@ -39,6 +40,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     if (!difficultyLevel) missingFields.push("difficultyLevel");
     if (!trekOverview) missingFields.push("trekOverview");
     if (!trekInclusion) missingFields.push("trekInclusion");
+    if (!trekExclusion) missingFields.push("trekExclusion");
     if (!trekHighlights) missingFields.push("trekHighlights");
     if (!trekItinerary) missingFields.push("trekItinerary");
     if (!faq) missingFields.push("faq");
@@ -98,6 +100,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     const parsedTrekItinerary = parseJsonSafe(trekItinerary, "trekItinerary");
     const parsedFaq = parseJsonSafe(faq, "faq");
     const parsedTrekInclusion = parseJsonSafe(trekInclusion, "trekInclusion");
+    const parsedTrekExclusion = parseJsonSafe(trekExclusion, "trekExclusion");
     const parsedTrekHighlights = parseJsonSafe(trekHighlights, "trekHighlights");
 
     const checkExistingTrek = await Trek.findOne({ trekName });
@@ -121,6 +124,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       trekHighlights: parsedTrekHighlights,
       highlightPicture: uploadedHighlightPictureUrls,
       trekInclusion: parsedTrekInclusion,
+      trekExclusion: parsedTrekExclusion,
       trekItinerary: parsedTrekItinerary,
       itineraryDayPhoto: uploadedItineraryDayPhotoUrl,
       faq: parsedFaq,

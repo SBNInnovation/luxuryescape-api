@@ -23,6 +23,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourOverview,
       tourHighlights,
       tourInclusion,
+      tourExclusion,
       tourItinerary,
       faq,
       location,
@@ -38,6 +39,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     if (!tourTypes) missingFields.push("tourTypes");
     if (!tourOverview) missingFields.push("tourOverview");
     if (!tourInclusion) missingFields.push("tourInclusion");
+    if (!tourExclusion) missingFields.push("tourExclusion");
     if (!tourHighlights) missingFields.push("tourHighlights");
     if (!tourItinerary) missingFields.push("tourItinerary");
     if (!faq) missingFields.push("faq");
@@ -100,6 +102,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const parsedTourItinerary = parseJsonSafe(tourItinerary, "tourItinerary");
     const parsedFaq = parseJsonSafe(faq, "faq");
     const parsedTourInclusion = parseJsonSafe(tourInclusion, "tourInclusion");
+    const parsedTourExclusion = parseJsonSafe(tourExclusion, "tourExclusion");
     const parsedTourHighlights = parseJsonSafe(tourHighlights, "tourHighlights");
 
     const checkExistingTour = await Tour.findOne({tourName})
@@ -123,6 +126,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourHighlights: parsedTourHighlights,
       highlightPicture: uploadedHighlightPictureUrls,
       tourInclusion: parsedTourInclusion,
+      tourExclusion: parsedTourExclusion,
       tourItinerary: parsedTourItinerary,
       itineraryDayPhoto: uploadedItineraryDayPhotoUrl,
       faq: parsedFaq,

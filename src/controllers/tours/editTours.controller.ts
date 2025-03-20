@@ -24,6 +24,7 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourOverview,
       tourHighlights,
       tourInclusion,
+      tourExclusion,
       tourItinerary,
       faq,
       location,
@@ -92,6 +93,7 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const parsedTourItinerary = tourItinerary ? parseJsonSafe(tourItinerary, "tourItinerary") : existingTour.tourItinerary;
     const parsedFaq = faq ? parseJsonSafe(faq, "faq") : existingTour.faq;
     const parsedTourInclusion = tourInclusion ? parseJsonSafe(tourInclusion, "tourInclusion") : existingTour.tourInclusion;
+    const parsedTourExclusion = tourExclusion ? parseJsonSafe(tourExclusion, "tourExclusion"): existingTour.tourExclusion;
     const parsedTourHighlights = tourHighlights ? parseJsonSafe(tourHighlights, "tourHighlights") : existingTour.tourHighlights;
 
     // Generate new slug if tourName is updated
@@ -114,6 +116,7 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
         tourHighlights: parsedTourHighlights,
         highlightPicture: uploadedHighlightPictureUrls,
         tourInclusion: parsedTourInclusion,
+        tourExclusion: parsedTourExclusion,
         tourItinerary: parsedTourItinerary,
         itineraryDayPhoto: uploadedItineraryDayPhotoUrls,
         faq: parsedFaq,

@@ -43,6 +43,7 @@ const tourSchema = new Schema(
     tourHighlights: {type: [String], trim: true, default: [] },
     highlightPicture:{type:[String],default:[]},
     tourInclusion: { type: [String], default: [] },
+    tourExclusion: { type: [String], default: [] },
     tourItinerary: { type: [itineraryDetailsSchema], default: [] },
     itineraryDayPhoto: { type: [String], default: [] },
     faq: {

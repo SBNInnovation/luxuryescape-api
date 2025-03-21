@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import slugify from "@sindresorhus/slugify";
-import { uploadFile } from "../../utility/cloudinary.js";
-import Accommodation from "../../models/accommodation.models/Accommodation.js";
-
+import Accommodation from "../../models/accommodation.models/Accommodation";
+import { uploadFile } from "../../utility/cloudinary";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -12,7 +11,7 @@ export interface MulterRequest extends Request {
 
 const editAccommodation = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
-    const { accommodationId } = req.params; 
+    const { accommodationId } = req.params;
     const {
       accommodationTitle,
       accommodationLocation,
@@ -24,54 +23,49 @@ const editAccommodation = async (req: MulterRequest, res: Response): Promise<voi
       policies,
     } = req.body;
 
-    // Validate required fields
-    if (!accommodationTitle || !accommodationLocation || !accommodationRating || !accommodationDescription || !country) {
-      res.status(400).json({ success: false, message: "Missing required fields." });
+    if (!accommodationId) {
+      res.status(400).json({ success: false, message: "Accommodation ID is required" });
       return;
     }
 
-    // Parse JSON fields if they come as strings
-    const parsedAccommodationAmenities = typeof accommodationAmenities === "string"
-      ? JSON.parse(accommodationAmenities)
-      : accommodationAmenities || [];
-
-    const parsedAccommodationFeatures = typeof accommodationFeatures === "string"
-      ? JSON.parse(accommodationFeatures)
-      : accommodationFeatures || [];
-
-    const parsedPolicies = typeof policies === "string" ? JSON.parse(policies) : policies || {};
-
-    if (!Array.isArray(parsedAccommodationAmenities) || !Array.isArray(parsedAccommodationFeatures)) {
-      res.status(400).json({ success: false, message: "Features, amenities, and rooms must be arrays." });
+    const existingAccommodation = await Accommodation.findById(accommodationId);
+    if (!existingAccommodation) {
+      res.status(404).json({ success: false, message: "Accommodation not found" });
       return;
     }
 
-    // Handle file uploads using Multer
+    const parseJsonSafe = (data: any, fieldName: string) => {
+      if (Array.isArray(data) || typeof data === "object") return data;
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        res.status(400).json({ success: false, message: `Invalid JSON format in ${fieldName}` });
+        return null;
+      }
+    };
+
+    const parsedAccommodationAmenities = accommodationAmenities
+      ? parseJsonSafe(accommodationAmenities, "accommodationAmenities")
+      : existingAccommodation.accommodationAmenities;
+    const parsedAccommodationFeatures = accommodationFeatures
+      ? parseJsonSafe(accommodationFeatures, "accommodationFeatures")
+      : existingAccommodation.accommodationFeatures;
+    const parsedPolicies = policies ? parseJsonSafe(policies, "policies") : existingAccommodation.policies;
+
+    if (!parsedAccommodationAmenities || !parsedAccommodationFeatures) return;
+
     const accommodationPics = req?.files?.accommodationPics || [];
 
-    // Upload photos to Cloudinary and store URLs
     const uploadedAccommodationPics = accommodationPics.length
-      ? await Promise.all(
-          accommodationPics.map(async (file) => {
-            try {
-              const uploaded = await uploadFile(file?.path || "", "tours/accommodation/images");
-              return uploaded?.secure_url || null;
-            } catch (error) {
-              console.error("Error uploading accommodation pic:", error);
-              return null;
-            }
-          })
-        )
+      ? await Promise.all(accommodationPics.map(file => uploadFile(file?.path || "", "tours/accommodation/images")))
       : [];
+    const uploadedAccommodationPicUrls = uploadedAccommodationPics.length > 0
+      ? uploadedAccommodationPics.map(file => file?.secure_url)
+      : existingAccommodation.accommodationPics;
 
-    // Remove null values (if any upload failed)
-    const filteredAccommodationPics = uploadedAccommodationPics.filter((url) => url !== null);
+    const slug = accommodationTitle ? slugify(accommodationTitle) : existingAccommodation.slug;
 
-    // Generate slug from title
-    const slug = slugify(accommodationTitle);
-
-    // Find the accommodation by ID and update it
-    const accommodation = await Accommodation.findByIdAndUpdate(
+    const updatedAccommodation = await Accommodation.findByIdAndUpdate(
       accommodationId,
       {
         accommodationTitle,
@@ -82,21 +76,16 @@ const editAccommodation = async (req: MulterRequest, res: Response): Promise<voi
         accommodationDescription,
         accommodationFeatures: parsedAccommodationFeatures,
         accommodationAmenities: parsedAccommodationAmenities,
-        accommodationPics: filteredAccommodationPics,
+        accommodationPics: uploadedAccommodationPicUrls,
         policies: parsedPolicies,
       },
-      { new: true } // Return the updated document
+      { new: true }
     );
 
-    if (!accommodation) {
-      res.status(404).json({ success: false, message: "Accommodation not found." });
-      return;
-    }
-
-    res.status(200).json({ success: true, message: "Accommodation updated successfully", data: accommodation });
+    res.status(200).json({ success: true, message: "Accommodation updated successfully", data: updatedAccommodation });
   } catch (error) {
     console.error("Error editing accommodation:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error." });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 

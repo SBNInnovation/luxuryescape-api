@@ -13,7 +13,7 @@ var transporter = nodemailer.createTransport({
 const sendSingleEmail = (email: string, subject: string, content: string) => {
   try {
     let mailOptions = {
-      from: `${process.env.EMAIL}`,
+      from: `Nepal Luxuy Escape <${process.env.EMAIL}>`,
       to: email,
       subject: subject,
       html: content,

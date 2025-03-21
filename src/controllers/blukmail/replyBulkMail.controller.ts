@@ -56,12 +56,12 @@ const bulkMailing = async (req: MulterRequest, res: Response) => {
     const createMailContent = (message: string, uploadedFiles: string[]) => {
       return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f4f4f6; padding: 20px; border-radius: 8px;">
-  <div style="background-color: #3B82F6; color: white; padding: 15px; text-align: center; border-radius: 8px 8px 0 0;">
-    <h1 style="margin: 0; font-size: 24px;">Going Nepal Adventure</h1>
+  <div style="background-color: #E8B86D; color: white; padding: 15px; text-align: center; border-radius: 8px 8px 0 0;">
+    <h1 style="margin: 0; font-size: 24px;">Nepal Luxury Escape</h1>
   </div>
   
   <div style="background-color: white; padding: 25px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-    <h2 style="color: #1E40AF; margin-bottom: 15px; font-size: 20px;">
+    <h2 style="color: # #E8B86D; margin-bottom: 15px; font-size: 20px;">
       Hello sir/madam,
     </h2>
     
@@ -73,11 +73,11 @@ const bulkMailing = async (req: MulterRequest, res: Response) => {
       uploadedFiles.length > 0
         ? `
         <div style="background-color: #F3F4F6; border-top: 1px solid #E5E7EB; padding: 15px; border-radius: 8px; margin-top: 20px;">
-          <h3 style="color: #1E40AF; margin-bottom: 10px; font-size: 16px;">Attached Files:</h3>
+          <h3 style="color:rgb(92, 94, 2); margin-bottom: 10px; font-size: 16px;">Attached Files:</h3>
           ${uploadedFiles
             .map(
               (file) => `
-            <a href="${file}" style="color: #3B82F6; text-decoration: none; display: block; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis;">
+            <a href="${file}" style="color:  #E8B86D; text-decoration: none; display: block; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis;">
               📄 ${file.split("/").pop()}
             </a>
           `

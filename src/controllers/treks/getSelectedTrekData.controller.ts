@@ -45,7 +45,7 @@ const getSelectedTrekData = async (req: Request, res: Response): Promise<void> =
 
     // Fetch trek data based on the query
     const getAllSelectedTrekData = await Trek.find(query)
-      .select("idealTime thumbnail trekName trekOverview cost createdAt isActivate country location")
+      .select("idealTime thumbnail trekName slug trekOverview cost createdAt isActivate country location")
       .sort(sortQuery)
       .limit(limit)
       .skip(skip);

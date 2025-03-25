@@ -63,6 +63,7 @@ import addAgentRouter from "./routes/bluk.routes/addAgent.routes.js";
 import bulkmailRouter from "./routes/bluk.routes/sendBulkMail.routes.js";
 import deleteUserRouter from "./routes/bluk.routes/deleteUser.routes.js";
 import editAgentRouter from "./routes/bluk.routes/editAgent.routes.js";
+import { bookingRouter } from "./routes/booking.routes/booking.routes.js";
 
 
 const app = express();
@@ -169,7 +170,11 @@ app.use(
     addAgentRouter,
     bulkmailRouter,
     deleteUserRouter,
-    editAgentRouter
+    editAgentRouter,
+
+    //booking
+    bookingRouter
+
 )
 
 

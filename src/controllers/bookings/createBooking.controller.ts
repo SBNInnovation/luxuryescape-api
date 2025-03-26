@@ -11,6 +11,8 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       email,
       phone,
       address,
+      country,
+      company,
       adventureType,
       adventureName,
       adventureSlug,
@@ -18,6 +20,8 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       bookingDate,
       totalPrice,
     } = req.body
+
+    console.log(req.body)
 
     if (
       !fullName ||
@@ -29,7 +33,8 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       !adventureSlug ||
       !adventureId ||
       !bookingDate ||
-      !totalPrice
+      !totalPrice ||
+      !country
     ) {
       res
         .status(404)
@@ -41,10 +46,12 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
     const user = await Agent.find({ userEmail: email })
     if (!user || user.length === 0) {
       const newUser = new Agent({
-        userEmail: email,
-        userName: fullName,
-        userPhone: phone,
-        userAddress: address,
+        email: email,
+        name: fullName,
+        number: phone,
+        country: country,
+        company: company || "N/A",
+        address:address
       })
       await newUser.save()
     }
@@ -55,6 +62,7 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       email,
       phone,
       address,
+      country,
       adventureType,
       adventureName,
       adventureSlug,

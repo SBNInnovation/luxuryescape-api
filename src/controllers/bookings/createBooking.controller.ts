@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express"
 import { Booking } from "../../models/booking.models/booking.js"
 import Agent from "../../models/agent.models/Agent.js"

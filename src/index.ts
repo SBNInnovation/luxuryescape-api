@@ -64,6 +64,7 @@ import bulkmailRouter from "./routes/bluk.routes/sendBulkMail.routes.js";
 import deleteUserRouter from "./routes/bluk.routes/deleteUser.routes.js";
 import editAgentRouter from "./routes/bluk.routes/editAgent.routes.js";
 import { bookingRouter } from "./routes/booking.routes/booking.routes.js";
+import activeteTrekRouter from "./routes/trek.routes/activate.routes.js";
 
 
 const app = express();
@@ -164,6 +165,7 @@ app.use(
     getSelectedDataForTrekRouter,
     deleteTrekRouter,
     editTrekRouter,
+    activeteTrekRouter,
 
     //bulk mail
     getAgentRouter,

@@ -1,9 +1,8 @@
 import express from "express";
-import authenticate from "../../middleware/tokenAuth.js";
-import activateTours from "../../controllers/tours/activateTours.controllers.js";
+import updateActiveStatus from "../../controllers/tours/updateAcitvation.controller.js";
 
 const activeteTourRouter = express.Router();
 
-activeteTourRouter.route("/tour/activate-tour").post(activateTours)
+activeteTourRouter.route("/tour/activate-tour").patch(updateActiveStatus)
 
 export default activeteTourRouter;

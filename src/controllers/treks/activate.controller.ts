@@ -1,16 +1,14 @@
 import { Request, Response } from "express"
-import Tour from "../../models/tours.models/tours.js";
+import Trek from "../../models/trek.models/trek.js";
 
 const updateActiveStatus = async(req:Request,res:Response):Promise<void> =>{
     try {
-        const {tourId} = req.query;
+        const {trekId} = req.query;
         const activation =req.body;
 
-        console.log(activation)
-
              // Validate input
-             if (!tourId) {
-                res.status(400).json({ success: false, message: "Tour ID is required." });
+             if (!trekId) {
+                res.status(400).json({ success: false, message: "Trek ID is required." });
                 return;
             }
     
@@ -20,16 +18,16 @@ const updateActiveStatus = async(req:Request,res:Response):Promise<void> =>{
             }
 
         if(activation.activation === "active"){
-            const tour = await Tour.findByIdAndUpdate(tourId,{isActivate:true},{new:true});
+            const tour = await Trek.findByIdAndUpdate(trekId,{isActivate:true},{new:true});
             if(!tour){
-                res.status(404).json({success:false, message:"Tour not found"})
+                res.status(404).json({success:false, message:"Trek not found"})
                 return
             }
             res.status(200).json({success:true, message:"Activated"});
         }else if(activation.activation === "inactive"){
-            const tour = await Tour.findByIdAndUpdate(tourId,{isActivate:false},{new:true});
+            const tour = await Trek.findByIdAndUpdate(trekId,{isActivate:false},{new:true});
             if(!tour){
-                res.status(404).json({success:false, message:"Tour not found"})
+                res.status(404).json({success:false, message:"Trek not found"})
                 return
             }
             res.status(200).json({success:true, message:"Deactivated"});

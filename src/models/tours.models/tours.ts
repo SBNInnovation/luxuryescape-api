@@ -57,6 +57,7 @@ const tourSchema = new Schema(
       default: [],
     },
     isActivate: { type: Boolean, default: true },
+    viewsCount:{type:Number, default:0}
   },
   { timestamps: true }
 );

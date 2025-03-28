@@ -55,6 +55,7 @@ const trekSchema = new Schema(
     },
     isRecommend: { type: Boolean, default: false },
     isActivate: { type: Boolean, default: true },
+    viewsCount:{type:Number, default:0}
   },
   { timestamps: true }
 );

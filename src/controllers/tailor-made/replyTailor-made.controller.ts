@@ -43,7 +43,7 @@ const replyToTailormade = async (req: Request, res: Response): Promise<void> => 
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border-radius: 10px; background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); border-left: 6px solid #E8B86D;">
                     <h2 style="color: #333; text-align: center; border-bottom: 2px solid #E8B86D; padding-bottom: 10px;">Reply from Nepal Luxury Escapes</h2>
-                    <p style="font-size: 18px; color: #444; line-height: 1.6;"><strong>Dear Customer,</strong></p>
+                    <p style="font-size: 18px; color: #444; line-height: 1.6;"><strong>Dear ${tailorMadeRequest.lastName},</strong></p>
                     <p style="font-size: 16px; color: #444; line-height: 1.6;">${message}</p>
                     <p style="font-size: 16px; color: #777; margin-top: 10px;">
                         <i>If you have any further questions, feel free to reply to this email.</i>

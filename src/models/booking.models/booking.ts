@@ -18,6 +18,10 @@ const BookingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    numberOfPerson:{
+      type:Number,
+      default:1
+    },
     country: {
       type: String,
       required: true,

@@ -10,6 +10,7 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       email,
       phone,
       address,
+      numberOfPerson,
       country,
       company,
       adventureType,
@@ -27,13 +28,13 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       !email ||
       !phone ||
       !address ||
+      // !numberOfPerson ||
       !adventureType ||
       !adventureName ||
       !adventureSlug ||
       !adventureId ||
       !bookingDate ||
-      !totalPrice ||
-      !country
+      !totalPrice
     ) {
       res
         .status(404)
@@ -48,7 +49,7 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
         email: email,
         name: fullName,
         number: phone,
-        country: country,
+        country: country || "N/A",
         company: company || "N/A",
         address:address
       })
@@ -61,6 +62,7 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       email,
       phone,
       address,
+      numberOfPerson,
       country,
       adventureType,
       adventureName,
@@ -117,6 +119,10 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
           <td style="padding: 12px; border-bottom: 1px solid #f0f0f0; width: 35%; color: #E8B86D; font-weight: bold;">Adventure Type:</td>
           <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">${adventureType}</td>
         </tr>
+         <tr>
+          <td style="padding: 12px; border-bottom: 1px solid #f0f0f0; width: 35%; color: #E8B86D; font-weight: bold;">Adventure Type:</td>
+          <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">${numberOfPerson}</td>
+        </tr>
         <tr>
           <td style="padding: 12px; border-bottom: 1px solid #f0f0f0; width: 35%; color: #E8B86D; font-weight: bold;">Adventure Name:</td>
            <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">
@@ -166,7 +172,7 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
             ${adventureName}
             <a href="${
               process.env.CLIENT_URL_PROD
-            }/${adventureType.toLowerCase()}/${adventureSlug}" style="margin-left: 10px; color: #E8B86D; text-decoration: none;">View Details</a>
+            }/${adventureType.toLowerCase()}/${adventureSlug}" style="margin-left: 10px; color: #E8B86D; text-decoration: underline;">View Details</a>
           </td>
         </tr>
         <tr>
@@ -192,7 +198,7 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
         </ol>
       </div>
       
-      <p style="color: #2c3e50; margin-top: 25px; text-align: center;">Thank you for choosing our adventure services!</p>
+      <p style="color: #2c3e50; margin-top: 25px; text-align: center;">Thank you for choosing Nepal Luxury Escape!</p>
       
       
     </div>

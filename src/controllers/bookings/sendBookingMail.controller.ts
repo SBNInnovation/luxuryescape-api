@@ -38,17 +38,17 @@ const sendBookingMail = async (req: MulterRequest, res: Response):Promise<void> 
     }
 
     const mailContent = `
-<div style="font-family: 'Poppins', sans-serif; max-width: 600px; margin: 0 auto; background-color: #121212; padding: 25px; border-radius: 10px; color: #f8f8f8;">
+<div style="font-family: 'Poppins', sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8f8f8; padding: 25px; border-radius: 10px; color: #1a1a1a;">
   <div style="background-color:#C19A6B; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
     <h1 style="margin: 0; font-size: 24px; color: white; font-weight: 600;">Nepal Luxury Escape</h1>
   </div>
   
-  <div style="background-color: #1a1a1a; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 12px rgba(255,255,255,0.1);">
+  <div style="background-color: #f8f8f8; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 12px rgba(255,255,255,0.1);">
     <h2 style="color: #C19A6B; margin-bottom: 20px; font-size: 20px; font-weight: 500;">
       Payment Request: ${name ? name : recipient}
     </h2>
     
-    <p style="color: #d4d4d4; line-height: 1.7; margin-bottom: 20px; font-size: 15px;">
+    <p style="color: #1a1a1a; line-height: 1.7; margin-bottom: 20px; font-size: 15px;">
       ${message}
     </p>
 

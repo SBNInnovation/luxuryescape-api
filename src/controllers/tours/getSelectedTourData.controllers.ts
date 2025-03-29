@@ -42,7 +42,6 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
         } else {
             sortQuery.createdAt = -1;
         }
-
         
         const getAllSelectedData = await Tour.find(query)
             .select("idealTime thumbnail tourName slug tourOverview cost createdAt isActivate country location")

@@ -7,8 +7,6 @@ const addBookingPrice = async (req: Request, res: Response): Promise<void> => {
     const {
       adventureType,
       adventureId,
-      pricePerPerson,
-      discount,
       soloFourStar,
       soloFiveStar,
       singleSupplementaryFourStar,
@@ -20,7 +18,6 @@ const addBookingPrice = async (req: Request, res: Response): Promise<void> => {
     if (
       !adventureType ||
       !adventureId ||
-      !pricePerPerson ||
       !soloFourStar ||
       !soloFiveStar ||
       !singleSupplementaryFourStar ||
@@ -38,8 +35,6 @@ const addBookingPrice = async (req: Request, res: Response): Promise<void> => {
       adventureType,
       trekId: adventureType === "Trekking" ? adventureId : null,
       tourId: adventureType === "Tour" ? adventureId : null,
-      pricePerPerson,
-      discount,
       soloFourStar,
       soloFiveStar,
       singleSupplementaryFourStar,

@@ -1,4 +1,4 @@
-import exp from "constants"
+
 import mongoose from "mongoose"
 
 const bookingPriceSchema = new mongoose.Schema(

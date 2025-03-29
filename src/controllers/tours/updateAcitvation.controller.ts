@@ -6,8 +6,6 @@ const updateActiveStatus = async(req:Request,res:Response):Promise<void> =>{
         const {tourId} = req.query;
         const activation =req.body;
 
-        console.log(activation)
-
              // Validate input
              if (!tourId) {
                 res.status(400).json({ success: false, message: "Tour ID is required." });

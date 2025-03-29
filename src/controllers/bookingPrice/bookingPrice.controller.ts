@@ -7,6 +7,7 @@ const addBookingPrice = async (req: Request, res: Response): Promise<void> => {
     const {
       adventureType,
       adventureId,
+      solo,
       soloFourStar,
       soloFiveStar,
       singleSupplementaryFourStar,
@@ -17,13 +18,7 @@ const addBookingPrice = async (req: Request, res: Response): Promise<void> => {
 
     if (
       !adventureType ||
-      !adventureId ||
-      !soloFourStar ||
-      !soloFiveStar ||
-      !singleSupplementaryFourStar ||
-      !singleSupplementaryFiveStar ||
-      !standardFourStar ||
-      !standardFiveStar
+      !adventureId
     ) {
       res.status(404).json({
         message: "Please fill all the fields",
@@ -35,6 +30,7 @@ const addBookingPrice = async (req: Request, res: Response): Promise<void> => {
       adventureType,
       trekId: adventureType === "Trekking" ? adventureId : null,
       tourId: adventureType === "Tour" ? adventureId : null,
+      solo,
       soloFourStar,
       soloFiveStar,
       singleSupplementaryFourStar,

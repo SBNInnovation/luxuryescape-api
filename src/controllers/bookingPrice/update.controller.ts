@@ -11,6 +11,7 @@ const updateBookingPrice = async (
       adventureId,
       pricePerPerson,
       discount,
+      solo,
       soloFourStar,
       soloFiveStar,
       singleSupplementaryFourStar,
@@ -21,14 +22,7 @@ const updateBookingPrice = async (
 
     if (
       !adventureType ||
-      !adventureId ||
-      !pricePerPerson ||
-      !soloFourStar ||
-      !soloFiveStar ||
-      !singleSupplementaryFourStar ||
-      !singleSupplementaryFiveStar ||
-      !standardFourStar ||
-      !standardFiveStar
+      !adventureId
     ) {
       res.status(404).json({
         message: "Please fill all the fields",
@@ -58,6 +52,7 @@ const updateBookingPrice = async (
       {
         pricePerPerson,
         discount,
+        solo,
         soloFourStar,
         soloFiveStar,
         singleSupplementaryFourStar,

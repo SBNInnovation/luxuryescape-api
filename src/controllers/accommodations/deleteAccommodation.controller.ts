@@ -31,6 +31,9 @@
 import { Request, Response } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
 import { deleteFile } from "../../utility/cloudinary.js";
+import Tour from "../../models/tours.models/tours.js";
+import Trek from "../../models/trek.models/trek.js";
+import Room from "../../models/rooms.models/room.js";
 
 
 const deleteAccommodation = async (req: Request, res: Response): Promise<void> => {
@@ -47,8 +50,15 @@ const deleteAccommodation = async (req: Request, res: Response): Promise<void> =
       res.status(404).json({ success: false, message: "Accommodation not found" });
       return;
     }
+    // Remove references from Tours
+    await Tour.updateMany({ accommodations: accommodationId }, { $pull: { accommodations: accommodationId }});
 
-    // Delete all accommodation images from Cloudinary
+    // Remove references from Treks
+    await Trek.updateMany({ accommodations: accommodationId }, { $pull: { accommodations: accommodationId }});
+
+    await Room.updateMany({accommodations: accommodationId}, {$pull:{accommodations: accommodationId }});
+
+    // Delete all accommodation images from Cloudinarya
     if (accommodation.accommodationPics && accommodation.accommodationPics.length > 0) {
       for (const image of accommodation.accommodationPics) {
         const imagePublicId = image.split('/').pop()?.split('.')[0]; // Extract public ID from the URL

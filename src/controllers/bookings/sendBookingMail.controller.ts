@@ -60,7 +60,7 @@ const sendBookingMail = async (req: MulterRequest, res: Response):Promise<void> 
     
     <div style="background-color: #222; padding: 15px; border-radius: 8px; margin-top: 25px; border-left: 4px solid #C19A6B;">
       <p style="color: #d4d4d4; line-height: 1.6; margin: 0; font-size: 14px;">
-        <strong>Note:</strong> Please complete your payment to secure your luxury booking. If you have any questions about this payment, please contact our support team at <a href="mailto:info@nepalluxuryescape.com" style="color: #C19A6B; text-decoration: none;">support@nepalluxuryescape.com</a>.
+        <strong>Note:</strong> Please complete your payment to secure your luxury booking. If you have any questions about this payment, please contact our support team at <a href="mailto:info@goingnepal.com" style="color: #C19A6B; text-decoration: none;">support@nepalluxuryescape.com</a>.
       </p>
     </div>
     
@@ -84,9 +84,9 @@ const sendBookingMail = async (req: MulterRequest, res: Response):Promise<void> 
       © ${new Date().getFullYear()} Nepal Luxury Escape. All rights reserved.
     </p>
     <div style="margin-top: 15px;">
-      <a href="https://www.facebook.com/nepalluxuryescape/" style="color: #C19A6B; text-decoration: none; margin: 0 10px; font-size: 13px;">Facebook</a>
-      <a href="https://www.instagram.com/nepalluxuryescape/" style="color: #C19A6B; text-decoration: none; margin: 0 10px; font-size: 13px;">Instagram</a>
-      <a href="https://www.nepalluxuryescape.com/contact-us" style="color: #C19A6B; text-decoration: none; margin: 0 10px; font-size: 13px;">Contact Us</a>
+      <a href="https://www.facebook.com/nepalluxuryescapes" style="color: #C19A6B; text-decoration: none; margin: 0 10px; font-size: 13px;">Facebook</a>
+      <a href="https://www.instagram.com/goingnepal/" style="color: #C19A6B; text-decoration: none; margin: 0 10px; font-size: 13px;">Instagram</a>
+      <a href="https://www.nepalluxuryescapes.com/contact" style="color: #C19A6B; text-decoration: none; margin: 0 10px; font-size: 13px;">Contact Us</a>
     </div>
   </div>
 </div>

@@ -7,8 +7,20 @@ import addBookingPrice from "../../controllers/bookingPrice/bookingPrice.control
 import updateBookingPrice from "../../controllers/bookingPrice/update.controller.js"
 import deleteBookingPrice from "../../controllers/bookingPrice/delete.controller.js"
 import getSingleBookingPrice from "../../controllers/bookingPrice/getSingle.controller.js"
+import multer from "multer"
+import sendBookingMail from "../../controllers/bookings/sendBookingMail.controller.js"
 
 const bookingRouter = express.Router()
+
+interface MulterRequest extends express.Request {
+  files: {
+    attachments: Express.Multer.File[]
+  }
+}
+
+// Configure storage (memory storage for buffer)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 bookingRouter.post("/booking/create", createBooking)
 bookingRouter.get("/booking/get-all", getBooking)
@@ -23,6 +35,15 @@ bookingRouter.delete("/delete-booking-price/:bookingPriceId", deleteBookingPrice
 bookingRouter.get(
   "/get-single-booking-price/:adventureId/:adventureType",
   getSingleBookingPrice
+)
+bookingRouter.post(
+  "/send-booking-mail/:id",
+  upload.single(
+    "attachments"
+  ),
+  (req, res) => {
+    sendBookingMail(req as MulterRequest, res)
+  }
 )
 
 

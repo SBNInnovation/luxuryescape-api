@@ -38,13 +38,12 @@ bookingRouter.get(
 )
 bookingRouter.post(
   "/send-booking-mail/:id",
-  upload.single(
-    "attachments"
-  ),
+  upload.array("attachments"), // Allows multiple files
   (req, res) => {
-    sendBookingMail(req as MulterRequest, res)
+    sendBookingMail(req as MulterRequest, res);
   }
-)
+);
+
 
 
 export { bookingRouter }

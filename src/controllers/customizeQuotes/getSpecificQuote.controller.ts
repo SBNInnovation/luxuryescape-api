@@ -4,7 +4,7 @@ import CustomizeQuote from "../../models/customizeQuote.models/customizeQuote.js
 const getSpecificQuote = async(req:Request, res:Response):Promise<void> =>{
     try {
         const {quoteId} = req.params;
-        const quote = await CustomizeQuote.findById(quoteId).exec();
+        const quote = await CustomizeQuote.findById(quoteId).populate("tourId", "slug").populate("trekId","slug").exec();
         if(!quote){
             res.status(404).json({success:false, message: "Quote not found"});
             return

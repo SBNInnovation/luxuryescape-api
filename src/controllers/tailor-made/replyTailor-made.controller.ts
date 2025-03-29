@@ -20,10 +20,6 @@ const replyToTailormade = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
-        // Update status to "mailed"
-        tailorMadeRequest.status = "mailed";
-        await tailorMadeRequest.save();
-
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -58,6 +54,10 @@ const replyToTailormade = async (req: Request, res: Response): Promise<void> => 
 
         // Send email
         await transporter.sendMail(mailOptions);
+        
+        // Update status to "mailed"
+        tailorMadeRequest.status = "mailed";
+        await tailorMadeRequest.save();
 
         res.status(200).json({ success: true, message: "Reply sent successfully." });
     } catch (error) {

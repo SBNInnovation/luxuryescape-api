@@ -7,6 +7,7 @@ import slugify from "@sindresorhus/slugify";
 export interface MulterRequest extends Request {
   files?: {
     thumbnail?: Express.Multer.File[];
+    routeMap?:Express.Multer.File[];
     gallery?: Express.Multer.File[];
     highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
@@ -60,6 +61,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
 
     // Check for files in the request, but allow them to be optional
     const thumbnail = req?.files?.thumbnail || [];
+    const routeMap =req?.files?.routeMap || [];
     const gallery = req?.files?.gallery || [];
     const highlightPicture = req?.files?.highlightPicture || [];
     const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
@@ -68,6 +70,11 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       ? await uploadFile(thumbnail[0]?.path || "", "treks/thumbnail/images")
       : null;
     const uploadedThumbnailUrl = uploadedThumbnail ? uploadedThumbnail.secure_url : null;
+
+    const uploadedRouteMap = routeMap.length
+      ? await uploadFile(routeMap[0]?.path || "", "tours/route-map/images")
+      : null;
+    const uploadedRouteMapUrl = uploadedRouteMap ? uploadedRouteMap.secure_url: null;
 
     const uploadedGallery = gallery.length
       ? await Promise.all(gallery.map((file) => uploadFile(file?.path || "", "treks/gallery/images")))
@@ -114,6 +121,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       trekName,
       slug: slug1,
       thumbnail: uploadedThumbnailUrl,
+      routeMap: uploadedRouteMapUrl,
       country,
       location,
       duration,

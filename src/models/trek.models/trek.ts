@@ -29,6 +29,7 @@ const trekSchema = new Schema(
     slug: { type: String, required: true, unique: true, lowercase: true },
     type: { type: String, default: "trek" },
     thumbnail: { type: String, default: "" },
+    routeMap:{type:String, default:""},
     gallery: { type: [String], default: [] },
     country: { type: String, enum: ["Nepal", "Bhutan", "Tibet", "Multidestinations"], required: true },
     location: { type: String, required: true, trim: true },

@@ -14,6 +14,10 @@ const bookingPriceSchema = new mongoose.Schema(
       ref: "Tour",
       default: null,
     },
+    singleSupplementaryThreeStar:{
+      type: Number,
+      default: 0
+    },
     singleSupplementaryFourStar: {
       type: Number,
       default: 0,
@@ -26,6 +30,10 @@ const bookingPriceSchema = new mongoose.Schema(
       type:Number,
       default:0
     },
+    soloThreeStar:{
+      type:Number,
+      default:0
+    },
     soloFourStar: {
       type: Number,
       required: true,
@@ -33,6 +41,10 @@ const bookingPriceSchema = new mongoose.Schema(
     soloFiveStar: {
       type: Number,
       required: true,
+    },
+    standardThreeStar:{
+      type:Number,
+      default:0
     },
     standardFourStar: {
       type: Number,

@@ -64,9 +64,9 @@ const getAllQuote = async (req: Request, res: Response): Promise<void> => {
                     statusOrder: {
                         $switch: {
                             branches: [
-                                { case: { $eq: ["$status", "pending"] }, then: 0 }, // "pending" first
-                                { case: { $eq: ["$status", "viewed"] }, then: 1 }, // "approved" next
-                                { case: { $eq: ["$status", "mailed"] }, then: 2 }, // "rejected" last
+                                { case: { $eq: ["$status", "pending"] }, then: 0 }, 
+                                { case: { $eq: ["$status", "viewed"] }, then: 1 }, 
+                                { case: { $eq: ["$status", "mailed"] }, then: 2 },
                             ],
                             default: 3,
                         },

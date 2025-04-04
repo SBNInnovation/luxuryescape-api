@@ -5,18 +5,12 @@ import bcrypt from "bcryptjs";
 const updateProfile = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.params.userId;
-    const { name, email, phone, oldPassword, password, confirmPassword } = req.body;
+    const { name, email, phone, oldPassword, password } = req.body;
 
     // Find the user by ID
     const user = await Register.findById(userId);
     if (!user) {
       res.status(404).json({ success: false, message: "User not found" });
-      return;
-    }
-
-    // Check if the new password and confirm password match
-    if (password && password !== confirmPassword) {
-      res.status(400).json({ success: false, message: "Passwords do not match" });
       return;
     }
 

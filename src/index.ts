@@ -85,7 +85,7 @@ app.use(cookieParser())
 
 app.use(
     cors({
-      origin: ["http://localhost:3000", "https://luxuryescape-admin.vercel.app", "https://www.nepalluxuryescapes.com", "https://admin.nepalluxuryescapes.com"],
+      origin: ["http://localhost:3000", "https://luxuryescape-admin.vercel.app", "https://www.nepalluxuryescapes.com", "https://admin.nepalluxuryescapes.com" , "https://admin-nepalluxuryescapes.vercel.app"],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
       credentials: true, // Allow cookies
     })

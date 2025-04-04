@@ -26,7 +26,7 @@ const loginUser = async(req:Request,res:Response):Promise<void> =>{
             return
         }
         res.cookie("token",token,{httpOnly:true,maxAge:24*60*60})
-        res.status(200).json({success:true, message:"Login successful",token, data:{_id:user._id,name:user.name, email:user.email, phone:user.phone}})
+        res.status(200).json({success:true, message:"Login successful",jwt:token, data:{_id:user._id,name:user.name, email:user.email}})
     } catch (error) {
         res.status(400).json({success:false, message:"Internal server error"})
     }

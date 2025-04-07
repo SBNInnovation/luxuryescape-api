@@ -72,7 +72,7 @@ const updateProfile = async (req: Request, res: Response): Promise<void> => {
     await user.save();
 
     // Return success response
-    res.status(200).json({ success: true, message: "Profile updated successfully", data:user });
+    res.status(200).json({ success: true, message: "Profile updated successfully"});
   } catch (error) {
     console.error(error);
     if(error instanceof(Error)){

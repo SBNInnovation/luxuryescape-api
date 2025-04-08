@@ -38,19 +38,55 @@ const uploadFile = async (file:string,folder:string) => {
 }
 
 // delete file
-const deleteFile = async (public_id:string) => {
-    // console.log(public_id);
+// const deleteFile = async (public_id:string) => {
+//     // console.log(public_id);
+//     try {
+//         const result = await cloudinary.uploader.destroy(public_id);
+//         if (!result) {
+//             throw new Error('Error deleting file');
+//         }
+//         // console.log(result);
+//         return result;
+//     } catch (error) {
+//         console.log("Error on cloudinary:", error);
+//     }
+// }
+
+const deleteFile = async (urlOrPublicId: string) => {
     try {
-        const result = await cloudinary.uploader.destroy(public_id);
-        if (!result) {
-            throw new Error('Error deleting file');
-        }
-        // console.log(result);
-        return result;
+      let publicId = urlOrPublicId;
+  
+      // Handle if full URL is provided
+      if (urlOrPublicId.startsWith("http")) {
+        const url = new URL(urlOrPublicId);
+        const pathParts = url.pathname.split("/");
+  
+        // Get index of "upload"
+        const uploadIndex = pathParts.findIndex(part => part === "upload");
+  
+        // Extract public ID parts (after "upload")
+        const publicIdParts = pathParts.slice(uploadIndex + 1);
+  
+        // Remove file extension from the last segment
+        const fileName = publicIdParts.pop() || "";
+        const fileNameWithoutExt = fileName.split(".")[0];
+  
+        // Recombine the full path without extension
+        publicId = [...publicIdParts, fileNameWithoutExt].join("/");
+      }
+  
+      const result = await cloudinary.uploader.destroy(publicId);
+  
+      if (!result || result.result !== "ok") {
+        throw new Error("Error deleting file");
+      }
+  
+      return result;
     } catch (error) {
-        console.log("Error on cloudinary:", error);
+      console.error("Cloudinary delete error:", error);
     }
-}
+  };
+  
 
 
 export{uploadFile,deleteFile}

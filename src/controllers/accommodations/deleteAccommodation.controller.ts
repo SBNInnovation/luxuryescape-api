@@ -58,7 +58,7 @@ const deleteAccommodation = async (req: Request, res: Response): Promise<void> =
 
     await Room.updateMany({accommodations: accommodationId}, {$pull:{accommodations: accommodationId }});
 
-    // Delete all accommodation images from Cloudinarya
+    // Delete all accommodation images from Cloudinary
     if (accommodation.accommodationPics && accommodation.accommodationPics.length > 0) {
       for (const image of accommodation.accommodationPics) {
         const imagePublicId = image.split('/').pop()?.split('.')[0]; // Extract public ID from the URL

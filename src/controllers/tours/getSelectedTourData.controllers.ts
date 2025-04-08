@@ -36,9 +36,9 @@ const getSelectedData = async (req: Request, res: Response): Promise<void> => {
         } else if (sort === "createdAtdesc") {
             sortQuery.createdAt = -1;
         } else if (sort === "asc") {
-            sortQuery.price = 1;
+            sortQuery.cost = 1;
         } else if (sort === "desc") {
-            sortQuery.price = -1;
+            sortQuery.cost = -1;
         } else {
             sortQuery.createdAt = -1;
         }

@@ -8,6 +8,7 @@ const accommodationDetailsSchema = new Schema({
   slug: { type: String, required: true, unique: true, lowercase: true , index: true},
   type:{type:String, default:"accommodation"},
   country:{type:String, required:true, trim:true},
+  destination: { type: mongoose.Schema.Types.ObjectId, ref: "Destination" },
   accommodationLocation: { type: String, required: true, trim: true },
   accommodationRating: { type: Number, min: 0, max: 5 }, // Ratings typically range 0-5
   accommodationDescription: { type: String, required: true, trim: true, minLength: 10 },

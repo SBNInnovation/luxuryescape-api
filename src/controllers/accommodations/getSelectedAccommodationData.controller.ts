@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
+import Destination from "../../models/destination.models/destination.js";
 
 
 const getSelectedAccommodationData = async (req: Request, res: Response): Promise<void> => {
@@ -9,6 +10,7 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         const limit: number = parseInt(req.query.limit as string, 10) || 10;
         const search = req.query.search ? req.query.search.toString().trim().toLowerCase() : "";
         const location = req.query.location ? req.query.location.toString().trim().toLowerCase() : "";
+        const destination = req.query.destination ? req.query.destination.toString().trim().toLowerCase() : "";
         const sort = req.query.sort ? req.query.sort.toString().trim().toLowerCase() : "";
         const rating = req.query.rating ? req.query.rating.toString().trim() : "";
 
@@ -27,14 +29,22 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         if (search) {
             query.$or = [
                 { accommodationTitle: { $regex: search, $options: "i" } },
-                { accommodationLocation: { $regex: search, $options: "i" } }
+                { accommodationLocation: { $regex: search, $options: "i" }}
             ];
         }
 
         if (location) {
             query.country = { $regex: location, $options: "i" };
         }
+        if(destination){
+            const destinationDoc = await Destination.findOne({ title: { $regex: destination, $options: "i" } });
 
+            if (destinationDoc?._id) {
+                query.destination = destinationDoc._id;
+            }
+        
+        }
+           
         if (rating) {
             const intRating = Number(rating);
             if (!isNaN(intRating)) {
@@ -51,7 +61,7 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         }
 
         // Fetch accommodations
-        const getAllSelectedData = await Accommodation.find(query)
+        const getAllSelectedData = await Accommodation.find(query).populate("destination")
             .select("accommodationLocation accommodationTitle accommodationDescription accommodationRating accommodationPics country slug")
             .sort(sortQuery)
             .limit(limit)

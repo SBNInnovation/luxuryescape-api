@@ -53,39 +53,45 @@ const uploadFile = async (file:string,folder:string) => {
 // }
 
 const deleteFile = async (urlOrPublicId: string) => {
-    try {
+  try {
       let publicId = urlOrPublicId;
-  
+
       // Handle if full URL is provided
       if (urlOrPublicId.startsWith("http")) {
-        const url = new URL(urlOrPublicId);
-        const pathParts = url.pathname.split("/");
-  
-        // Get index of "upload"
-        const uploadIndex = pathParts.findIndex(part => part === "upload");
-  
-        // Extract public ID parts (after "upload")
-        const publicIdParts = pathParts.slice(uploadIndex + 1);
-  
-        // Remove file extension from the last segment
-        const fileName = publicIdParts.pop() || "";
-        const fileNameWithoutExt = fileName.split(".")[0];
-  
-        // Recombine the full path without extension
-        publicId = [...publicIdParts, fileNameWithoutExt].join("/");
+          try {
+              const url = new URL(urlOrPublicId);
+              
+              // Extract the path after '/upload/'
+              const uploadPath = url.pathname.split("/upload/")[1];
+              
+              if (!uploadPath) {
+                  throw new Error("Could not extract path from URL");
+              }
+              
+              // Remove file extension
+              publicId = uploadPath.replace(/\.[^/.]+$/, "");
+          } catch (parseError) {
+              console.error("Error parsing Cloudinary URL:", parseError);
+              throw new Error(`Invalid Cloudinary URL format: ${urlOrPublicId}`);
+          }
       }
-  
+
       const result = await cloudinary.uploader.destroy(publicId);
-  
-      if (!result || result.result !== "ok") {
-        throw new Error("Error deleting file");
+
+      if (!result) {
+          throw new Error("No result from Cloudinary delete operation");
       }
-  
+      
+      if (result.result !== "ok") {
+          throw new Error(`Cloudinary delete failed with status: ${result.result}`);
+      }
+
       return result;
-    } catch (error) {
+  } catch (error) {
       console.error("Cloudinary delete error:", error);
-    }
-  };
+      throw error; // Re-throw to allow proper error handling upstream
+  }
+};
   
 
 

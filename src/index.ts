@@ -65,6 +65,7 @@ import deleteUserRouter from "./routes/bluk.routes/deleteUser.routes.js";
 import editAgentRouter from "./routes/bluk.routes/editAgent.routes.js";
 import { bookingRouter } from "./routes/booking.routes/booking.routes.js";
 import activeteTrekRouter from "./routes/trek.routes/activate.routes.js";
+import destinationRouter from "./routes/destination.routes/destination.routes.js";
 
 
 const app = express();
@@ -175,7 +176,10 @@ app.use(
     editAgentRouter,
 
     //booking
-    bookingRouter
+    bookingRouter,
+
+    //destination
+    destinationRouter
 
 )
 

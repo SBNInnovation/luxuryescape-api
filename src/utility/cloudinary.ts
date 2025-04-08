@@ -38,60 +38,60 @@ const uploadFile = async (file:string,folder:string) => {
 }
 
 // delete file
-// const deleteFile = async (public_id:string) => {
-//     // console.log(public_id);
-//     try {
-//         const result = await cloudinary.uploader.destroy(public_id);
-//         if (!result) {
-//             throw new Error('Error deleting file');
-//         }
-//         // console.log(result);
-//         return result;
-//     } catch (error) {
-//         console.log("Error on cloudinary:", error);
-//     }
-// }
+const deleteFile = async (public_id:string) => {
+    // console.log(public_id);
+    try {
+        const result = await cloudinary.uploader.destroy(public_id);
+        if (!result) {
+            throw new Error('Error deleting file');
+        }
+        // console.log(result);
+        return result;
+    } catch (error) {
+        console.log("Error on cloudinary:", error);
+    }
+}
 
-const deleteFile = async (urlOrPublicId: string) => {
-  try {
-      let publicId = urlOrPublicId;
+// const deleteFile = async (urlOrPublicId: string) => {
+//   try {
+//       let publicId = urlOrPublicId;
 
-      // Handle if full URL is provided
-      if (urlOrPublicId.startsWith("http")) {
-          try {
-              const url = new URL(urlOrPublicId);
+//       // Handle if full URL is provided
+//       if (urlOrPublicId.startsWith("http")) {
+//           try {
+//               const url = new URL(urlOrPublicId);
               
-              // Extract the path after '/upload/'
-              const uploadPath = url.pathname.split("/upload/")[1];
+//               // Extract the path after '/upload/'
+//               const uploadPath = url.pathname.split("/upload/")[1];
               
-              if (!uploadPath) {
-                  throw new Error("Could not extract path from URL");
-              }
+//               if (!uploadPath) {
+//                   throw new Error("Could not extract path from URL");
+//               }
               
-              // Remove file extension
-              publicId = uploadPath.replace(/\.[^/.]+$/, "");
-          } catch (parseError) {
-              console.error("Error parsing Cloudinary URL:", parseError);
-              throw new Error(`Invalid Cloudinary URL format: ${urlOrPublicId}`);
-          }
-      }
+//               // Remove file extension
+//               publicId = uploadPath.replace(/\.[^/.]+$/, "");
+//           } catch (parseError) {
+//               console.error("Error parsing Cloudinary URL:", parseError);
+//               throw new Error(`Invalid Cloudinary URL format: ${urlOrPublicId}`);
+//           }
+//       }
 
-      const result = await cloudinary.uploader.destroy(publicId);
+//       const result = await cloudinary.uploader.destroy(publicId);
 
-      if (!result) {
-          throw new Error("No result from Cloudinary delete operation");
-      }
+//       if (!result) {
+//           throw new Error("No result from Cloudinary delete operation");
+//       }
       
-      if (result.result !== "ok") {
-          throw new Error(`Cloudinary delete failed with status: ${result.result}`);
-      }
+//       if (result.result !== "ok") {
+//           throw new Error(`Cloudinary delete failed with status: ${result.result}`);
+//       }
 
-      return result;
-  } catch (error) {
-      console.error("Cloudinary delete error:", error);
-      throw error; // Re-throw to allow proper error handling upstream
-  }
-};
+//       return result;
+//   } catch (error) {
+//       console.error("Cloudinary delete error:", error);
+//       throw error; // Re-throw to allow proper error handling upstream
+//   }
+// };
   
 
 

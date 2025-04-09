@@ -28,12 +28,18 @@ const uploader = multer({
   }),
 });
 
+// Define file upload fields
+const upload = [
+  { name: "image", maxCount: 1 }, // Single file for thumbnail
+];
+
+
 // Define the route to handle blog upload
 destinationRouter.post(
   "/destination/add", 
-  uploader.single("image"), // Single file upload with field name 'thumbnail'
+  uploader.fields(upload), // Single file upload with field name 'thumbnail'
   (req: Request, res: Response) => {
-    console.log("Uploaded file:", req.file); // Debugging the uploaded file
+    console.log("Uploaded file: add", req.file); // Debugging the uploaded file
     createDestination(req as MulterRequest, res); // Ensure MulterRequest type is used
   }
 );
@@ -43,15 +49,15 @@ destinationRouter.get("/destination/get/:destinationId", getDestinationById);
 // Route for updating an existing destination by its ID
 destinationRouter.put(
   "/destination/edit/:destinationId", 
-  uploader.single("image"), 
+  uploader.fields(upload), 
   (req: Request, res: Response) => {
-    console.log("Uploaded file:", req.file); // Debugging the uploaded file
+    console.log("Uploaded file: edit", req.file); // Debugging the uploaded file
     updateDestination(req as MulterRequest, res); // Ensure MulterRequest type is used
   }
 );
 
 // Route for deleting a destination by its ID
-destinationRouter.delete("/destinations/delete/:destinationId", deleteDestination);
+destinationRouter.delete("/destination/delete/:destinationId", deleteDestination);
 
 // Route to get all destinations
 destinationRouter.get("/destinations", getAllDestinations);

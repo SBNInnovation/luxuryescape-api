@@ -16,6 +16,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       accommodationTitle,
       accommodationLocation,
       country,
+      destination,
       accommodationRating,
       accommodationDescription,
       accommodationFeatures,
@@ -24,7 +25,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
     } = req.body;
 
     // Validate required fields
-    if (!accommodationTitle || !accommodationLocation || !accommodationRating || !accommodationDescription || ! country) {
+    if (!accommodationTitle || !accommodationLocation || !accommodationRating || !accommodationDescription || ! country || !destination) {
       res.status(400).json({ success: false, message: "Missing required fields." });
       return;
     }
@@ -76,6 +77,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       accommodationTitle,
       slug,
       country,
+      destination,
       accommodationLocation,
       accommodationRating,
       accommodationDescription,

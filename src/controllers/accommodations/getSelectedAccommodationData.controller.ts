@@ -36,15 +36,12 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         if (location) {
             query.country = { $regex: location, $options: "i" };
         }
-        if(destination){
-            const destinationDoc = await Destination.findOne({ title: { $regex: destination, $options: "i" } });
-
-            if (destinationDoc?._id) {
-                query.destination = destinationDoc._id;
+        if (destination) {
+                query.destination = destination;
+            } else {
+                console.log(`No destination found for input: ${destination}`);
             }
         
-        }
-           
         if (rating) {
             const intRating = Number(rating);
             if (!isNaN(intRating)) {

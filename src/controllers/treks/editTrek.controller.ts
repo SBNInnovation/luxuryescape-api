@@ -173,8 +173,8 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       location,
       country,
       galleryToDelete,
-      // highlightPictureToDelete,
-      // itineraryDayPhotoToDelete,
+      highlightPictureToDelete,
+      itineraryDayPhotoToDelete,
     } = req.body;
 
     if (!trekId) {
@@ -194,7 +194,11 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     }
 
     // FILES
-    const { thumbnail = [], routeMap = [], gallery = [], highlightPicture = [], itineraryDayPhoto = [] } = req.files || {};
+    const thumbnail = req?.files?.thumbnail ||[]; 
+    const routeMap =req?.files?.routeMap || [];
+    const gallery = req?.files?.gallery || [];
+    const highlightPicture = req?.files?.highlightPicture || [];
+    const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
 
     const uploadedThumbnail = thumbnail.length
       ? await uploadFile(thumbnail[0]?.path || "", "treks/thumbnail/images")
@@ -208,19 +212,19 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
 
     // --- HANDLE GALLERY, HIGHLIGHT, ITINERARY DELETIONS ---
     const deletedGallery: string[] = galleryToDelete ? JSON.parse(galleryToDelete) : [];
-    // const deletedHighlightPicture: string[] = highlightPictureToDelete ? JSON.parse(highlightPictureToDelete) : [];
-    // const deletedItineraryDayPhoto: string[] = itineraryDayPhotoToDelete ? JSON.parse(itineraryDayPhotoToDelete) : [];
+    const deletedHighlightPicture: string[] = highlightPictureToDelete ? JSON.parse(highlightPictureToDelete) : [];
+    const deletedItineraryDayPhoto: string[] = itineraryDayPhotoToDelete ? JSON.parse(itineraryDayPhotoToDelete) : [];
 
     // Remove deleted ones from existing arrays
     const finalGallery = existingTrek.gallery.filter((url: string) => !deletedGallery.includes(url));
-    // const finalHighlightPicture = existingTrek.highlightPicture.filter((url: string) => !deletedHighlightPicture.includes(url));
-    // const finalItineraryDayPhoto = existingTrek.itineraryDayPhoto.filter((url: string) => !deletedItineraryDayPhoto.includes(url));
+    const finalHighlightPicture = existingTrek.highlightPicture.filter((url: string) => !deletedHighlightPicture.includes(url));
+    const finalItineraryDayPhoto = existingTrek.itineraryDayPhoto.filter((url: string) => !deletedItineraryDayPhoto.includes(url));
 
     // Delete from Cloudinary
     await Promise.all([
       ...deletedGallery.map((url) => deleteFile(url)),
-      // ...deletedHighlightPicture.map((url) => deleteFile(url)),
-      // ...deletedItineraryDayPhoto.map((url) => deleteFile(url)),
+      ...deletedHighlightPicture.map((url) => deleteFile(url)),
+      ...deletedItineraryDayPhoto.map((url) => deleteFile(url)),
     ]);
 
     // Upload new images
@@ -241,8 +245,8 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
 
     // Final image arrays
     const finalGalleryUrls = [...finalGallery, ...uploadedGalleryUrls];
-    const finalHighlightPictureUrls = [ ...uploadedHighlightPictureUrls];
-    const finalItineraryDayPhotoUrls = [...uploadedItineraryDayPhotoUrls];
+    const finalHighlightPictureUrls = [...finalHighlightPicture, ...uploadedHighlightPictureUrls];
+    const finalItineraryDayPhotoUrls = [...finalItineraryDayPhoto, ...uploadedItineraryDayPhotoUrls];
 
     // Safe JSON parsing
     const parseJsonSafe = (data: any, fieldName: string) => {

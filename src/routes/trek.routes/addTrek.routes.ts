@@ -87,6 +87,7 @@ const uploader = multer({
 // Define the fields for file upload with their limits
 const upload = [
   { name: "thumbnail", maxCount: 1 },
+  {name:"routeMap", maxCount:1},
   { name: "gallery", maxCount: 5 },
   { name: "highlightPicture", maxCount: 10 },
   { name: "itineraryDayPhoto" },

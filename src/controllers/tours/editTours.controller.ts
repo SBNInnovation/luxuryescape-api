@@ -157,7 +157,7 @@ import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
 export interface MulterRequest extends Request {
   files?: {
     thumbnail?: Express.Multer.File[];
-    routeMap?: Express.Multer.File[];
+    // routeMap?: Express.Multer.File[];
     gallery?: Express.Multer.File[];
     highlightPicture?: Express.Multer.File[];
     itineraryDayPhoto?: Express.Multer.File[];
@@ -216,17 +216,17 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const parsedItineraryPhotoToDelete = parseDeleteArray(itineraryDayPhotoToDelete);
 
     // === FILE UPLOADS ===
-    const { thumbnail = [], routeMap = [], gallery = [], highlightPicture = [], itineraryDayPhoto = [] } = req.files || {};
+    const { thumbnail = [], gallery = [], highlightPicture = [], itineraryDayPhoto = [] } = req.files || {};
 
     const uploadedThumbnail = thumbnail.length
       ? await uploadFile(thumbnail[0]?.path || "", "tours/thumbnail/images")
       : null;
     const uploadedThumbnailUrl = uploadedThumbnail?.secure_url || existingTour.thumbnail;
 
-    const uploadedRouteMap = routeMap.length
-      ? await uploadFile(routeMap[0]?.path || "", "tours/route-map/images")
-      : null;
-    const uploadedRouteMapUrl = uploadedRouteMap?.secure_url || existingTour.routeMap;
+    // const uploadedRouteMap = routeMap.length
+    //   ? await uploadFile(routeMap[0]?.path || "", "tours/route-map/images")
+    //   : null;
+    // const uploadedRouteMapUrl = uploadedRouteMap?.secure_url || existingTour.routeMap;
 
     const uploadedGallery = gallery.length
       ? await Promise.all(gallery.map(file => uploadFile(file?.path || "", "tours/gallery/images")))
@@ -296,7 +296,7 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
         tourName,
         slug: slug1,
         thumbnail: uploadedThumbnailUrl,
-        routeMap: uploadedRouteMapUrl,
+        // routeMap: uploadedRouteMapUrl,
         country,
         location,
         duration,

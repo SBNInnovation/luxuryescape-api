@@ -1,186 +1,3 @@
-// import { Request, Response } from "express";
-// import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
-// import Destination from "../../models/destination.models/destination.js";
-// import slug from "slug";
-
-// export interface MulterRequest extends Request {
-//   files?: {
-//     image?: Express.Multer.File[];
-//   };
-// }
-
-// const createDestination = async (req: MulterRequest, res: Response): Promise<void> => {
-//   try {
-//     const title = req.body.title?.trim();
-//     const description = req.body.description?.trim();
-
-//     if (!title || !description) {
-//       res.status(400).json({ success: false, message: "Please fill in all fields." });
-//       return;
-//     }
-
-//     let uploadedImageUrl = "";
-
-//     if (req.files?.image?.[0]) {
-//       const uploadedThumbnail = await uploadFile(req.files.image[0].path, "destinations/images");
-//       if (uploadedThumbnail?.secure_url) {
-//         uploadedImageUrl = uploadedThumbnail.secure_url;
-//       } else {
-//         res.status(500).json({ success: false, message: "Image upload failed." });
-//         return;
-//       }
-//     }
-
-//     const slugs = slug(title, {
-//       lower: true,
-//       });
-
-//     const destination = await Destination.create({
-//       slug:slugs,
-//       title,
-//       description,
-//       image: uploadedImageUrl,
-//     });
-
-//     res.status(201).json({ success: true, data: destination });
-
-//   } catch (error) {
-//     console.error("Error in createDestination:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: error instanceof Error ? error.message : "Internal server error",
-//     });
-//   }
-// };
-
-
-// const getDestinationById = async (req: Request, res: Response): Promise<void> => {
-//     try {
-//       const { destinationId } = req.params;
-  
-//       const destination = await Destination.findById(destinationId);
-  
-//       if (!destination) {
-//         res.status(404).json({ success: false, message: "Destination not found." });
-//         return;
-//       }
-  
-//       res.status(200).json({ success: true, data: destination });
-  
-//     } catch (error) {
-//       console.error("Error fetching destination:", error);
-//       res.status(500).json({ success: false, message: error instanceof Error ? error.message : "Server error" });
-//     }
-//   };
-
-//   const updateDestination = async (req: MulterRequest, res: Response): Promise<void> => {
-//     try {
-//       const { destinationId } = req.params;
-//       const { title, description, removeImage } = req.body;
-  
-//       // Find the destination by ID
-//       const destination = await Destination.findById(destinationId);
-//       if (!destination) {
-//         res.status(404).json({ success: false, message: "Destination not found." });
-//         return;
-//       }
-  
-//       let updatedImageUrl = destination.image; // Keep the current image URL by default
-
-//       // If image is being removed explicitly
-//       if (removeImage&& destination.image) {
-//         // Delete the image from Cloudinary
-//         await deleteFile(destination.image); // Delete the existing image
-//         updatedImageUrl = ""; // Set the image URL to an empty string
-//       }
-  
-//       // If a new image is uploaded, handle the upload and update URL
-//       if (req.files?.image?.[0]) {
-//         const uploadedImage = await uploadFile(req.files.image[0].path, "destinations/images");
-//         if (!uploadedImage?.secure_url) {
-//           res.status(500).json({ success: false, message: "Image upload failed." });
-//           return;
-//         }
-//         updatedImageUrl = uploadedImage.secure_url; // Update with the new image URL
-//       }
-  
-//       // Update the other fields
-//       destination.title = title?.trim() || destination.title;
-//       destination.description = description?.trim() || destination.description;
-//       destination.image = updatedImageUrl; // Set the new image URL or keep the old one if no new image was uploaded
-//       destination.slug = slug(title,
-//         {
-//           lower:true
-//         }
-//       );
-//       // Save the updated destination
-//       await destination.save();
-  
-//       res.status(200).json({ success: true, data: destination });
-  
-//     } catch (error) {
-//       console.error("Error updating destination:", error);
-//       res.status(500).json({
-//         success: false,
-//         message: error instanceof Error ? error.message : "Server error",
-//       });
-//     }
-//   };
-
-//   const deleteDestination = async (req: Request, res: Response): Promise<void> => {
-//     try {
-//       const { destinationId } = req.params;
-  
-//       const deleted = await Destination.findByIdAndDelete(destinationId);
-  
-//       if (!deleted) {
-//         res.status(404).json({ success: false, message: "Destination not found." });
-//         return;
-//       }
-  
-//       res.status(200).json({ success: true, message: "Destination deleted successfully." });
-  
-//     } catch (error) {
-//       console.error("Error deleting destination:", error);
-//       res.status(500).json({ success: false, message: error instanceof Error ? error.message : "Server error" });
-//     }
-//   };
-  
-
-//   const getAllDestinations = async (req: Request, res: Response): Promise<void> => {
-//     try {
-//       // Fetch all destinations from the database
-//       const destinations = await Destination.find();
-  
-//       // Check if no destinations were found
-//       if (destinations.length === 0) {
-//         res.status(404).json({ success: false, message: "No destinations found." });
-//         return;
-//       }
-  
-//       res.status(200).json({ success: true, data: destinations });
-//     } catch (error) {
-//       console.error("Error fetching all destinations:", error);
-//       res.status(500).json({
-//         success: false,
-//         message: error instanceof Error ? error.message : "Server error",
-//       });
-//     }
-//   };
-  
-  
-  
-// export { createDestination,
-//     updateDestination,
-//     deleteDestination,
-//     getDestinationById,
-//     getAllDestinations
-//  };
-
-
-
-
-
 import { Request, Response } from "express";
 import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
 import Destination from "../../models/destination.models/destination.js";
@@ -188,38 +5,77 @@ import slug from "slug";
 
 export interface MulterRequest extends Request {
   files?: {
+    thumbnail?: Express.Multer.File[];
     image?: Express.Multer.File[];
   };
 }
 
 const createDestination = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
-    const title = req.body.title?.trim();
-    const description = req.body.description?.trim();
+    const {title,description,caption} = req.body;
+
+    console.log(req.body)
 
     if (!title || !description) {
       res.status(400).json({ success: false, message: "Please fill in all fields." });
       return
     }
 
-    let uploadedImageUrl = "";
+    let parsedCaption: string[] = [];
+    if (caption) {
+      try {
+        parsedCaption = JSON.parse(caption);
+      } catch (e) {
+        res.status(400).json({ success: false, message: "Invalid caption format. Must be a valid JSON array." });
+        return;
+      }
 
-    if (req.files?.image?.[0]) {
-      const uploadedThumbnail = await uploadFile(req.files.image[0].path, "destinations/images");
+      if (!Array.isArray(parsedCaption)) {
+        res.status(400).json({ success: false, message: "Caption must be an array." });
+        return;
+      }
+    } else {
+      res.status(400).json({ success: false, message: "Caption is required." });
+      return;
+    }
+
+    let uploadedThumbnailUrl = "";
+
+    if (req.files?.thumbnail?.[0]) {
+      const uploadedThumbnail = await uploadFile(req.files.thumbnail[0].path, "destinations/thumbnail");
       if (uploadedThumbnail?.secure_url) {
-        uploadedImageUrl = uploadedThumbnail.secure_url;
+        uploadedThumbnailUrl = uploadedThumbnail.secure_url;
       } else {
         res.status(500).json({ success: false, message: "Image upload failed." });
       }
     }
 
+    const image = req.files?.image || [];
+
+    if (parsedCaption.length !== image.length) {
+      res.status(400).json({ success: false, message: "Number of captions and images must match" });
+      return
+    }
+    
+    const uploadedImage = image.length?
+    await Promise.all(image.map((file)=> uploadFile(file.path || "", "destinations/images")))
+    :[];
+
+    const uploadedImageUrl = uploadedImage.map((file)=> file?.secure_url)
+
     const destinationSlug = slug(title, { lower: true });
 
+    const relatedDestinations = parsedCaption.map((caption: string, index: number) => ({
+      caption,
+      image: uploadedImageUrl[index] || ""
+    }));
+    
     const destination = await Destination.create({
       slug: destinationSlug,
       title,
       description,
-      image: uploadedImageUrl,
+      thumbnail: uploadedThumbnailUrl,
+      destinations: relatedDestinations
     });
 
     res.status(201).json({ success: true, data: destination });
@@ -252,59 +108,165 @@ const getDestinationById = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+// const updateDestination = async (req: MulterRequest, res: Response): Promise<void> => {
+//   try {
+//     const { destinationId } = req.params;
+//     const { title, description, removeThumbnail } = req.body;
+
+//     const destination = await Destination.findById(destinationId);
+//     if (!destination) {
+//       res.status(404).json({ success: false, message: "Destination not found." });
+//       return;
+//     }
+
+//     // Initial image URL
+//     let updatedThumbnailUrl = destination.thumbnail;
+
+//     // 🗑️ If user requests to remove image
+//     if (removeThumbnail === "true" && destination.thumbnail) {
+//       await deleteFile(destination.thumbnail); // Remove from Cloudinary
+//       updatedThumbnailUrl = ""; // Clear image
+//     }
+
+//     // 🆕 If new image is uploaded (overwrite previous image)
+//     if (req.files?.thumbnail?.[0]) {
+//       // 🔁 If there's an old image, delete it first
+//       if (updatedThumbnailUrl) {
+//         await deleteFile(updatedThumbnailUrl);
+//       }
+
+//       const uploadedImage = await uploadFile(req.files.thumbnail[0].path, "destinations/images");
+//       if (!uploadedImage?.secure_url) {
+//         res.status(500).json({ success: false, message: "Image upload failed." });
+//         return;
+//       }
+//       updatedThumbnailUrl = uploadedImage.secure_url; // New image URL
+//     }
+
+//     // 🔄 Update the rest
+//     destination.title = title?.trim() || destination.title;
+//     destination.description = description?.trim() || destination.description;
+//     destination.thumbnail = updatedThumbnailUrl;
+//     destination.slug = slug(title?.trim() || destination.title, { lower: true });
+
+//     await destination.save();
+
+//     res.status(200).json({ success: true, data: destination });
+
+//   } catch (error) {
+//     console.error("Error updating destination:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: error instanceof Error ? error.message : "Server error",
+//     });
+//   }
+// };
+
 const updateDestination = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
     const { destinationId } = req.params;
-    const { title, description, removeImage } = req.body;
+
+    const title = req.body.title?.trim();
+    const description = req.body.description?.trim();
+    const removeCaptions = req.body.removeCaptions ? JSON.parse(req.body.removeCaptions) : []; // ["Pashupatinath"]
+    const newCaptions = req.body.caption ? JSON.parse(req.body.caption) : []; // ["New caption 1", "New caption 2"]
 
     const destination = await Destination.findById(destinationId);
     if (!destination) {
       res.status(404).json({ success: false, message: "Destination not found." });
-      return;
+      return
     }
 
-    // Initial image URL
-    let updatedImageUrl = destination.image;
-
-    // 🗑️ If user requests to remove image
-    if (removeImage === "true" && destination.image) {
-      await deleteFile(destination.image); // Remove from Cloudinary
-      updatedImageUrl = ""; // Clear image
+    // Update title/description
+    if (title) {
+      destination.title = title;
+      destination.slug = slug(title, { lower: true });
+    }
+    if (description) {
+      destination.description = description;
     }
 
-    // 🆕 If new image is uploaded (overwrite previous image)
-    if (req.files?.image?.[0]) {
-      // 🔁 If there's an old image, delete it first
-      if (updatedImageUrl) {
-        await deleteFile(updatedImageUrl);
+    // Update thumbnail if new one is uploaded
+    if (req.files?.thumbnail?.[0]) {
+      const uploadedThumb = await uploadFile(req.files.thumbnail[0].path, "destinations/thumbnail");
+    
+      if (uploadedThumb?.secure_url) {
+        // 👇 Delete old thumbnail from Cloudinary
+        if (destination.thumbnail) {
+          const parts = destination.thumbnail.split("/") || [];
+          const fileName = parts[parts.length - 1]; // e.g., abc123.jpg
+          const [publicId] = fileName.split(".");   // abc123
+          const fullPublicId = `destinations/thumbnail/${publicId}`;
+          await deleteFile(fullPublicId);
+        }
+    
+        // 👇 Update thumbnail
+        destination.thumbnail = uploadedThumb.secure_url;
+      }
+    }
+    
+    if (removeCaptions.length) {
+      // 👇 Get destinations that need to be deleted
+      const toDelete = destination.destinations.filter(dest =>
+        removeCaptions.includes(dest.caption)
+      );
+    
+      // 👇 Remove them from the array
+      destination.set(
+        'destinations',
+        destination.destinations.filter(dest =>
+          !removeCaptions.includes(dest.caption)
+        )
+      );
+    
+      // 👇 Extract public_ids from image URLs
+      const publicIds = toDelete
+        .map(dest => {
+          const parts = dest.image?.split("/") || [];
+          const fileName = parts[parts.length - 1]; // abc123.jpg
+          const [publicId] = fileName.split(".");   // abc123
+          return `destinations/images/${publicId}`;
+        })
+        .filter(Boolean);
+    
+      // 👇 Delete from Cloudinary
+      await Promise.all(publicIds.map(id => deleteFile(id)));
+    }
+    
+    // Add new captions + images (if any)
+    const imageFiles = req.files?.image || [];
+
+    if (newCaptions.length && imageFiles.length) {
+      if (newCaptions.length !== imageFiles.length) {
+        res.status(400).json({ success: false, message: "Number of captions and images must match." });
+        return
       }
 
-      const uploadedImage = await uploadFile(req.files.image[0].path, "destinations/images");
-      if (!uploadedImage?.secure_url) {
-        res.status(500).json({ success: false, message: "Image upload failed." });
-        return;
-      }
-      updatedImageUrl = uploadedImage.secure_url; // New image URL
+      const uploadedImages = await Promise.all(
+        imageFiles.map((file) => uploadFile(file.path, "destinations/gallery/images"))
+      );
+
+      const newDestinations = newCaptions.map((caption: string, index: number) => ({
+        caption,
+        image: uploadedImages[index]?.secure_url || ""
+      }));
+
+      destination.destinations.push(...newDestinations);
     }
-
-    // 🔄 Update the rest
-    destination.title = title?.trim() || destination.title;
-    destination.description = description?.trim() || destination.description;
-    destination.image = updatedImageUrl;
-    destination.slug = slug(title?.trim() || destination.title, { lower: true });
-
+    // Save changes
     await destination.save();
 
     res.status(200).json({ success: true, data: destination });
 
   } catch (error) {
-    console.error("Error updating destination:", error);
+    console.error("Error in editDestination:", error);
     res.status(500).json({
       success: false,
-      message: error instanceof Error ? error.message : "Server error",
+      message: error instanceof Error ? error.message : "Internal server error",
     });
   }
 };
+
 
 
 const deleteDestination = async (req: Request, res: Response): Promise<void> => {
@@ -315,7 +277,29 @@ const deleteDestination = async (req: Request, res: Response): Promise<void> => 
 
     if (!deleted) {
       res.status(404).json({ success: false, message: "Destination not found." });
-      return
+      return;
+    }
+
+    // ✅ Delete thumbnail from Cloudinary
+    if (deleted.thumbnail) {
+      const parts = deleted.thumbnail.split("/") || [];
+      const fileName = parts[parts.length - 1];
+      const [publicId] = fileName.split(".");
+      const fullPublicId = `destinations/thumbnail/${publicId}`;
+      await deleteFile(fullPublicId);
+    }
+
+    // ✅ Delete all destination images
+    if (deleted.destinations && Array.isArray(deleted.destinations)) {
+      await Promise.all(deleted.destinations.map(async (destination) => {
+        if (destination.image) {
+          const parts = destination.image.split("/") || [];
+          const fileName = parts[parts.length - 1];
+          const [publicId] = fileName.split(".");
+          const fullPublicId = `destinations/images/${publicId}`;
+          await deleteFile(fullPublicId);
+        }
+      }));
     }
 
     res.status(200).json({ success: true, message: "Destination deleted successfully." });

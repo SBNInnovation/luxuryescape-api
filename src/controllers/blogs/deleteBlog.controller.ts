@@ -47,16 +47,29 @@ const blogDelete = async (req: Request, res: Response): Promise<void> => {
         }
 
         // Extract and delete the thumbnail from Cloudinary
-        if (blog.thumbnail) {
-            const thumbnailPublicId = blog.thumbnail.split('/').pop()?.split('.')[0]; // Extract public ID from URL
-            if (thumbnailPublicId) {
-                const deleteResult = await deleteFile(thumbnailPublicId);
-                if (!deleteResult) {
-                    res.status(500).json({ success: false, message: "Failed to delete thumbnail from Cloudinary." });
-                    return;
-                }
-            }
-        }
+        // if (blog.thumbnail) {
+        //     const thumbnailPublicId = blog.thumbnail.split('/').pop()?.split('.')[0]; // Extract public ID from URL
+        //     if (thumbnailPublicId) {
+        //         const deleteResult = await deleteFile(thumbnailPublicId);
+        //         if (!deleteResult) {
+        //             res.status(500).json({ success: false, message: "Failed to delete thumbnail from Cloudinary." });
+        //             return;
+        //         }
+        //     }
+        // }
+
+               if (blog.thumbnail) {
+                    const fileName = blog.thumbnail.split('/').pop();         // abc123.jpg
+                    const publicId = fileName?.split('.')[0];                 // abc123
+                    const fullPublicId = `blogs/thumbnail/${publicId}`;       // ✅ with folder
+                    if (fullPublicId) {
+                      const deleteResult = await deleteFile(fullPublicId);
+                      if (!deleteResult) {
+                        res.status(500).json({ sueccess: false, message: "Failed to delete thumbnail image from Cloudinary" });
+                        return;
+                      }
+                    }
+                  }
 
         // Delete the blog from the database
         await Blog.findByIdAndDelete(blogId);

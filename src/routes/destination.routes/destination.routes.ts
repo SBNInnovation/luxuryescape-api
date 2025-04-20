@@ -30,13 +30,14 @@ const uploader = multer({
 
 // Define file upload fields
 const upload = [
-  { name: "image", maxCount: 1 }, // Single file for thumbnail
+  { name: "thumbnail", maxCount: 1 }, // Single file for thumbnail
+  { name: "image", maxCount: 5 }, // Up to 5 files for
 ];
 
 
 // Define the route to handle blog upload
 destinationRouter.post(
-  "/destination/add", 
+  "/destination/add-dest", 
   uploader.fields(upload), // Single file upload with field name 'thumbnail'
   (req: Request, res: Response) => {
     console.log("Uploaded file: add", req.file); // Debugging the uploaded file

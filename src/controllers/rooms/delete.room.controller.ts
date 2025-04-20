@@ -34,6 +34,7 @@
 import { Request, Response } from "express";
 import Room from "../../models/rooms.models/room.js";
 import { deleteFile } from "../../utility/cloudinary.js";
+import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 
 const deleteRoom = async (req: Request, res: Response): Promise<void> => {
@@ -50,18 +51,25 @@ const deleteRoom = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Delete associated photos from Cloudinary
-        if (room.roomPhotos && room.roomPhotos.length > 0) {
-            await Promise.all(
-                room.roomPhotos.map(async (photoUrl: string) => {
-                    try {
-                        const publicId = photoUrl.split("/").pop()?.split(".")[0]; // Extract public ID
-                        if (publicId) await deleteFile(publicId);
-                    } catch (error) {
-                        console.error("Error deleting room photo from Cloudinary:", error);
-                    }
-                })
-            );
+        // // Delete associated photos from Cloudinary
+        // if (room.roomPhotos && room.roomPhotos.length > 0) {
+        //     await Promise.all(
+        //         room.roomPhotos.map(async (photoUrl: string) => {
+        //             try {
+        //                 const publicId = photoUrl.split("/").pop()?.split(".")[0]; // Extract public ID
+        //                 if (publicId) await deleteFile(publicId);
+        //             } catch (error) {
+        //                 console.error("Error deleting room photo from Cloudinary:", error);
+        //             }
+        //         })
+        //     );
+        // }
+
+        // Delete itinerary day photos
+        const deletedRooms = await deleteImageGroup(room.roomPhotos, "tours/accommodation/rooms/images");
+        if (!deletedRooms) {
+          res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
+          return;
         }
 
         // Delete room from database

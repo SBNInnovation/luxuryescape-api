@@ -34,6 +34,7 @@ import { deleteFile } from "../../utility/cloudinary.js";
 import Tour from "../../models/tours.models/tours.js";
 import Trek from "../../models/trek.models/trek.js";
 import Room from "../../models/rooms.models/room.js";
+import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 
 const deleteAccommodation = async (req: Request, res: Response): Promise<void> => {
@@ -59,17 +60,23 @@ const deleteAccommodation = async (req: Request, res: Response): Promise<void> =
     await Room.updateMany({accommodations: accommodationId}, {$pull:{accommodations: accommodationId }});
 
     // Delete all accommodation images from Cloudinary
-    if (accommodation.accommodationPics && accommodation.accommodationPics.length > 0) {
-      for (const image of accommodation.accommodationPics) {
-        const imagePublicId = image.split('/').pop()?.split('.')[0]; // Extract public ID from the URL
-        if (imagePublicId) {
-          const deleteResult = await deleteFile(imagePublicId);
-          if (!deleteResult) {
-            res.status(500).json({ success: false, message: "Failed to delete some images from Cloudinary" });
-            return;
-          }
-        }
-      }
+    // if (accommodation.accommodationPics && accommodation.accommodationPics.length > 0) {
+    //   for (const image of accommodation.accommodationPics) {
+    //     const imagePublicId = image.split('/').pop()?.split('.')[0]; // Extract public ID from the URL
+    //     if (imagePublicId) {
+    //       const deleteResult = await deleteFile(imagePublicId);
+    //       if (!deleteResult) {
+    //         res.status(500).json({ success: false, message: "Failed to delete some images from Cloudinary" });
+    //         return;
+    //       }
+    //     }
+    //   }
+    // }
+
+    const deletedAccommodationPics = await deleteImageGroup(accommodation.accommodationPics, "tours/accommodation/images");
+    if (!deletedAccommodationPics) {
+      res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
+      return;
     }
 
     // Now delete the accommodation from the database

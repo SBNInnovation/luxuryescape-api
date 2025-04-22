@@ -80,6 +80,10 @@ const sendBookingMail = async (req: MulterRequest, res: Response):Promise<void> 
   </div>
   
   <div style="text-align: center; padding: 20px 0 0;">
+  <p style="color: #666; font-size: 14px; font-weight: 500; margin-bottom: 12px; line-height: 1.6;">
+    Kindly reply to this email with a screenshot of your payment once your transaction is successfully completed. <br><br>
+    If you have any questions or face any issues with the payment process, please don’t hesitate to let us know — we’re here to help!
+  </p>
     <p style="color: #a0a0a0; font-size: 13px; margin-bottom: 10px;">
       © ${new Date().getFullYear()} Nepal Luxury Escape. All rights reserved.
     </p>

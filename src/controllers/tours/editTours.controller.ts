@@ -153,7 +153,6 @@ import { Request, Response } from "express";
 import slug from "slug";
 import Tour from "../../models/tours.models/tours.js";
 import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
-import { parse } from "dotenv";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -248,15 +247,71 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
       ...uploadedGalleryUrls,
     ];
 
-    const finalHighlightPictures = [
-      ...existingTour.highlightPicture.filter((img: string) => !parsedHighlightToDelete.includes(img)),
-      ...uploadedHighlightUrls,
-    ];
 
-    const finalItineraryPhotos = [
-      ...existingTour.itineraryDayPhoto.filter((img: string) => !parsedItineraryPhotoToDelete.includes(img)),
-      ...uploadedItineraryPhotoUrls,
-    ];
+
+    // const finalHighlightPictures = [
+    //   ...existingTour.highlightPicture.filter((img: string) => !parsedHighlightToDelete.includes(img)),
+    //   ...uploadedHighlightUrls,
+    // ];
+
+    const parsedHighlightIndexesToDelete: number[] = parseDeleteArray(highlightPictureToDelete);
+
+    // Clone existing highlight images
+    const updatedHighlightPictures = [...existingTour.highlightPicture];
+
+    // Replace deleted indexes with uploaded images
+    parsedHighlightIndexesToDelete.forEach((deleteIndex, i) => {
+      const newImage = uploadedHighlightUrls[i];
+      if (newImage) {
+        updatedHighlightPictures[deleteIndex] = newImage;
+      } else {
+        // If no replacement image, remove the item
+        updatedHighlightPictures.splice(deleteIndex, 1);
+      }
+    });
+
+    // Push extra uploads if more images uploaded than deleted
+    if (uploadedHighlightUrls.length > parsedHighlightIndexesToDelete.length) {
+      const extraHighlightPics:any = uploadedHighlightUrls.slice(parsedHighlightIndexesToDelete.length);
+      updatedHighlightPictures.push(...extraHighlightPics);
+    }
+
+    const finalHighlightPictures = updatedHighlightPictures;
+
+
+
+    // const finalItineraryPhotos = [
+    //   ...existingTour.itineraryDayPhoto.filter((img: string) => !parsedItineraryPhotoToDelete.includes(img)),
+    //   ...uploadedItineraryPhotoUrls,
+    // ];
+
+    const parsedItineraryIndexesToDelete: number[] = parseDeleteArray(itineraryDayPhotoToDelete);
+
+    // Clone the existing array so we can modify it
+    const updatedItineraryPhotos = [...existingTour.itineraryDayPhoto];
+
+    // Replace deleted indexes with new uploads
+    parsedItineraryIndexesToDelete.forEach((deleteIndex, i) => {
+      const newImage = uploadedItineraryPhotoUrls[i];
+      if (newImage) {
+        updatedItineraryPhotos[deleteIndex] = newImage;
+      } else {
+        // If no new image for this index, just remove it
+        updatedItineraryPhotos.splice(deleteIndex, 1);
+      }
+    });
+
+    // If more new uploads exist than deletions, push remaining ones at the end
+    if (uploadedItineraryPhotoUrls.length > parsedItineraryIndexesToDelete.length) {
+      const extraImages:any = uploadedItineraryPhotoUrls.slice(parsedItineraryIndexesToDelete.length);
+      updatedItineraryPhotos.push(...extraImages);
+    }
+
+    const finalItineraryPhotos = updatedItineraryPhotos;
+
+
+
+
 
     // === DELETE FROM CLOUDINARY ===
     const allToDelete = [

@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose"
-import slug from "slug";
 
 
 const destinations  = new Schema({

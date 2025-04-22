@@ -153,6 +153,7 @@ import { Request, Response } from "express";
 import slug from "slug";
 import Tour from "../../models/tours.models/tours.js";
 import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
+import { parse } from "dotenv";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -246,6 +247,16 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
       ...existingTour.gallery.filter((img: string) => !parsedGalleryToDelete.includes(img)),
       ...uploadedGalleryUrls,
     ];
+
+    // const final1 = [
+    //   existingTour.highlightPicture.map((img,index)=>
+    //     if(img[index] === parsedHighlightToDelete.map((img,index)=>
+    //       existingTour.highlightPicture.filter((img: string) => img !== parsedHighlightToDelete[index])
+    //     )
+    //       )
+    //   )
+    // ]
+
 
     const finalHighlightPictures = [
       ...existingTour.highlightPicture.filter((img: string) => !parsedHighlightToDelete.includes(img)),

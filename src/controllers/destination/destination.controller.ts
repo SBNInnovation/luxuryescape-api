@@ -34,9 +34,6 @@ const createDestination = async (req: MulterRequest, res: Response): Promise<voi
         res.status(400).json({ success: false, message: "Caption must be an array." });
         return;
       }
-    } else {
-      res.status(400).json({ success: false, message: "Caption is required." });
-      return;
     }
 
     let uploadedThumbnailUrl = "";
@@ -168,8 +165,8 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
 
     const title = req.body.title?.trim();
     const description = req.body.description?.trim();
-    const removeCaptions = req.body.removeCaptions ? JSON.parse(req.body.removeCaptions) : []; // ["Pashupatinath"]
-    const newCaptions = req.body.caption ? JSON.parse(req.body.caption) : []; // ["New caption 1", "New caption 2"]
+    const removeCaptions = req.body.removeCaptions ? JSON.parse(req.body.removeCaptions) : [];
+    const newCaptions = req.body.caption ? JSON.parse(req.body.caption) : [];
 
     const destination = await Destination.findById(destinationId);
     if (!destination) {
@@ -200,18 +197,18 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
           await deleteFile(fullPublicId);
         }
     
-        // 👇 Update thumbnail
+        // Update thumbnail
         destination.thumbnail = uploadedThumb.secure_url;
       }
     }
     
     if (removeCaptions.length) {
-      // 👇 Get destinations that need to be deleted
+      //  Get destinations that need to be deleted
       const toDelete = destination.destinations.filter(dest =>
         removeCaptions.includes(dest.caption)
       );
     
-      // 👇 Remove them from the array
+      // Remove them from the array
       destination.set(
         'destinations',
         destination.destinations.filter(dest =>
@@ -219,7 +216,7 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
         )
       );
     
-      // 👇 Extract public_ids from image URLs
+      // Extract public_ids from image URLs
       const publicIds = toDelete
         .map(dest => {
           const parts = dest.image?.split("/") || [];
@@ -229,7 +226,7 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
         })
         .filter(Boolean);
     
-      // 👇 Delete from Cloudinary
+      // Delete from Cloudinary
       await Promise.all(publicIds.map(id => deleteFile(id)));
     }
     

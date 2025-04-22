@@ -44,7 +44,7 @@ const sendBookingMail = async (req: MulterRequest, res: Response):Promise<void> 
   </div>
   
   <div style="background-color: #f8f8f8; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 12px rgba(255,255,255,0.1);">
-    <h2 style="color: #C19A6B; margin-bottom: 20px; font-size: 20px; font-weight: 500;">
+    <h2 style="color:rgb(193, 184, 107); margin-bottom: 20px; font-size: 20px; font-weight: 500;">
       Payment Request: ${name ? name : recipient}
     </h2>
     
@@ -54,7 +54,7 @@ const sendBookingMail = async (req: MulterRequest, res: Response):Promise<void> 
 
     ${link ? `
     <div style="text-align: center; margin: 30px 0;">
-      <a href="${link}" style="background-color: #C19A6B; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: 500; display: inline-block; transition: background-color 0.3s;">Make Payment</a>
+      <a href="${link}" style="background-color:rgb(204, 189, 51); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: 500; display: inline-block; transition: background-color 0.3s;">Make Payment</a>
     </div>
     ` : ""}
     

@@ -248,16 +248,6 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
       ...uploadedGalleryUrls,
     ];
 
-    // const final1 = [
-    //   existingTour.highlightPicture.map((img,index)=>
-    //     if(img[index] === parsedHighlightToDelete.map((img,index)=>
-    //       existingTour.highlightPicture.filter((img: string) => img !== parsedHighlightToDelete[index])
-    //     )
-    //       )
-    //   )
-    // ]
-
-
     const finalHighlightPictures = [
       ...existingTour.highlightPicture.filter((img: string) => !parsedHighlightToDelete.includes(img)),
       ...uploadedHighlightUrls,

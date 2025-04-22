@@ -15,14 +15,14 @@ const addRoom = async(req:MulterRequest,res:Response):Promise<void> =>{
     try {
         const {
             roomTitle,
-            roomStandard,
+            // roomStandard,
             roomDescription,
             roomFacilities,
             accommodation
         } = req.body;
 
         if(!roomTitle ||
-            !roomStandard ||
+            // !roomStandard ||
             !roomDescription ||
             !roomFacilities ||
             !accommodation){
@@ -63,7 +63,7 @@ const addRoom = async(req:MulterRequest,res:Response):Promise<void> =>{
          const createRoom = await Room.create({
             roomTitle,
             slug:slug1,
-            roomStandard,
+            // roomStandard,
             roomDescription,
             roomFacilities: parsedFacilites,
             accommodation,

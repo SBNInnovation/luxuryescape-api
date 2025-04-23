@@ -120,7 +120,16 @@ const deleteReccommended = async (req: Request, res: Response): Promise<void> =>
   
       // Delete thumbnail from cloudinary if exists
       if (recToDelete.thumbnail) {
-        await deleteFile(recToDelete.thumbnail);
+        const fileName = recToDelete.thumbnail.split('/').pop();         // abc123.jpg
+        const publicId = fileName?.split('.')[0];                 // abc123
+        const fullPublicId = `affiliated/images/${publicId}`;       // ✅ with folder
+        if (fullPublicId) {
+          const deleteResult = await deleteFile(fullPublicId);
+          if (!deleteResult) {
+            res.status(500).json({ sueccess: false, message: "Failed to delete thumbnail image from Cloudinary" });
+            return;
+          }
+        }
       }
   
       await Recommend.findByIdAndDelete(recommendedId);

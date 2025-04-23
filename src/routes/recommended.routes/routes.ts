@@ -32,8 +32,8 @@ const uploader = multer({
 });
 
 recommendedRouter.route("/reccommend/get").get(getAllRecommended)
-recommendedRouter.route("/reccommend/get/single").get(getRecommendedById)
-recommendedRouter.route("/reccommend/delete").delete(deleteReccommended)
+recommendedRouter.route("/reccommend/get/single/:recommendedId").get(getRecommendedById)
+recommendedRouter.route("/reccommend/delete/:recommendedId").delete(deleteReccommended)
 recommendedRouter.post(
     "/recommended/add",
     uploader.single("thumbnail"), // Handle single file upload for 'thumbnail'
@@ -41,7 +41,7 @@ recommendedRouter.post(
       addRecommededAcco(req as MulterRequest, res); // Explicit type assertion for the request
     }
   );
-recommendedRouter.patch("recommended/edit",
+recommendedRouter.patch("recommended/edit/:recommendedId",
     uploader.single("thumnail"),
     (req,res) =>{
         editReccommendedAcco(req as MulterRequest, res)

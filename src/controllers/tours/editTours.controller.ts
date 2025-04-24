@@ -285,29 +285,23 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
     //   ...uploadedItineraryPhotoUrls,
     // ];
 
-    const parsedItineraryIndexesToDelete: number[] = parseDeleteArray(itineraryDayPhotoToDelete);
+    const finalItineraryPhotos = [...existingTour.itineraryDayPhoto];
 
-    // Clone the existing array so we can modify it
-    const updatedItineraryPhotos = [...existingTour.itineraryDayPhoto];
-
-    // Replace deleted indexes with new uploads
-    parsedItineraryIndexesToDelete.forEach((deleteIndex, i) => {
-      const newImage = uploadedItineraryPhotoUrls[i];
-      if (newImage) {
-        updatedItineraryPhotos[deleteIndex] = newImage;
+    // Replace/delete based on exact index mapping
+    parsedItineraryPhotoToDelete.forEach((deleteIndex:any) => {
+      const replacementImage = uploadedItineraryPhotoUrls.shift(); // Get first new image
+      if (replacementImage) {
+        finalItineraryPhotos[deleteIndex] = replacementImage;
       } else {
-        // If no new image for this index, just remove it
-        updatedItineraryPhotos.splice(deleteIndex, 1);
+        finalItineraryPhotos.splice(deleteIndex, 1);
       }
     });
-
-    // If more new uploads exist than deletions, push remaining ones at the end
-    if (uploadedItineraryPhotoUrls.length > parsedItineraryIndexesToDelete.length) {
-      const extraImages:any = uploadedItineraryPhotoUrls.slice(parsedItineraryIndexesToDelete.length);
-      updatedItineraryPhotos.push(...extraImages);
-    }
-
-    const finalItineraryPhotos = updatedItineraryPhotos;
+    
+    // Push any leftover uploaded images (extra new days maybe)
+    // if (uploadedItineraryPhotoUrls.length > 0) {
+    //   finalItineraryPhotos.push(...uploadedItineraryPhotoUrls);
+    // }
+    
 
 
 

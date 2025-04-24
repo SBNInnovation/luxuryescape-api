@@ -43,8 +43,6 @@ const addRecommededAcco = async(req:Request, res:Response):Promise<void> =>{
     }
 }
 
-
-
 const editReccommendedAcco = async (req: Request, res: Response): Promise<void> => {
   try {
     const { affiliatedAccommodation, link } = req.body;
@@ -74,8 +72,8 @@ const editReccommendedAcco = async (req: Request, res: Response): Promise<void> 
 
     if (req.file) {
       // Upload new thumbnail if file is provided
-      const uploadedThumbnail = await uploadFile(req.file.path, 'affiliated/images');
-      uploadedThumbnailUrl = uploadedThumbnail?.secure_url || uploadedThumbnailUrl;
+      const thumbnail = await uploadFile(req.file.path, 'affiliated/images');
+      uploadedThumbnailUrl = thumbnail?.secure_url || uploadedThumbnailUrl;
 
       // Delete old thumbnail from Cloudinary if it's not the same as the new one
       if (existingReccommeded.thumbnail && existingReccommeded.thumbnail !== uploadedThumbnailUrl) {
@@ -157,7 +155,6 @@ const getAllRecommended = async (req: Request, res: Response): Promise<void> => 
     }
   };
 
-  
 // Get a specific recommended accommodation
 const getRecommendedById = async (req: Request, res: Response): Promise<void> => {
     try {

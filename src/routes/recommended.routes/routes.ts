@@ -31,17 +31,17 @@ const uploader = multer({
   }),
 });
 
-recommendedRouter.route("/reccommend/get").get(getAllRecommended)
-recommendedRouter.route("/reccommend/get/single/:recommendedId").get(getRecommendedById)
-recommendedRouter.route("/reccommend/delete/:recommendedId").delete(deleteReccommended)
+recommendedRouter.route("/recommend/get").get(getAllRecommended)
+recommendedRouter.route("/recommend/get/single/:recommendedId").get(getRecommendedById)
+recommendedRouter.route("/recommend/delete/:recommendedId").delete(deleteReccommended)
 recommendedRouter.post(
-    "/recommended/add",
+    "/recommend/add",
     uploader.single("thumbnail"), // Handle single file upload for 'thumbnail'
     (req, res) => {
       addRecommededAcco(req as MulterRequest, res); // Explicit type assertion for the request
     }
   );
-recommendedRouter.patch("recommended/edit/:recommendedId",
+recommendedRouter.patch("/recommend/edit/:recommendedId",
     uploader.single("thumnail"),
     (req,res) =>{
         editReccommendedAcco(req as MulterRequest, res)

@@ -42,7 +42,7 @@ recommendedRouter.post(
     }
   );
 recommendedRouter.patch("/recommend/edit/:recommendedId",
-    uploader.single("thumnail"),
+    uploader.single("thumbnail"),
     (req,res) =>{
         editReccommendedAcco(req as MulterRequest, res)
     }

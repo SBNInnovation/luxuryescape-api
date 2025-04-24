@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import slug from "slug";
 import Tour from "../../models/tours.models/tours.js";
-import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
+import { uploadFile} from "../../utility/cloudinary.js";
+import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -81,53 +82,26 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const uploadedGalleryUrls = uploadedGallery.map(file => file?.secure_url).filter(Boolean);
 
     const uploadedHighlight = highlightPicture.length
-      ? await Promise.all(highlightPicture.map(file => uploadFile(file?.path || "", "tours/highlightPicture/images")))
+      ? await Promise.all(highlightPicture.map(file => uploadFile(file?.path || "", "tours/gallery/images")))
       : [];
     const uploadedHighlightUrls = uploadedHighlight.map(file => file?.secure_url).filter(Boolean);
 
     const uploadedItineraryPhotos = itineraryDayPhoto.length
-      ? await Promise.all(itineraryDayPhoto.map(file => uploadFile(file?.path || "", "tours/itineraryDayPhoto/images")))
+      ? await Promise.all(itineraryDayPhoto.map(file => uploadFile(file?.path || "", "tours/gallery/images")))
       : [];
     const uploadedItineraryPhotoUrls = uploadedItineraryPhotos.map(file => file?.secure_url).filter(Boolean);
 
-    // === CLEAN IMAGE LISTS ===
+    //CLEAN IMAGE LISTS
     const finalGallery = [
       ...existingTour.gallery.filter((img: string) => !parsedGalleryToDelete.includes(img)),
       ...uploadedGalleryUrls,
     ];
 
 
-
-    // const finalHighlightPictures = [
-    //   ...existingTour.highlightPicture.filter((img: string) => !parsedHighlightToDelete.includes(img)),
-    //   ...uploadedHighlightUrls,
-    // ];
-
-    const parsedHighlightIndexesToDelete: number[] = parseDeleteArray(highlightPictureToDelete);
-
-    // Clone existing highlight images
-    const updatedHighlightPictures = [...existingTour.highlightPicture];
-
-    // Replace deleted indexes with uploaded images
-    parsedHighlightIndexesToDelete.forEach((deleteIndex, i) => {
-      const newImage = uploadedHighlightUrls[i];
-      if (newImage) {
-        updatedHighlightPictures[deleteIndex] = newImage;
-      } else {
-        // If no replacement image, remove the item
-        updatedHighlightPictures.splice(deleteIndex, 1);
-      }
-    });
-
-    // Push extra uploads if more images uploaded than deleted
-    if (uploadedHighlightUrls.length > parsedHighlightIndexesToDelete.length) {
-      const extraHighlightPics:any = uploadedHighlightUrls.slice(parsedHighlightIndexesToDelete.length);
-      updatedHighlightPictures.push(...extraHighlightPics);
-    }
-
-    const finalHighlightPictures = updatedHighlightPictures;
-
-
+    const finalHighlightPictures = [
+      ...existingTour.highlightPicture.filter((img: string) => !parsedHighlightToDelete.includes(img)),
+      ...uploadedHighlightUrls,
+    ];
 
     // const finalItineraryPhotos = [
     //   ...existingTour.itineraryDayPhoto.filter((img: string) => !parsedItineraryPhotoToDelete.includes(img)),
@@ -137,15 +111,6 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const finalItineraryPhotos = [...existingTour.itineraryDayPhoto];
 
     // Replace/delete based on exact index mapping
-    // parsedItineraryPhotoToDelete.forEach((deleteIndex:any) => {
-    //   const replacementImage = uploadedItineraryPhotoUrls.shift(); // Get first new image
-    //   if (replacementImage) {
-    //     finalItineraryPhotos[deleteIndex] = replacementImage;
-    //   } else {
-    //     finalItineraryPhotos.splice(deleteIndex, 1);
-    //   }
-    // });
-
     parsedItineraryPhotoToDelete.forEach((deleteIndex: number) => {
       if (deleteIndex >= 0 && deleteIndex < finalItineraryPhotos.length) {
         const replacementImage = uploadedItineraryPhotoUrls.shift();
@@ -157,14 +122,17 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
       }
     });
     
-    
     // Push any leftover uploaded images (extra new days maybe)
     const validUploadedPhotos = uploadedItineraryPhotoUrls.filter((url): url is string => typeof url === 'string');
     if (validUploadedPhotos.length > 0) {
       finalItineraryPhotos.push(...validUploadedPhotos);
     }
-    
-    // === DELETE FROM CLOUDINARY ===
+
+
+
+
+
+    //DELETE FROM CLOUDINARY
     const allToDelete = [
       ...parsedGalleryToDelete,
       ...parsedHighlightToDelete,
@@ -172,7 +140,7 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
     ];
 
     for (const url of allToDelete) {
-      await deleteFile(url);
+      await deleteImageGroup(url,"tours/gallery/images");
     }
 
     // === JSON FIELD PARSING ===

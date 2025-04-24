@@ -86,7 +86,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       const uploadedItineraryDayPhotoUrl = uploadedItineraryDayPhoto.map(file => file?.secure_url);
 
       const uploadedHighlightPicture = highlightPicture.length? 
-      await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "tours/highlightPicture/images"))):[];
+      await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "tours/gallery/images"))):[];
 
       const uploadedHighlightPictureUrls = uploadedHighlightPicture.map(file => file?.secure_url);
     

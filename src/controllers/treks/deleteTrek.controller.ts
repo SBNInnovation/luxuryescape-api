@@ -34,6 +34,19 @@ const deleteTrek = async (req: Request, res: Response): Promise<void> => {
       }
     }
 
+    if (trek.routeMap) {
+      const fileName = trek.routeMap.split('/').pop();         // abc123.jpg
+      const publicId = fileName?.split('.')[0];                 // abc123
+      const fullPublicId = `treks/route-map/images/${publicId}`;       // ✅ with folder
+      if (fullPublicId) {
+        const deleteResult = await deleteFile(fullPublicId);
+        if (!deleteResult) {
+          res.status(500).json({ sueccess: false, message: "Failed to delete route map from Cloudinary" });
+          return;
+        }
+      }
+    }
+
     // Delete gallery images
     const galleryDeleted = await deleteImageGroup(trek.gallery, "treks/gallery/images");
     if (!galleryDeleted) {
@@ -42,14 +55,14 @@ const deleteTrek = async (req: Request, res: Response): Promise<void> => {
     }
     
     // Delete highlight images
-    const highlightDeleted = await deleteImageGroup(trek.highlightPicture, "treks/highlight/images");
+    const highlightDeleted = await deleteImageGroup(trek.highlightPicture, "treks/gallery/images");
     if (!highlightDeleted) {
       res.status(500).json({ success: false, message: "Failed to delete highlight images" });
       return;
     }
     
     // Delete itinerary day photos
-    const itineraryDeleted = await deleteImageGroup(trek.itineraryDayPhoto, "treks/itinerary/images");
+    const itineraryDeleted = await deleteImageGroup(trek.itineraryDayPhoto, "treks/gallery/images");
     if (!itineraryDeleted) {
       res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
       return;

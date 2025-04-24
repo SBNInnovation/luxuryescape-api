@@ -85,14 +85,14 @@ if (!galleryDeleted) {
 }
 
 // Delete highlight images
-const highlightDeleted = await deleteImageGroup(tour.highlightPicture, "tours/highlight/images");
+const highlightDeleted = await deleteImageGroup(tour.highlightPicture, "tours/gallery/images");
 if (!highlightDeleted) {
   res.status(500).json({ success: false, message: "Failed to delete highlight images" });
   return;
 }
 
 // Delete itinerary day photos
-const itineraryDeleted = await deleteImageGroup(tour.itineraryDayPhoto, "tours/itinerary/images");
+const itineraryDeleted = await deleteImageGroup(tour.itineraryDayPhoto, "tours/gallery/images");
 if (!itineraryDeleted) {
   res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
   return;

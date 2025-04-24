@@ -72,7 +72,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     const uploadedThumbnailUrl = uploadedThumbnail ? uploadedThumbnail.secure_url : null;
 
     const uploadedRouteMap = routeMap.length
-      ? await uploadFile(routeMap[0]?.path || "", "tours/route-map/images")
+      ? await uploadFile(routeMap[0]?.path || "", "treks/route-map/images")
       : null;
     const uploadedRouteMapUrl = uploadedRouteMap ? uploadedRouteMap.secure_url: null;
 
@@ -87,7 +87,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     const uploadedItineraryDayPhotoUrl = uploadedItineraryDayPhoto.map((file) => file?.secure_url);
 
     const uploadedHighlightPicture = highlightPicture.length
-      ? await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "treks/highlightPicture/images")))
+      ? await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "treks/gallery/images")))
       : [];
     const uploadedHighlightPictureUrls = uploadedHighlightPicture.map((file) => file?.secure_url);
 

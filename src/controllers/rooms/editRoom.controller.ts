@@ -166,7 +166,7 @@ const editRoom = async (req: MulterRequest, res: Response): Promise<void> => {
       // Delete from Cloudinary
       for (const url of parsedImagesToDelete) {
         // await deleteFile(url);
-        deleteImageGroup(url,"tours/accommodation/rooms/images")
+        deleteImageGroup([url],"tours/accommodation/rooms/images")
       }
     }
 

@@ -238,7 +238,8 @@
 import { Request, Response } from "express";
 import slugify from "@sindresorhus/slugify";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
-import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
+import { uploadFile } from "../../utility/cloudinary.js";
+import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -276,12 +277,12 @@ const editAccommodation = async (req: MulterRequest, res: Response): Promise<voi
     const parseJsonSafe = (data: any, fieldName: string) => {
       if (Array.isArray(data) || typeof data === "object") return data;
       try {
-         JSON.parse(data);
+        return JSON.parse(data);
       } catch (error) {
-         res.status(400).json({ success: false, message: `Invalid JSON format in ${fieldName}` });
+        throw new Error(`Invalid JSON format in ${fieldName}`);
       }
     };
-
+    
     const parsedAccommodationAmenities = accommodationAmenities
       ? parseJsonSafe(accommodationAmenities, "accommodationAmenities")
       : existingAccommodation.accommodationAmenities;
@@ -297,22 +298,39 @@ const editAccommodation = async (req: MulterRequest, res: Response): Promise<voi
     const parsedImageToDelete = imageToDelete ? JSON.parse(imageToDelete) : [];
 
     if (!parsedAccommodationAmenities || !parsedAccommodationFeatures) return ;
+
+
     // Upload new images
     const accommodationPics = req?.files?.accommodationPics || [];
+
+    // const uploadedAccommodationPics = accommodationPics.length
+    //   ? await Promise.all(accommodationPics.map(file => uploadFile(file?.path || "", "tours/accommodation/images")))
+    //   : [];
+
+    // const uploadedAccommodationPicUrls = uploadedAccommodationPics.map(file => file?.secure_url);
+
     const uploadedAccommodationPics = accommodationPics.length
-      ? await Promise.all(accommodationPics.map(file => uploadFile(file?.path || "", "tours/accommodation/images")))
+      ? await Promise.all(accommodationPics.map(async file => {
+          try {
+            const result = await uploadFile(file?.path || "", "tours/accommodation/images");
+            return result?.secure_url || null;
+          } catch (err) {
+            console.error("Error uploading file:", err);
+            return null;
+          }
+        }))
       : [];
 
-    const uploadedAccommodationPicUrls = uploadedAccommodationPics.map(file => file?.secure_url);
+    const uploadedAccommodationPicUrls = uploadedAccommodationPics.filter(Boolean); // removes nulls
 
-    // Filter out deleted images
+     // // Filter out deleted images
     let updatedImageList = existingAccommodation.accommodationPics;
 
     if (parsedImageToDelete.length > 0) {
       updatedImageList = updatedImageList.filter(pic => !parsedImageToDelete.includes(pic));
       // Delete from Cloudinary
       for (const url of parsedImageToDelete) {
-        await deleteFile(url);
+        await deleteImageGroup(url,"tours/accommodation/images");
       }
     }
 

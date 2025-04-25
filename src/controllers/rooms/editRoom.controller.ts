@@ -115,10 +115,10 @@ const editRoom = async (req: MulterRequest, res: Response): Promise<void> => {
       return;
     }
 
-    if (!roomTitle || !roomStandard || !roomDescription || !roomFacilities || !accommodation) {
-      res.status(400).json({ success: false, message: "Please fill in all fields" });
-      return;
-    }
+    // if (!roomTitle || !roomStandard || !roomDescription || !roomFacilities || !accommodation) {
+    //   res.status(400).json({ success: false, message: "Please fill in all fields" });
+    //   return;
+    // }
 
     // Find existing room
     const existingRoom = await Room.findById(roomId);

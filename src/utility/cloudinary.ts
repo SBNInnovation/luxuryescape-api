@@ -39,7 +39,7 @@ const uploadFile = async (file:string,folder:string) => {
 
 // delete file
 const deleteFile = async (public_id:string) => {
-    // console.log(public_id);
+    console.log(public_id);
     try {
         const result = await cloudinary.uploader.destroy(public_id);
         if (!result) {

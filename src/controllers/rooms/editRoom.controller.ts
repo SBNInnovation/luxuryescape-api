@@ -91,7 +91,7 @@ import { Request, Response } from "express";
 import slug from "slug";
 import Room from "../../models/rooms.models/room.js";
 import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
-import deleteImageGroup from "../../utility/deleteGroupedImage.js";
+// import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -166,8 +166,8 @@ const editRoom = async (req: MulterRequest, res: Response): Promise<void> => {
       // Delete from Cloudinary
       for (const url of parsedImagesToDelete) {
         // await deleteFile(url);
-        deleteImageGroup([url],"tours/accommodation/rooms/images")
-      }
+        await deleteFile(url)
+      } 
     }
 
     // Merge updated list with new uploads

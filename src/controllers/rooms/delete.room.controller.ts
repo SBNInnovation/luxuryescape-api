@@ -34,7 +34,7 @@
 import { Request, Response } from "express";
 import Room from "../../models/rooms.models/room.js";
 import { deleteFile } from "../../utility/cloudinary.js";
-import deleteImageGroup from "../../utility/deleteGroupedImage.js";
+// import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 
 const deleteRoom = async (req: Request, res: Response): Promise<void> => {
@@ -66,11 +66,16 @@ const deleteRoom = async (req: Request, res: Response): Promise<void> => {
         // }
 
         // Delete itinerary day photos
-        const deletedRooms = await deleteImageGroup(room.roomPhotos, "tours/accommodation/rooms/images");
-        if (!deletedRooms) {
-          res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
-          return;
-        }
+        // const deletedRooms = await deleteFile(room.roomPhotos, "tours/accommodation/rooms/images");
+        if (room && room.roomPhotos && room.roomPhotos.length > 0) {
+            room.roomPhotos.map(async (image) => {
+              await deleteFile(image)
+            })
+          }
+        // if (!deletedRooms) {
+        //   res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
+        //   return;
+        // }
 
         // Delete room from database
         await Room.findByIdAndDelete(roomId);

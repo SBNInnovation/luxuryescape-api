@@ -28,6 +28,7 @@ const deleteImageGroup = async (images: string[], folder: string): Promise<boole
       const publicId = fileName?.split('.')[0];
       if (publicId) {
         const fullPublicId = `${folder}/${publicId}`;
+        console.log("Attempting to delete image with publicId:", fullPublicId);
         const result = await deleteFile(fullPublicId);
         if (!result) allSuccess = false;
       }

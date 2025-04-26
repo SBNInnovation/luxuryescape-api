@@ -32,7 +32,6 @@
 import { Request, Response } from "express";
 import Tour from "../../models/tours.models/tours.js";
 import { deleteFile } from "../../utility/cloudinary.js";
-import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 
 const deleteTour = async (req: Request, res: Response): Promise<void> => {
@@ -63,40 +62,40 @@ const deleteTour = async (req: Request, res: Response): Promise<void> => {
     //   }
     // }
 
-    if (tour.thumbnail) {
-      const fileName = tour.thumbnail.split('/').pop();         // abc123.jpg
-      const publicId = fileName?.split('.')[0];                 // abc123
-      const fullPublicId = `tours/thumbnail/images/${publicId}`;       // ✅ with folder
-      if (fullPublicId) {
-        const deleteResult = await deleteFile(fullPublicId);
-        if (!deleteResult) {
-          res.status(500).json({ success: false, message: "Failed to delete thumbnail image from Cloudinary" });
-          return;
-        }
-      }
+    if (tour?.thumbnail) {
+      await deleteFile(tour.thumbnail)
     }
     
 
 // Delete gallery images
-const galleryDeleted = await deleteImageGroup(tour.gallery, "tours/gallery/images");
-if (!galleryDeleted) {
-  res.status(500).json({ success: false, message: "Failed to delete gallery images" });
-  return;
-}
+// const galleryDeleted = await deleteImageGroup(tour.gallery, "tours/gallery/images");
+    for (const url of tour.gallery) {
+      await deleteFile(url);
+    }
+// if (!galleryDeleted) {
+//   res.status(500).json({ success: false, message: "Failed to delete gallery images" });
+//   return;
+// }
 
 // Delete highlight images
-const highlightDeleted = await deleteImageGroup(tour.highlightPicture, "tours/gallery/images");
-if (!highlightDeleted) {
-  res.status(500).json({ success: false, message: "Failed to delete highlight images" });
-  return;
-}
+// const highlightDeleted = await deleteImageGroup(tour.highlightPicture, "tours/gallery/images");
+ for (const url of tour.highlightPicture) {
+      await deleteFile(url);
+    }
+// if (!highlightDeleted) {
+//   res.status(500).json({ success: false, message: "Failed to delete highlight images" });
+//   return;
+// }
 
 // Delete itinerary day photos
-const itineraryDeleted = await deleteImageGroup(tour.itineraryDayPhoto, "tours/gallery/images");
-if (!itineraryDeleted) {
-  res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
-  return;
-}
+// const itineraryDeleted = await deleteImageGroup(tour.itineraryDayPhoto, "tours/gallery/images");
+ for (const url of tour.itineraryDayPhoto) {
+      await deleteFile(url);
+    }
+// if (!itineraryDeleted) {
+//   res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
+//   return;
+// }
 
     // Now delete the tour from the database
     const deletedTour = await Tour.findByIdAndDelete(tourId);

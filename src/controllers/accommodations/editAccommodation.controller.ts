@@ -388,8 +388,8 @@
 import { Request, Response } from "express";
 import slugify from "@sindresorhus/slugify";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
-import { uploadFile } from "../../utility/cloudinary.js";
-import deleteImageGroup from "../../utility/deleteGroupedImage.js";
+import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
+// import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -496,7 +496,7 @@ const editAccommodation = async (req: Request, res: Response) => {
       // Delete images from Cloudinary
       try {
         await Promise.all(
-          parsedImageToDelete.map(url => deleteImageGroup([url], "tours/accommodation/images"))
+          parsedImageToDelete.map(url => deleteFile(url))
         );
       } catch (deleteErr) {
         console.error("Failed to delete some images from Cloudinary:", deleteErr);

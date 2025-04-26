@@ -144,7 +144,7 @@ import { Request, Response } from "express";
 import slugify from "@sindresorhus/slugify";
 import Trek from "../../models/trek.models/trek.js";
 import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
-import deleteImageGroup from "../../utility/deleteGroupedImage.js";
+// import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -255,7 +255,7 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
        ];
    
        for (const url of allToDelete) {
-         await deleteImageGroup(url,"treks/gallery/images");
+         await deleteFile(url);
        }
 
     // Final image arrays

@@ -34,7 +34,7 @@ import { deleteFile } from "../../utility/cloudinary.js";
 import Tour from "../../models/tours.models/tours.js";
 import Trek from "../../models/trek.models/trek.js";
 import Room from "../../models/rooms.models/room.js";
-import deleteImageGroup from "../../utility/deleteGroupedImage.js";
+// import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 
 const deleteAccommodation = async (req: Request, res: Response): Promise<void> => {
@@ -73,11 +73,16 @@ const deleteAccommodation = async (req: Request, res: Response): Promise<void> =
     //   }
     // }
 
-    const deletedAccommodationPics = await deleteImageGroup(accommodation.accommodationPics, "tours/accommodation/images");
-    if (!deletedAccommodationPics) {
-      res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
-      return;
-    }
+    // const deletedAccommodationPics = await deleteImageGroup(accommodation.accommodationPics, "tours/accommodation/images");
+     if (accommodation && accommodation.accommodationPics && accommodation.accommodationPics.length > 0) {
+                accommodation.accommodationPics.map(async (image) => {
+                  await deleteFile(image)
+                })
+              }
+    // if (!deletedAccommodationPics) {
+    //   res.status(500).json({ success: false, message: "Failed to delete itinerary day photos" });
+    //   return;
+    // }
 
     // Now delete the accommodation from the database
     const deletedAccommodation = await Accommodation.findByIdAndDelete(accommodationId);

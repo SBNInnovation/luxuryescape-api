@@ -140,6 +140,7 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
     //DELETE FROM CLOUDINARY
     const allToDelete = [
       ...parsedGalleryToDelete,
+      ...parsedHighlightToDelete
     ];
 
     for (const url of allToDelete) {

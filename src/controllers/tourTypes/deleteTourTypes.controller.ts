@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import TourTypes from "../../models/tourTypes.models/tourTypes.js";
 import { deleteFile } from "../../utility/cloudinary.js";
 
+
 const deleteTourType = async(req:Request,res:Response):Promise<void> =>{
     try {
         const {tourTypeId} = req.params;

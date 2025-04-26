@@ -389,6 +389,7 @@ import { Request, Response } from "express";
 import slugify from "@sindresorhus/slugify";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
 import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
+
 // import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 export interface MulterRequest extends Request {

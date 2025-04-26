@@ -30,10 +30,11 @@
 
 import { Request, Response } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
-import { deleteFile } from "../../utility/cloudinary.js";
 import Tour from "../../models/tours.models/tours.js";
 import Trek from "../../models/trek.models/trek.js";
 import Room from "../../models/rooms.models/room.js";
+import { deleteFile } from "../../utility/cloudinary.js";
+
 // import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 

@@ -34,6 +34,7 @@ import Tour from "../../models/tours.models/tours.js";
 import { deleteFile } from "../../utility/cloudinary.js";
 
 
+
 const deleteTour = async (req: Request, res: Response): Promise<void> => {
   try {
     const { tourId } = req.params;

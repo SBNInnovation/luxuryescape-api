@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Trek from "../../models/trek.models/trek.js";
 import { deleteFile } from "../../utility/cloudinary.js";
 
+
 // import deleteImageGroup from "../../utility/deleteGroupedImage.js";/
 
 

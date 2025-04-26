@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import slug from "slug";
 import Tour from "../../models/tours.models/tours.js";
-import {  deleteFile, uploadFile} from "../../utility/cloudinary.js";
+import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
+
 // import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 export interface MulterRequest extends Request {
@@ -103,18 +104,30 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
       ...uploadedHighlightUrls,
     ];
 
-    const finalItineraryPhotos = [
-      ...existingTour.itineraryDayPhoto.filter((img: string) => !parsedItineraryPhotoToDelete.includes(img)),
-      ...uploadedItineraryPhotoUrls,
-    ];
+    // const finalItineraryPhotos = [
+    //   ...existingTour.itineraryDayPhoto.filter((img: string) => !parsedItineraryPhotoToDelete.includes(img)),
+    //   ...uploadedItineraryPhotoUrls,
+    // ];
+
 
     // const matchedImages = [
     // existingTour.itineraryDayPhoto.filter((img: string, index) => parsedItineraryPhotoToDelete.includes(img, index)),
     // ]
-
-    // const indexes = matchedImages.map((url:string))
-
-    // uploadedItineraryPhotoUrls = matchedImages[]
+    for (const [idx, img] of parsedItineraryPhotoToDelete.entries()) {
+      const index = existingTour.itineraryDayPhoto.indexOf(img);
+    
+      const newPhoto = uploadedItineraryPhotoUrls[idx];
+      
+      if (index !== -1) {
+        if (!newPhoto) {
+          throw new Error(`Uploaded photo missing for image at index ${idx}`);
+        }
+        await deleteFile(img);
+        existingTour.itineraryDayPhoto[index] = newPhoto;
+      }
+    }
+    
+    
     
     // // Push any leftover uploaded images (extra new days maybe)
     // const validUploadedPhotos = uploadedItineraryPhotoUrls.filter((url): url is string => typeof url === 'string');

@@ -38,19 +38,79 @@ const uploadFile = async (file:string,folder:string) => {
 }
 
 // delete file
-const deleteFile = async (public_id:string) => {
-    console.log(public_id);
+// const deleteFile = async (public_id:string) => {
+//     console.log(public_id);
+//     try {
+//         const result = await cloudinary.uploader.destroy(public_id);
+//         if (!result) {
+//             throw new Error('Error deleting file');
+//         }
+//         // console.log(result);
+//         return result;
+//     } catch (error) {
+//         console.log("Error on cloudinary:", error);
+//     }
+// }
+
+// const deleteFile = async (secureUrl: string) => {
+//     try {
+//       if (!secureUrl) {
+//         throw new Error("secureUrl is required")
+//       }
+  
+//       // Extract the public_id
+//       const publicId = secureUrl
+//         .split("/")
+//         .slice(7) // Remove initial URL components
+//         .join("/") // Join remaining components
+//         .replace(/\.[^/.]+$/, "") // Remove the file extension
+  
+//       console.log(`Extracted public_id: ${publicId}`)
+  
+//       const updatedString = publicId.replace(/%20/g, " ")
+
+  
+//       // Delete the image using the public_id
+//       const result = await cloudinary.uploader.destroy(updatedString)
+  
+//       if (result.result !== "ok") {
+//         throw new Error("Error deleting file")
+//       }
+  
+//       // return result
+//     } catch (error) {
+//       console.error("Error in deleteImage function:", error)
+//       throw error
+//     }
+//   }
+
+const deleteFile = async (secureUrl: string) => {
     try {
-        const result = await cloudinary.uploader.destroy(public_id);
-        if (!result) {
-            throw new Error('Error deleting file');
-        }
-        // console.log(result);
-        return result;
+      if (!secureUrl) {
+        throw new Error("secureUrl is required")
+      }
+  
+      const publicId = secureUrl
+        .split("/")
+        .slice(7)
+        .join("/")
+        .replace(/\.[^/.]+$/, "")
+  
+      const updatedString = decodeURIComponent(publicId)
+  
+      const result = await cloudinary.uploader.destroy(updatedString)
+  
+      if (result.result !== "ok") {
+        throw new Error(`Cloudinary deletion failed: ${JSON.stringify(result)}`)
+      }
+  
     } catch (error) {
-        console.log("Error on cloudinary:", error);
+      console.error("Error in deleteImage function:", error);
+      // Always throw a real Error object
+      throw new Error(`Error deleting image: ${error instanceof Error ? error.message : String(error)}`);
     }
-}
+  }
+  
 
 // const deleteFile = async (urlOrPublicId: string) => {
 //   try {
@@ -92,7 +152,4 @@ const deleteFile = async (public_id:string) => {
 //       throw error; // Re-throw to allow proper error handling upstream
 //   }
 // };
-  
-
-
-export{uploadFile,deleteFile}
+export {uploadFile,deleteFile}

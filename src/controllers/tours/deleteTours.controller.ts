@@ -50,18 +50,6 @@ const deleteTour = async (req: Request, res: Response): Promise<void> => {
     return
     }
 
-    // // Delete the thumbnail image from Cloudinary
-    // if (tour.thumbnail) {
-    //   const thumbnailPublicId = tour.thumbnail.split('/').pop()?.split('.')[0];
-    //   if (thumbnailPublicId) {
-    //     const deleteResult = await deleteFile(thumbnailPublicId);
-    //     if (!deleteResult) {
-    //     res.status(500).json({ success: false, message: "Failed to delete thumbnail image from Cloudinary" });
-    //     return
-    //     }
-    //   }
-    // }
-
     if (tour?.thumbnail) {
       await deleteFile(tour.thumbnail)
     }

@@ -31,6 +31,7 @@ import Blog from "../../models/blogs.models/blogs.js";
 import { deleteFile } from "../../utility/cloudinary.js";
 
 
+
 const blogDelete = async (req: Request, res: Response): Promise<void> => {
     try {
         const blogId = req.params.blogId;
@@ -59,17 +60,8 @@ const blogDelete = async (req: Request, res: Response): Promise<void> => {
         // }
 
                if (blog.thumbnail) {
-                    const fileName = blog.thumbnail.split('/').pop();         // abc123.jpg
-                    const publicId = fileName?.split('.')[0];                 // abc123
-                    const fullPublicId = `blogs/thumbnail/${publicId}`;       // ✅ with folder
-                    if (fullPublicId) {
-                      const deleteResult = await deleteFile(fullPublicId);
-                      if (!deleteResult) {
-                        res.status(500).json({ sueccess: false, message: "Failed to delete thumbnail image from Cloudinary" });
-                        return;
-                      }
-                    }
-                  }
+                await deleteFile(blog.thumbnail)
+                }
 
         // Delete the blog from the database
         await Blog.findByIdAndDelete(blogId);

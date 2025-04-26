@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import slug from "slug";
 import Tour from "../../models/tours.models/tours.js";
-import { deleteFile, uploadFile} from "../../utility/cloudinary.js";
+import {  deleteFile, uploadFile} from "../../utility/cloudinary.js";
 // import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 export interface MulterRequest extends Request {

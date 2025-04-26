@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
+
 import Destination from "../../models/destination.models/destination.js";
 import slug from "slug";
+import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -190,11 +191,7 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
       if (uploadedThumb?.secure_url) {
         // 👇 Delete old thumbnail from Cloudinary
         if (destination.thumbnail) {
-          const parts = destination.thumbnail.split("/") || [];
-          const fileName = parts[parts.length - 1]; // e.g., abc123.jpg
-          const [publicId] = fileName.split(".");   // abc123
-          const fullPublicId = `destinations/thumbnail/${publicId}`;
-          await deleteFile(fullPublicId);
+          await deleteFile(destination.thumbnail);
         }
     
         // Update thumbnail
@@ -279,22 +276,14 @@ const deleteDestination = async (req: Request, res: Response): Promise<void> => 
 
     // ✅ Delete thumbnail from Cloudinary
     if (deleted.thumbnail) {
-      const parts = deleted.thumbnail.split("/") || [];
-      const fileName = parts[parts.length - 1];
-      const [publicId] = fileName.split(".");
-      const fullPublicId = `destinations/thumbnail/${publicId}`;
-      await deleteFile(fullPublicId);
+      await deleteFile(deleted.thumbnail)
     }
 
     // ✅ Delete all destination images
     if (deleted.destinations && Array.isArray(deleted.destinations)) {
       await Promise.all(deleted.destinations.map(async (destination) => {
         if (destination.image) {
-          const parts = destination.image.split("/") || [];
-          const fileName = parts[parts.length - 1];
-          const [publicId] = fileName.split(".");
-          const fullPublicId = `destinations/images/${publicId}`;
-          await deleteFile(fullPublicId);
+          await deleteFile(destination.image);
         }
       }));
     }

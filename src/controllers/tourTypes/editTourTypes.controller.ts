@@ -70,8 +70,9 @@
 
 import { Request, Response } from "express";
 import TourTypes from "../../models/tourTypes.models/tourTypes.js";
-import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
+
 import { Express } from "express";
+import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
 
 export interface MulterRequest extends Request {
   file?: Express.Multer.File; // Represents the single file uploaded using multer.single()

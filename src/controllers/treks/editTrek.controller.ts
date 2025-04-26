@@ -143,7 +143,7 @@
 import { Request, Response } from "express";
 import slugify from "@sindresorhus/slugify";
 import Trek from "../../models/trek.models/trek.js";
-import { uploadFile, deleteFile } from "../../utility/cloudinary.js";
+import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
 // import deleteImageGroup from "../../utility/deleteGroupedImage.js";
 
 export interface MulterRequest extends Request {

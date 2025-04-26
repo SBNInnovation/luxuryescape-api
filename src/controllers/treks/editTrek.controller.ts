@@ -246,15 +246,47 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     
        // Remove deleted ones from existing arrays
        const finalGallery = existingTrek.gallery.filter((url: string) => !parsedGalleryToDelete.includes(url));
-       const finalHighlightPicture = existingTrek.highlightPicture.filter((url: string) => !parsedHighlightToDelete.includes(url));
-       const finalItineraryDayPhoto = existingTrek.itineraryDayPhoto.filter((url: string) => !parsedItineraryPhotoToDelete.includes(url));
+      //  const finalHighlightPicture = existingTrek.highlightPicture.filter((url: string) => !parsedHighlightToDelete.includes(url));
+      //  const finalItineraryDayPhoto = existingTrek.itineraryDayPhoto.filter((url: string) => !parsedItineraryPhotoToDelete.includes(url));
    
        // Delete from Cloudinary
        const allToDelete = [
          ...parsedGalleryToDelete,
-         ...parsedHighlightToDelete,
-         ...parsedItineraryPhotoToDelete,
        ];
+       const finalHighlightPictures: string[] = [...existingTrek.highlightPicture];
+
+       for (const [idx, img] of parsedHighlightToDelete.entries()) {
+         const index = existingTrek.highlightPicture.indexOf(img);
+       
+         const newPhoto = uploadedHighlightPictureUrls[idx];
+         
+         if (index !== -1) {
+           if (!newPhoto) {
+             throw new Error(`Uploaded photo missing for image at index ${idx}`);
+           }
+       
+           await deleteFile(img);
+           finalHighlightPictures[index] = newPhoto; // Replace inside the final array
+         }
+       }
+   
+   
+       const finalItineraryPhotos: string[] = [...existingTrek.itineraryDayPhoto];
+   
+       for (const [idx, img] of parsedItineraryPhotoToDelete.entries()) {
+         const index = existingTrek.itineraryDayPhoto.indexOf(img);
+       
+         const newPhoto = uploadedItineraryDayPhotoUrls[idx];
+         
+         if (index !== -1) {
+           if (!newPhoto) {
+             throw new Error(`Uploaded photo missing for image at index ${idx}`);
+           }
+       
+           await deleteFile(img);
+           finalItineraryPhotos[index] = newPhoto; // Replace inside the final array
+         }
+       }
    
        for (const url of allToDelete) {
          await deleteFile(url);
@@ -262,8 +294,9 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
 
     // Final image arrays
     const finalGalleryUrls = [...finalGallery, ...uploadedGalleryUrls];
-    const finalHighlightPictureUrls = [...finalHighlightPicture, ...uploadedHighlightPictureUrls];
-    const finalItineraryDayPhotoUrls = [...finalItineraryDayPhoto, ...uploadedItineraryDayPhotoUrls];
+  
+    
+    
 
     const parseJsonSafe = (data: any, fieldName: string) => {
       if (Array.isArray(data)) return data;
@@ -299,11 +332,11 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
         difficultyLevel,
         trekOverview,
         trekHighlights: parsedTrekHighlights,
-        highlightPicture: finalHighlightPictureUrls,
+        highlightPicture: finalHighlightPictures,
         trekInclusion: parsedTrekInclusion,
         trekExclusion: parsedTrekExclusion,
         trekItinerary: parsedTrekItinerary,
-        itineraryDayPhoto: finalItineraryDayPhotoUrls,
+        itineraryDayPhoto: finalItineraryPhotos,
         faq: parsedFaq,
         gallery: finalGalleryUrls,
       },

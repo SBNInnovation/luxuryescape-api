@@ -51,14 +51,14 @@ const addRoom = async(req:MulterRequest,res:Response):Promise<void> =>{
 
         const filteredRoomPhotos = uploadedRoomPhotos.filter((url) => url !== null);
 
-        // Generate slug from title
-         const slug1 = slug(roomTitle);
-
-         const  checkExistingRoom = await Room.findOne({roomTitle:roomTitle});
-         if(checkExistingRoom){
-            res.status(400).json({success:false, message:"Room already exists"});
-            return;
-        }
+         const checkExistingRoom = await Room.findOne({ roomTitle: roomTitle, accommodation: accommodation });
+         if (checkExistingRoom) {
+             res.status(400).json({ success: false, message: "Room with this title already exists in this accommodation" });
+             return;
+         }
+         
+         // Generate unique slug
+         const slug1 = slug(roomTitle) + "-" + accommodation.toString();
         
          const createRoom = await Room.create({
             roomTitle,

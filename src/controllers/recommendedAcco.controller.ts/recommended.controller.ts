@@ -11,7 +11,8 @@ const addRecommededAcco = async(req:Request, res:Response):Promise<void> =>{
     try {
         const{
             affiliatedAccommodation,
-            link
+            link,
+            destination
         } = req.body;
         if(!affiliatedAccommodation){
             res.status(404).json({success:false, message:"Affiliated name is required"})
@@ -27,7 +28,8 @@ const addRecommededAcco = async(req:Request, res:Response):Promise<void> =>{
         const newAffiliated = await Recommend.create({
             affiliatedAccommodation,
             thumbnail:uploadedThumbnail?.secure_url,
-            link
+            link,
+            destination
         })
         if(!newAffiliated){
             res.status(404).json({success:false, message:"Unable to create the affialiated."})
@@ -45,7 +47,7 @@ const addRecommededAcco = async(req:Request, res:Response):Promise<void> =>{
 
 const editReccommendedAcco = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { affiliatedAccommodation, link } = req.body;
+    const { affiliatedAccommodation, link, destination } = req.body;
     const { recommendedId } = req.params;
 
     // Check if recommendedId is provided
@@ -66,6 +68,7 @@ const editReccommendedAcco = async (req: Request, res: Response): Promise<void> 
     // Update properties
     existingReccommeded.affiliatedAccommodation = affiliatedAccommodation || existingReccommeded.affiliatedAccommodation;
     existingReccommeded.link = link || existingReccommeded.link;
+    existingReccommeded.destination = destination || existingReccommeded.destination;
 
     // Handle file upload (if any)
     let uploadedThumbnailUrl = existingReccommeded.thumbnail;
@@ -136,7 +139,7 @@ const deleteReccommended = async (req: Request, res: Response): Promise<void> =>
   // Get all recommended accommodations
 const getAllRecommended = async (req: Request, res: Response): Promise<void> => {
     try {
-      const recommendedList = await Recommend.find().sort({ createdAt: -1 });
+      const recommendedList = await Recommend.find().populate("destination").sort({ createdAt: -1 });
       res.status(200).json({ success: true, data: recommendedList });
     } catch (error) {
       console.error("Error fetching recommended accommodations:", error);

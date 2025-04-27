@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import Destination from "../../models/destination.models/destination.js";
 import slug from "slug";
 import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
+import Recommend from "../../models/recommendedAcco.models/recommended.js";
+import Accommodation from "../../models/accommodation.models/Accommodation.js";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -287,7 +289,12 @@ const deleteDestination = async (req: Request, res: Response): Promise<void> => 
         }
       }));
     }
-
+        // Remove references from recommended acco
+        await Recommend.updateMany({ destination: destinationId }, { $pull: { destination: destinationId }});
+    
+        // Remove references from Accommodation
+        await Accommodation.updateMany({ destination: destinationId }, { $pull: { destination: destinationId }});
+    
     res.status(200).json({ success: true, message: "Destination deleted successfully." });
 
   } catch (error) {

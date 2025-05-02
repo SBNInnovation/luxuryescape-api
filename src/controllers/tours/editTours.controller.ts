@@ -117,22 +117,48 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
     }
 
 
+    // const finalItineraryPhotos: string[] = [...existingTour.itineraryDayPhoto];
+
+    // for (const [idx, img] of parsedItineraryPhotoToDelete.entries()) {
+    //   const index = existingTour.itineraryDayPhoto.indexOf(img);
+    
+    //   const newPhoto = uploadedItineraryPhotoUrls[idx];
+      
+    //   if (index !== -1) {
+    //     if (!newPhoto) {
+    //       throw new Error(`Uploaded photo missing for image at index ${idx}`);
+    //     }
+    
+    //     await deleteFile(img);
+    //     finalItineraryPhotos[index] = newPhoto; // Replace inside the final array
+    //   }
+    // }
+
     const finalItineraryPhotos: string[] = [...existingTour.itineraryDayPhoto];
 
-    for (const [idx, img] of parsedItineraryPhotoToDelete.entries()) {
-      const index = existingTour.itineraryDayPhoto.indexOf(img);
-    
-      const newPhoto = uploadedItineraryPhotoUrls[idx];
-      
-      if (index !== -1) {
-        if (!newPhoto) {
-          throw new Error(`Uploaded photo missing for image at index ${idx}`);
+      for (const [idx, img] of parsedItineraryPhotoToDelete.entries()) {
+        const index = existingTour.itineraryDayPhoto.indexOf(img);
+        const newPhoto = uploadedItineraryPhotoUrls[idx];
+
+        if (index !== -1) {
+          if (!newPhoto) {
+            throw new Error(`Uploaded photo missing for image at index ${idx}`);
+          }
+
+          await deleteFile(img);
+          finalItineraryPhotos[index] = newPhoto;
         }
-    
-        await deleteFile(img);
-        finalItineraryPhotos[index] = newPhoto; // Replace inside the final array
       }
-    }
+
+      // ✅ Append new photos beyond replacements
+        if (uploadedItineraryPhotoUrls.length > parsedItineraryPhotoToDelete.length) {
+          const remaining = uploadedItineraryPhotoUrls
+            .slice(parsedItineraryPhotoToDelete.length)
+            .filter((url): url is string => typeof url === "string"); // filter out undefined
+          finalItineraryPhotos.push(...remaining);
+        }
+      
+
     
     
 

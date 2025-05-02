@@ -108,8 +108,8 @@ const uploader = multer({
 const upload = [
   { name: "thumbnail", maxCount: 1 }, // Single file for thumbnail
   { name: "gallery", maxCount: 5 },    // Multiple files for gallery (max 5)
-  { name: "highlightPicture", maxCount: 10 },  // Multiple files for highlight pictures (max 10)
-  { name: "itineraryDayPhoto" } // Multiple files for itinerary photos (no max count)
+  { name: "highlightPicture"},  // Multiple files for highlight pictures (max 10)
+  { name: "itineraryDayPhoto"} // Multiple files for itinerary photos (no max count)
 ];
 
 // Define the route to handle tour upload

@@ -115,6 +115,13 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
         finalHighlightPictures[index] = newPhoto; // Replace inside the final array
       }
     }
+    if (uploadedHighlightUrls.length > parsedHighlightToDelete.length) {
+      const remaining = uploadedHighlightUrls
+        .slice(parsedHighlightToDelete.length)
+        .filter((url): url is string => typeof url === "string"); // filter out undefined
+      finalHighlightPictures.push(...remaining);
+    }
+    
 
 
     // const finalItineraryPhotos: string[] = [...existingTour.itineraryDayPhoto];
@@ -157,10 +164,7 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
             .filter((url): url is string => typeof url === "string"); // filter out undefined
           finalItineraryPhotos.push(...remaining);
         }
-      
-
-    
-    
+        
 
 
     //DELETE FROM CLOUDINARY

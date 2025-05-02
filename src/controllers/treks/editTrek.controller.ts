@@ -253,6 +253,8 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
        const allToDelete = [
          ...parsedGalleryToDelete,
        ];
+
+
        const finalHighlightPictures: string[] = [...existingTrek.highlightPicture];
 
        for (const [idx, img] of parsedHighlightToDelete.entries()) {
@@ -269,28 +271,37 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
            finalHighlightPictures[index] = newPhoto; // Replace inside the final array
          }
        }
-   
+       if (uploadedHighlightPictureUrls.length > parsedHighlightToDelete.length) {
+         const remaining = uploadedHighlightPictureUrls
+           .slice(parsedHighlightToDelete.length)
+           .filter((url): url is string => typeof url === "string"); // filter out undefined
+         finalHighlightPictures.push(...remaining);
+       }
+
    
        const finalItineraryPhotos: string[] = [...existingTrek.itineraryDayPhoto];
-   
+
        for (const [idx, img] of parsedItineraryPhotoToDelete.entries()) {
          const index = existingTrek.itineraryDayPhoto.indexOf(img);
-       
          const newPhoto = uploadedItineraryDayPhotoUrls[idx];
-         
+ 
          if (index !== -1) {
            if (!newPhoto) {
              throw new Error(`Uploaded photo missing for image at index ${idx}`);
            }
-       
+ 
            await deleteFile(img);
-           finalItineraryPhotos[index] = newPhoto; // Replace inside the final array
+           finalItineraryPhotos[index] = newPhoto;
          }
        }
-   
-       for (const url of allToDelete) {
-         await deleteFile(url);
-       }
+ 
+       // ✅ Append new photos beyond replacements
+         if (uploadedItineraryDayPhotoUrls.length > parsedItineraryPhotoToDelete.length) {
+           const remaining = uploadedItineraryDayPhotoUrls
+             .slice(parsedItineraryPhotoToDelete.length)
+             .filter((url): url is string => typeof url === "string"); // filter out undefined
+           finalItineraryPhotos.push(...remaining);
+         }
 
     // Final image arrays
     const finalGalleryUrls = [...finalGallery, ...uploadedGalleryUrls];

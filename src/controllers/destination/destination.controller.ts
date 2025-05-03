@@ -337,8 +337,16 @@ const getAllDestinations = async (req: Request, res: Response): Promise<void> =>
       res.status(404).json({ success: false, message: "No destinations found." });
       return
     }
+    const total = await Destination.countDocuments(query);
 
-    res.status(200).json({ success: true, data: destinations });
+    res.status(200).json({ success: true, data: {
+      destinations, 
+      pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+  } }});
 
   } catch (error) {
     console.error("Error fetching all destinations:", error);

@@ -27,7 +27,7 @@ const getAllTreks = async (req: Request, res: Response): Promise<void> => {
       .limit(limit);
 
     if (allTreks.length === 0) {
-      res.status(404).json({ success: false, message: "No treks found" });
+      res.status(404).json({ success: false, message: "No treks found", data:{} });
       return;
     }
 

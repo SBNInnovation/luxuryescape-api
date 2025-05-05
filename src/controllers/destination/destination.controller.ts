@@ -162,6 +162,107 @@ const getDestinationById = async (req: Request, res: Response): Promise<void> =>
 //   }
 // };
 
+// const updateDestination = async (req: MulterRequest, res: Response): Promise<void> => {
+//   try {
+//     const { destinationId } = req.params;
+
+//     const title = req.body.title?.trim();
+//     const description = req.body.description?.trim();
+//     const removeCaptions = req.body.removeCaptions ? JSON.parse(req.body.removeCaptions) : [];
+//     const newCaptions = req.body.caption ? JSON.parse(req.body.caption) : [];
+
+//     const destination = await Destination.findById(destinationId);
+//     if (!destination) {
+//       res.status(404).json({ success: false, message: "Destination not found." });
+//       return
+//     }
+
+//     // Update title/description
+//     if (title) {
+//       destination.title = title;
+//       destination.slug = slug(title, { lower: true });
+//     }
+//     if (description) {
+//       destination.description = description;
+//     }
+
+//     // Update thumbnail if new one is uploaded
+//     if (req.files?.thumbnail?.[0]) {
+//       const uploadedThumb = await uploadFile(req.files.thumbnail[0].path, "destinations/thumbnail");
+    
+//       if (uploadedThumb?.secure_url) {
+//         // 👇 Delete old thumbnail from Cloudinary
+//         if (destination.thumbnail) {
+//           await deleteFile(destination.thumbnail);
+//         }
+    
+//         // Update thumbnail
+//         destination.thumbnail = uploadedThumb.secure_url;
+//       }
+//     }
+    
+//     if (removeCaptions.length) {
+//       //  Get destinations that need to be deleted
+//       const toDelete = destination.destinations.filter(dest =>
+//         removeCaptions.includes(dest.caption)
+//       );
+    
+//       // Remove them from the array
+//       destination.set(
+//         'destinations',
+//         destination.destinations.filter(dest =>
+//           !removeCaptions.includes(dest.caption)
+//         )
+//       );
+    
+//       // Extract public_ids from image URLs
+//       const publicIds = toDelete
+//         .map(dest => {
+//           const parts = dest.image?.split("/") || [];
+//           const fileName = parts[parts.length - 1]; // abc123.jpg
+//           const [publicId] = fileName.split(".");   // abc123
+//           return `destinations/images/${publicId}`;
+//         })
+//         .filter(Boolean);
+    
+//       // Delete from Cloudinary
+//       await Promise.all(publicIds.map(id => deleteFile(id)));
+//     }
+    
+//     // Add new captions + images (if any)
+//     const imageFiles = req.files?.image || [];
+
+//     if (newCaptions.length && imageFiles.length) {
+//       if (newCaptions.length !== imageFiles.length) {
+//         res.status(400).json({ success: false, message: "Number of captions and images must match." });
+//         return
+//       }
+
+//       const uploadedImages = await Promise.all(
+//         imageFiles.map((file) => uploadFile(file.path, "destinations/gallery/images"))
+//       );
+
+//       const newDestinations = newCaptions.map((caption: string, index: number) => ({
+//         caption,
+//         image: uploadedImages[index]?.secure_url || ""
+//       }));
+
+//       destination.destinations.push(...newDestinations);
+//     }
+//     // Save changes
+//     await destination.save();
+
+//     res.status(200).json({ success: true, data: destination });
+
+//   } catch (error) {
+//     console.error("Error in editDestination:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: error instanceof Error ? error.message : "Internal server error",
+//     });
+//   }
+// };
+
 const updateDestination = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
     const { destinationId } = req.params;
@@ -174,7 +275,7 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
     const destination = await Destination.findById(destinationId);
     if (!destination) {
       res.status(404).json({ success: false, message: "Destination not found." });
-      return
+      return;
     }
 
     // Update title/description
@@ -189,53 +290,43 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
     // Update thumbnail if new one is uploaded
     if (req.files?.thumbnail?.[0]) {
       const uploadedThumb = await uploadFile(req.files.thumbnail[0].path, "destinations/thumbnail");
-    
+
       if (uploadedThumb?.secure_url) {
-        // 👇 Delete old thumbnail from Cloudinary
         if (destination.thumbnail) {
-          await deleteFile(destination.thumbnail);
+          await deleteFile(destination.thumbnail); // ✅ Use full secure_url
         }
-    
-        // Update thumbnail
         destination.thumbnail = uploadedThumb.secure_url;
       }
     }
-    
+
+    // Remove specified images/captions
     if (removeCaptions.length) {
-      //  Get destinations that need to be deleted
       const toDelete = destination.destinations.filter(dest =>
         removeCaptions.includes(dest.caption)
       );
-    
-      // Remove them from the array
+
+      // Remove matching destinations
       destination.set(
         'destinations',
         destination.destinations.filter(dest =>
           !removeCaptions.includes(dest.caption)
         )
       );
-    
-      // Extract public_ids from image URLs
-      const publicIds = toDelete
-        .map(dest => {
-          const parts = dest.image?.split("/") || [];
-          const fileName = parts[parts.length - 1]; // abc123.jpg
-          const [publicId] = fileName.split(".");   // abc123
-          return `destinations/images/${publicId}`;
-        })
-        .filter(Boolean);
-    
-      // Delete from Cloudinary
-      await Promise.all(publicIds.map(id => deleteFile(id)));
-    }
-    
-    // Add new captions + images (if any)
-    const imageFiles = req.files?.image || [];
 
+      // Get full secure_urls for deletion
+      const urlsToDelete = toDelete
+        .map(dest => dest.image)
+        .filter((url): url is string => Boolean(url));
+
+      await Promise.all(urlsToDelete.map(url => deleteFile(url))); // ✅ send full URL
+    }
+
+    // Add new captions and images
+    const imageFiles = req.files?.image || [];
     if (newCaptions.length && imageFiles.length) {
       if (newCaptions.length !== imageFiles.length) {
         res.status(400).json({ success: false, message: "Number of captions and images must match." });
-        return
+        return;
       }
 
       const uploadedImages = await Promise.all(
@@ -249,7 +340,7 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
 
       destination.destinations.push(...newDestinations);
     }
-    // Save changes
+
     await destination.save();
 
     res.status(200).json({ success: true, data: destination });
@@ -262,7 +353,6 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
     });
   }
 };
-
 
 
 const deleteDestination = async (req: Request, res: Response): Promise<void> => {

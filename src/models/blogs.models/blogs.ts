@@ -12,7 +12,7 @@ const blogSchema = new Schema({
     slug: { type: String, required: true, unique: true, lowercase: true },
     thumbnail: { type: String },
     category: { type: mongoose.Schema.Types.ObjectId, ref: "TourTypes" },
-    description: { type: String, required: true, min: 100 },
+    description: { type: String, required: true},
     link: [linkSchema],
     isActive: { type: Boolean, default: true },
     isFeature:{type:Boolean, default:false},

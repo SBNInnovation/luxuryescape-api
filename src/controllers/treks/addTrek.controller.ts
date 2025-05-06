@@ -63,7 +63,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     const thumbnail = req?.files?.thumbnail || [];
     const routeMap =req?.files?.routeMap || [];
     const gallery = req?.files?.gallery || [];
-    const highlightPicture = req?.files?.highlightPicture || [];
+    // const highlightPicture = req?.files?.highlightPicture || [];
     const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
 
     const uploadedThumbnail = thumbnail.length
@@ -86,10 +86,10 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       : [];
     const uploadedItineraryDayPhotoUrl = uploadedItineraryDayPhoto.map((file) => file?.secure_url);
 
-    const uploadedHighlightPicture = highlightPicture.length
-      ? await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "treks/gallery/images")))
-      : [];
-    const uploadedHighlightPictureUrls = uploadedHighlightPicture.map((file) => file?.secure_url);
+    // const uploadedHighlightPicture = highlightPicture.length
+    //   ? await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "treks/gallery/images")))
+    //   : [];
+    // const uploadedHighlightPictureUrls = uploadedHighlightPicture.map((file) => file?.secure_url);
 
     const parseJsonSafe = (data: any, fieldName: string) => {
       if (Array.isArray(data)) {
@@ -130,7 +130,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       difficultyLevel,
       trekOverview,
       trekHighlights: parsedTrekHighlights,
-      highlightPicture: uploadedHighlightPictureUrls,
+      // highlightPicture: uploadedHighlightPictureUrls,
       trekInclusion: parsedTrekInclusion,
       trekExclusion: parsedTrekExclusion,
       trekItinerary: parsedTrekItinerary,

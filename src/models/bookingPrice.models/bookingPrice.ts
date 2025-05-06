@@ -14,7 +14,7 @@ const bookingPriceSchema = new mongoose.Schema(
       ref: "Tour",
       default: null,
     },
-    singleSupplementaryThreeStar:{
+    singleSupplementaryPremiumFiveStar:{
       type: Number,
       default: 0
     },
@@ -30,7 +30,7 @@ const bookingPriceSchema = new mongoose.Schema(
       type:Number,
       default:0
     },
-    soloThreeStar:{
+    soloPremiumFiveStar:{
       type:Number,
       default:0
     },
@@ -42,7 +42,7 @@ const bookingPriceSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    standardThreeStar:{
+    standardPremiumFiveStar:{
       type:Number,
       default:0
     },

@@ -7,7 +7,7 @@ const roomDetailsSchema = new Schema(
       slug: { type: String, required: true, unique: true, lowercase: true },
       roomPhotos: { type: [String], default: [] },
       // roomStandard: { type: String, required: true, trim: true },
-      roomDescription: { type: String,trim: true, minLength: 10 },
+      roomDescription: { type: String,trim: true},
       roomFacilities: { type: [String],default: [] },
       accommodation:{type:mongoose.Schema.Types.ObjectId, ref:"Accommodation"}
     },{

@@ -62,7 +62,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       const thumbnail = req?.files?.thumbnail ||[]; 
       // const routeMap =req?.files?.routeMap || [];
       const gallery = req?.files?.gallery || [];
-      const highlightPicture = req?.files?.highlightPicture || [];
+      // const highlightPicture = req?.files?.highlightPicture || [];
       const itineraryDayPhoto = req?.files?.itineraryDayPhoto || [];
       
       const uploadedThumbnail = thumbnail.length
@@ -85,10 +85,10 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       : [];
       const uploadedItineraryDayPhotoUrl = uploadedItineraryDayPhoto.map(file => file?.secure_url);
 
-      const uploadedHighlightPicture = highlightPicture.length? 
-      await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "tours/gallery/images"))):[];
+      // const uploadedHighlightPicture = highlightPicture.length? 
+      // await Promise.all(highlightPicture.map((file) => uploadFile(file?.path || "", "tours/gallery/images"))):[];
 
-      const uploadedHighlightPictureUrls = uploadedHighlightPicture.map(file => file?.secure_url);
+      // const uploadedHighlightPictureUrls = uploadedHighlightPicture.map(file => file?.secure_url);
     
 
     // Helper function to safely parse JSON or return the original value if it's already an array
@@ -132,7 +132,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       tourTypes,
       tourOverview,
       tourHighlights: parsedTourHighlights,
-      highlightPicture: uploadedHighlightPictureUrls,
+      // highlightPicture: uploadedHighlightPictureUrls,
       tourInclusion: parsedTourInclusion,
       tourExclusion: parsedTourExclusion,
       tourItinerary: parsedTourItinerary,

@@ -68,9 +68,9 @@ const deleteTour = async (req: Request, res: Response): Promise<void> => {
 
 // Delete highlight images
 // const highlightDeleted = await deleteImageGroup(tour.highlightPicture, "tours/gallery/images");
- for (const url of tour.highlightPicture) {
-      await deleteFile(url);
-    }
+//  for (const url of tour.highlightPicture) {
+//       await deleteFile(url);
+//     }
 // if (!highlightDeleted) {
 //   res.status(500).json({ success: false, message: "Failed to delete highlight images" });
 //   return;

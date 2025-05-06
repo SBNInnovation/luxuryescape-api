@@ -420,8 +420,7 @@ const getAllDestinations = async (req: Request, res: Response): Promise<void> =>
     const destinations = await Destination.find(query)
     .skip(skip)
     .limit(limit)
-    .sort({ createdAt: -1 })
-    ;
+    .sort({ createdAt: -1 });
 
     if (destinations.length === 0) {
       res.status(404).json({ success: false, message: "No destinations found." });

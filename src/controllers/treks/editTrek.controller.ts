@@ -249,15 +249,6 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       //  const finalHighlightPicture = existingTrek.highlightPicture.filter((url: string) => !parsedHighlightToDelete.includes(url));
       //  const finalItineraryDayPhoto = existingTrek.itineraryDayPhoto.filter((url: string) => !parsedItineraryPhotoToDelete.includes(url));
    
-       // Delete from Cloudinary
-       const allToDelete = [
-         ...parsedGalleryToDelete,
-       ];
-
-        for (const url of allToDelete) {
-           await deleteFile(url);
-        }
-
 
       //  const finalHighlightPictures: string[] = [...existingTrek.highlightPicture];
 
@@ -310,7 +301,14 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     // Final image arrays
     const finalGalleryUrls = [...finalGallery, ...uploadedGalleryUrls];
   
-    
+       // Delete from Cloudinary
+       const allToDelete = [
+         ...parsedGalleryToDelete,
+       ];
+
+        for (const url of allToDelete) {
+           await deleteFile(url);
+        }
     
 
     const parseJsonSafe = (data: any, fieldName: string) => {

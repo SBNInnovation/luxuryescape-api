@@ -234,6 +234,8 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
 
 export default editTour;
 
+///edit tour
+
 
 
 

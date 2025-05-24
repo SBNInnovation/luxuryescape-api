@@ -395,10 +395,12 @@ import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
 export interface MulterRequest extends Request {
   files?: {
     accommodationPics?: Express.Multer.File[];
+    logo?: Express.Multer.File[];
   };
 }
 
-const editAccommodation = async (req: Request, res: Response) => {
+
+const editAccommodation = async (req:MulterRequest , res: Response) => {
   try {
     const { accommodationId } = req.params;
     const {
@@ -472,6 +474,7 @@ const editAccommodation = async (req: Request, res: Response) => {
 
     // Handle image uploads
     const accommodationPics = (req as MulterRequest)?.files?.accommodationPics || [];
+    const logo =req?.files?.logo || [];
     
     const uploadedAccommodationPics = await Promise.all(
       accommodationPics.map(async (file) => {
@@ -484,6 +487,14 @@ const editAccommodation = async (req: Request, res: Response) => {
         }
       })
     );
+
+    const uploadedLogo = logo.length
+        ? await uploadFile(logo[0]?.path || "", "tours/accommdation/logo")
+        : null;
+        
+    const uploadedLogoUrl = uploadedLogo ? uploadedLogo.secure_url : existingAccommodation.logo;
+
+    
 
     const uploadedAccommodationPicUrls = uploadedAccommodationPics.filter(Boolean); // Remove nulls
 
@@ -527,6 +538,7 @@ const editAccommodation = async (req: Request, res: Response) => {
         accommodationFeatures: parsedAccommodationFeatures,
         accommodationAmenities: parsedAccommodationAmenities,
         accommodationPics: finalImageList,
+        logo:uploadedLogoUrl,
         policies: parsedPolicies,
       },
       { new: true, runValidators: true }

@@ -20,6 +20,7 @@ const itineraryDetailsSchema = new Schema(
     title: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true},
     accommodation: [{ type: mongoose.Schema.Types.ObjectId, ref: "Accommodation" }],
+    note:{type:String},
     links: { type: [linksSchema], default: [] },
   },
   { _id: false }

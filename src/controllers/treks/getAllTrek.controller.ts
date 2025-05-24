@@ -9,6 +9,7 @@ const getAllTreks = async (req: Request, res: Response): Promise<void> => {
     const page: number = parseInt(req.query.page as string) || 1;
     const limit: number = parseInt(req.query.limit as string) || 10;
     const search = req.query.search?.toString();
+    const activation = req.query.activation?.toString();
 
     if (page < 1 || limit < 1) {
       res.status(400).json({ success: false, message: "Invalid pagination parameters" });
@@ -17,9 +18,20 @@ const getAllTreks = async (req: Request, res: Response): Promise<void> => {
 
     const skip = (page - 1) * limit;
 
-    const query = search
-      ? { trekName: { $regex: search, $options: "i" } }
-      : {};
+    let query: any = {};
+    if (search) {
+      query.$or = [
+        { trekName: { $regex: search, $options: "i" } },
+        { location: { $regex: search, $options: "i" } }
+      ];
+    }
+
+    if (activation === "active") {
+      query.isActivate = true;
+    } else if (activation === "inactive") {
+      query.isActivate = false; 
+    }
+    
 
     const allTreks = await Trek.find(query)
       .sort({ createdAt: -1 })

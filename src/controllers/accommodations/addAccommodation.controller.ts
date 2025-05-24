@@ -7,6 +7,7 @@ import Accommodation from "../../models/accommodation.models/Accommodation.js";
 export interface MulterRequest extends Request {
   files?: {
     accommodationPics?: Express.Multer.File[];
+    logo?: Express.Multer.File[];
   };
 }
 
@@ -49,6 +50,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
 
     // Handle file uploads using Multer
     const accommodationPics = req?.files?.accommodationPics || [];
+    const logo = req?.files?.logo || [];
 
     // Upload photos to Cloudinary and store URLs
     const uploadedAccommodationPics = accommodationPics.length
@@ -64,6 +66,10 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
           })
         )
       : [];
+    const uploadedLogo = logo.length
+        ? await uploadFile(logo[0]?.path || "", "accommodation/logo")
+        : null;
+    const uploadedLogoUrl = uploadedLogo ? uploadedLogo.secure_url : null;
 
     // Remove null values (if any upload failed)
     const filteredAccommodationPics = uploadedAccommodationPics.filter((url) => url !== null);
@@ -84,6 +90,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
       accommodationFeatures: parsedAccommodationFeatures,
       accommodationAmenities: parsedAccommodationAmenities,
       accommodationPics: filteredAccommodationPics,
+      logo:uploadedLogoUrl,
       policies: parsedPolicies
     });
 

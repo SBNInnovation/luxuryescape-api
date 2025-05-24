@@ -25,7 +25,7 @@ const getSpecificTour = async (req: Request, res: Response): Promise<void> => {
             BookingPrice.findOne({ adventureType: "Tour", tourId: tour._id }),
             Tour.findOne({ slug }).populate({
                 path: "tourItinerary.accommodation",
-                select: "accommodationTitle slug accommodationPics",
+                select: "accommodationTitle slug accommodationPics accommodationRating",
             }),
         ]);
 

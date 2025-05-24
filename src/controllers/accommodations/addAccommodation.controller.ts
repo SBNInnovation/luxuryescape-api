@@ -67,7 +67,7 @@ const addAccommodation = async (req: MulterRequest, res: Response): Promise<void
         )
       : [];
     const uploadedLogo = logo.length
-        ? await uploadFile(logo[0]?.path || "", "accommodation/logo")
+        ? await uploadFile(logo[0]?.path || "", "tours/accommdation/logo")
         : null;
     const uploadedLogoUrl = uploadedLogo ? uploadedLogo.secure_url : null;
 

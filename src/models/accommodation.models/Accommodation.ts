@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 // Accommodation Details Schema
 const accommodationDetailsSchema = new Schema({
   accommodationPics: { type: [String], default: [] },
+  logo: {type:String},
   accommodationTitle: { type: String, required: true, trim: true },
   slug: { type: String, required: true, unique: true, lowercase: true , index: true},
   type:{type:String, default:"accommodation"},

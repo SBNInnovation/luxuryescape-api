@@ -249,30 +249,6 @@ const editTrek = async (req: MulterRequest, res: Response): Promise<void> => {
       //  const finalHighlightPicture = existingTrek.highlightPicture.filter((url: string) => !parsedHighlightToDelete.includes(url));
       //  const finalItineraryDayPhoto = existingTrek.itineraryDayPhoto.filter((url: string) => !parsedItineraryPhotoToDelete.includes(url));
    
-
-      //  const finalHighlightPictures: string[] = [...existingTrek.highlightPicture];
-
-      //  for (const [idx, img] of parsedHighlightToDelete.entries()) {
-      //    const index = existingTrek.highlightPicture.indexOf(img);
-       
-      //    const newPhoto = uploadedHighlightPictureUrls[idx];
-         
-      //    if (index !== -1) {
-      //      if (!newPhoto) {
-      //        throw new Error(`Uploaded photo missing for image at index ${idx}`);
-      //      }
-       
-      //      await deleteFile(img);
-      //      finalHighlightPictures[index] = newPhoto; // Replace inside the final array
-      //    }
-      //  }
-      //  if (uploadedHighlightPictureUrls.length > parsedHighlightToDelete.length) {
-      //    const remaining = uploadedHighlightPictureUrls
-      //      .slice(parsedHighlightToDelete.length)
-      //      .filter((url): url is string => typeof url === "string"); // filter out undefined
-      //    finalHighlightPictures.push(...remaining);
-      //  }
-
    
        const finalItineraryPhotos: string[] = [...existingTrek.itineraryDayPhoto];
 

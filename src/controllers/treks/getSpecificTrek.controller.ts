@@ -25,7 +25,7 @@ const getSpecificTrek = async (req: Request, res: Response): Promise<void> => {
             BookingPrice.findOne({ adventureType: "Trekking", trekId: trek._id }),
             Trek.findOne({ slug }).populate({
                 path: "trekItinerary.accommodation",
-                select: "accommodationTitle slug accommodationPics",
+                select: "accommodationTitle slug accommodationPics accommodationRating",
             }),
         ]);
 

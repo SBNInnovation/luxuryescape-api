@@ -5,6 +5,7 @@ import Accommodation from "../../models/accommodation.models/Accommodation.js";
 import Blog from "../../models/blogs.models/blogs.js";
 import TailorMade from "../../models/tailor-made.models/tailor-made.js";
 import CustomizeQuote from "../../models/customizeQuote.models/customizeQuote.js";
+import { Booking } from "../../models/booking.models/booking.js";
 
 const getDetailsForDashboard = async (req: Request, res: Response):Promise<void> => {
     try {
@@ -15,7 +16,10 @@ const getDetailsForDashboard = async (req: Request, res: Response):Promise<void>
             getAccommodationDetails,
             getBlogDetails,
             getRecentTailormade,
-            getRecentInquiry
+            getRecentInquiry,
+            bookings,
+            quotes,
+            tailorMade
         ] = await Promise.all([
             Tour.countDocuments({ isActivate: true }),
             Trek.countDocuments({ isActivate: true }),
@@ -28,7 +32,10 @@ const getDetailsForDashboard = async (req: Request, res: Response):Promise<void>
             CustomizeQuote.find({})
                 .sort({ createdAt: -1 })
                 .limit(5)
-                .select("name email tourName trekName tourId trekId status createdAt type")
+                .select("name email tourName trekName tourId trekId status createdAt type"),
+            TailorMade.countDocuments({status:"pending"}),
+            Booking.countDocuments({status:"pending"}),
+            CustomizeQuote.countDocuments({stauts:"pending"})
         ]);
 
         res.status(200).json({
@@ -39,7 +46,10 @@ const getDetailsForDashboard = async (req: Request, res: Response):Promise<void>
                 accommodationCount: getAccommodationDetails,
                 blogCount: getBlogDetails,
                 recentTailormade: getRecentTailormade,
-                recentInquiries: getRecentInquiry
+                recentInquiries: getRecentInquiry,
+                bookings: bookings,
+                quotes: quotes,
+                tailorMade: tailorMade
             }
         });
 

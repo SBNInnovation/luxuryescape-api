@@ -61,6 +61,18 @@ const BookingSchema = new mongoose.Schema(
       enum: ["pending", "viewed", "mailed"],
       default: "pending",
     },
+    accommodationType: {
+      type: String,
+    },
+    supplementaryConfigs:{
+      type: [
+      {
+        numberOfSupplementaryRooms: Number,
+        supplementaryRoomType: String,
+      },
+      ],
+      default:[]
+    }
   },
   {
     timestamps: true,

@@ -19,6 +19,8 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       adventureId,
       bookingDate,
       totalPrice,
+      supplementaryConfigs,
+      accommodationType,
     } = req.body
 
     console.log(req.body)
@@ -40,6 +42,13 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
         .status(404)
         .json({ success: false, message: "Please provide all required fields" })
       return
+    }
+
+    let parsedSupplementConfig;
+    if(!Array(supplementaryConfigs)){
+      parsedSupplementConfig = JSON.parse(supplementaryConfigs);
+    }else{
+      res.status(404).json({success:false, message:"Supplementary config must me an array"})
     }
 
     //update user details
@@ -71,6 +80,8 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       tourId: adventureType === "Tour" ? adventureId : null,
       bookingDate,
       totalPrice,
+      accommodationType,
+      supplementaryConfigs: parsedSupplementConfig
     })
 
     const create = await booking.save()

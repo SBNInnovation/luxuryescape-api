@@ -43,13 +43,24 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
         .json({ success: false, message: "Please provide all required fields" })
       return
     }
-
-    let parsedSupplementConfig;
-    if(!Array(supplementaryConfigs)){
-      parsedSupplementConfig = JSON.parse(supplementaryConfigs);
-    }else{
-      res.status(404).json({success:false, message:"Supplementary config must me an array"})
-    }
+  // let parsedSupplementConfig;
+  // if (!Array.isArray(supplementaryConfigs)) {
+  //   try {
+  //     parsedSupplementConfig = JSON.parse(supplementaryConfigs);
+  //   } catch (err) {
+  //      res.status(400).json({
+  //       success: false,
+  //       message: "Invalid JSON format for supplementaryConfigs",
+  //     });
+  //     return;
+  //   }
+  // } else {
+  //   res.status(400).json({
+  //     success: false,
+  //     message: "Supplementary config must be a stringified array",
+  //   });
+  //   return;
+  // }
 
     //update user details
     const user = await Agent.find({ userEmail: email })
@@ -81,7 +92,7 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       bookingDate,
       totalPrice,
       accommodationType,
-      supplementaryConfigs: parsedSupplementConfig
+      supplementaryConfigs
     })
 
     const create = await booking.save()

@@ -17,9 +17,9 @@ const getDetailsForDashboard = async (req: Request, res: Response):Promise<void>
             getBlogDetails,
             getRecentTailormade,
             getRecentInquiry,
+            tailorMade,
             bookings,
-            quotes,
-            tailorMade
+            quotes
         ] = await Promise.all([
             Tour.countDocuments({ isActivate: true }),
             Trek.countDocuments({ isActivate: true }),
@@ -35,7 +35,7 @@ const getDetailsForDashboard = async (req: Request, res: Response):Promise<void>
                 .select("name email tourName trekName tourId trekId status createdAt type"),
             TailorMade.countDocuments({status:"pending"}),
             Booking.countDocuments({status:"pending"}),
-            CustomizeQuote.countDocuments({stauts:"pending"})
+            CustomizeQuote.countDocuments({status:"pending"})
         ]);
 
         res.status(200).json({

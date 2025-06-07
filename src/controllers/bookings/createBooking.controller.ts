@@ -43,24 +43,6 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
         .json({ success: false, message: "Please provide all required fields" })
       return
     }
-  // let parsedSupplementConfig;
-  // if (!Array.isArray(supplementaryConfigs)) {
-  //   try {
-  //     parsedSupplementConfig = JSON.parse(supplementaryConfigs);
-  //   } catch (err) {
-  //      res.status(400).json({
-  //       success: false,
-  //       message: "Invalid JSON format for supplementaryConfigs",
-  //     });
-  //     return;
-  //   }
-  // } else {
-  //   res.status(400).json({
-  //     success: false,
-  //     message: "Supplementary config must be a stringified array",
-  //   });
-  //   return;
-  // }
 
     //update user details
     const user = await Agent.find({ userEmail: email })
@@ -165,7 +147,7 @@ const createBooking = async (req: Request, res: Response): Promise<void> => {
       </table>
       
       <div style="text-align: center; margin-top: 25px;">
-        <a href="${process.env.CLIENT_URL}/bookings/${
+        <a href="${process.env.CLIENT_URL_PROD}/bookings/${
       create._id
     }" style="background-color: #E8B86D; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Review Booking</a>
       </div>

@@ -88,7 +88,7 @@
 
 
 import { Request, Response } from "express";
-import slug from "slug";
+import slugify from "slugify";
 import Room from "../../models/rooms.models/room.js";
 import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
 
@@ -176,7 +176,7 @@ const editRoom = async (req: MulterRequest, res: Response): Promise<void> => {
     // Merge updated list with new uploads
     const finalPhotoList = [...updatedPhotoList, ...uploadedPhotoUrls];
 
-    const slugified = slug(roomTitle);
+    const slugified = slugify(roomTitle);
 
     const updatedRoom = await Room.findByIdAndUpdate(
       roomId,

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import Destination from "../../models/destination.models/destination.js";
-import slug from "slug";
+import slugify from "slugify";
 import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
 import Recommend from "../../models/recommendedAcco.models/recommended.js";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
@@ -63,7 +63,7 @@ const createDestination = async (req: MulterRequest, res: Response): Promise<voi
 
     const uploadedImageUrl = uploadedImage.map((file)=> file?.secure_url)
 
-    const destinationSlug = slug(title, { lower: true });
+    const destinationSlug = slugify(title, { lower: true });
 
     const relatedDestinations = parsedCaption.map((caption: string, index: number) => ({
       caption,
@@ -281,7 +281,7 @@ const updateDestination = async (req: MulterRequest, res: Response): Promise<voi
     // Update title/description
     if (title) {
       destination.title = title;
-      destination.slug = slug(title, { lower: true });
+      destination.slug = slugify(title, { lower: true });
     }
     if (description) {
       destination.description = description;

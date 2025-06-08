@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 // import { Express } from "express";
 import { uploadFile } from "../../utility/cloudinary.js";
 import Room from "../../models/rooms.models/room.js";
-import slug from "slug";
+import slugify from "slugify";
 
 
 export interface MulterRequest extends Request {
@@ -52,7 +52,7 @@ const addRoom = async(req:MulterRequest,res:Response):Promise<void> =>{
         const filteredRoomPhotos = uploadedRoomPhotos.filter((url) => url !== null);
 
         // Generate slug
-        let slug1 = slug(roomTitle) + "-" + accommodation.toString();
+        let slug1 = slugify(roomTitle) + "-" + accommodation.toString();
 
         // Check if slug already exists
         let existingRoom = await Room.findOne({ slug: slug1 });

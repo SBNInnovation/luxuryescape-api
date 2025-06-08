@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { uploadFile } from "../../utility/cloudinary.js";
 import Tour from "../../models/tours.models/tours.js";
-import slug from "slug";
+import slugify from "slugify";
 
 export interface MulterRequest extends Request {
   files?: {
@@ -117,7 +117,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
       res.status(400).json({ success: false, message: "Tour already exists" });
       return;
     }
-   const slug1 = slug(tourName)
+   const slug1 = slugify(tourName)
     // Create Tour
     const createTour = await Tour.create({
       tourName,

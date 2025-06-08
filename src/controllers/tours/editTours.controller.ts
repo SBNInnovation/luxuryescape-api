@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import slug from "slug";
+import slugify from "slugify";
 import Tour from "../../models/tours.models/tours.js";
 import { deleteFile, uploadFile } from "../../utility/cloudinary.js";
 
@@ -158,7 +158,7 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
     const parsedTourExclusion = tourExclusion ? parseJsonSafe(tourExclusion, existingTour.tourExclusion) : existingTour.tourExclusion;
     const parsedTourHighlights = tourHighlights ? parseJsonSafe(tourHighlights, existingTour.tourHighlights) : existingTour.tourHighlights;
 
-    const slug1 = tourName ? slug(tourName) : existingTour.slug;
+    const slug1 = tourName ? slugify(tourName) : existingTour.slug;
 
     // === UPDATE TOUR ===
     const updatedTour = await Tour.findByIdAndUpdate(

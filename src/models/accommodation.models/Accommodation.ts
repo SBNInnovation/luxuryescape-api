@@ -15,7 +15,7 @@ const accommodationDetailsSchema = new Schema({
     required: true
   },
   accommodationLocation: { type: String, required: true, trim: true },
-  accommodationRating: { type: Number, min: 0, max: 7 }, // Ratings typically range 0-5
+  accommodationRating: { type: Number, min: 0, max: 8 }, // Ratings typically range 0-5
   accommodationDescription: { type: String, required: true, trim: true},
   accommodationFeatures: { type: [String], default: [] },
   accommodationAmenities: { type: [String], default: [] },

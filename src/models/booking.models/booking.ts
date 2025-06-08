@@ -69,6 +69,7 @@ const BookingSchema = new mongoose.Schema(
       {
         numberOfSupplementaryRooms: Number,
         supplementaryRoomType: String,
+        price: Number 
       },
       ],
       default:[]

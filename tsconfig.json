@@ -75,11 +75,10 @@
 // }
 
 
-
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "module": "CommonJS",        // ✅ Fix: transpile import/export to require/module.exports
+    "module": "ESNext",
     "target": "ES2020",
     "moduleResolution": "Node",
     "strict": true,
@@ -89,7 +88,6 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
-
 
 
 

@@ -107,21 +107,36 @@ const editTour = async (req: MulterRequest, res: Response): Promise<void> => {
 
     const finalItineraryPhotos: string[] = [...existingTour.itineraryDayPhoto];
 
+      // for (const [idx, img] of parsedItineraryPhotoToDelete.entries()) {
+      //   const index = existingTour.itineraryDayPhoto.indexOf(img);
+      //   const newPhoto = uploadedItineraryPhotoUrls[idx];
+
+      //   if (index !== -1) {
+      //     if (!newPhoto) {
+      //       throw new Error(`Uploaded photo missing for image at index ${idx}`);
+      //     }
+      //     finalItineraryPhotos[index] = newPhoto;
+      //     await deleteFile(img);
+      //   }
+      // }
+
       for (const [idx, img] of parsedItineraryPhotoToDelete.entries()) {
         const index = existingTour.itineraryDayPhoto.indexOf(img);
         const newPhoto = uploadedItineraryPhotoUrls[idx];
 
         if (index !== -1) {
-          if (!newPhoto) {
-            throw new Error(`Uploaded photo missing for image at index ${idx}`);
+          if (newPhoto) {
+            finalItineraryPhotos[index] = newPhoto;
+            await deleteFile(img); // safe to delete
+          } else {
+            console.warn(`Skipping deletion for ${img} - no replacement photo found`);
+            // Optionally, log this and inform frontend there's an inconsistency
           }
-
-          await deleteFile(img);
-          finalItineraryPhotos[index] = newPhoto;
         }
       }
 
-      // ✅ Append new photos beyond replacements
+
+      // Append new photos beyond replacements
         if (uploadedItineraryPhotoUrls.length > parsedItineraryPhotoToDelete.length) {
           const remaining = uploadedItineraryPhotoUrls
             .slice(parsedItineraryPhotoToDelete.length)

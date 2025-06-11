@@ -4,7 +4,7 @@ const recommendedSchema = new Schema({
    affiliatedAccommodation: { type: String},
     thumbnail :{ type:String},
     link:{ type: String },
-    destination:{type:mongoose.Schema.Types.ObjectId, ref:"Destination"}
+    destination:{type: String}
 })
 
 const Recommend = mongoose.model("Recommend",recommendedSchema)

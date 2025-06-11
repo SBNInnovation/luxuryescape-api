@@ -139,7 +139,7 @@ const deleteReccommended = async (req: Request, res: Response): Promise<void> =>
   // Get all recommended accommodations
 const getAllRecommended = async (req: Request, res: Response): Promise<void> => {
     try {
-      const recommendedList = await Recommend.find().populate("destination").sort({ createdAt: -1 });
+      const recommendedList = await Recommend.find().sort({ createdAt: -1 });
       res.status(200).json({ success: true, data: recommendedList });
     } catch (error) {
       console.error("Error fetching recommended accommodations:", error);

@@ -24,7 +24,8 @@ const accommodationDetailsSchema = new Schema({
     checkOutTime : {type : String},
     cancellationPolicy : {type : String},
     pets: {type: String}
-  }
+  },
+  isFeature:{type:Boolean, default:false}
 },{
   timestamps:true
 });

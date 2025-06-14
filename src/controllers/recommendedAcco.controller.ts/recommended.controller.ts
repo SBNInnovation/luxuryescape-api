@@ -139,7 +139,7 @@ const deleteReccommended = async (req: Request, res: Response): Promise<void> =>
   // Get all recommended accommodations
 const getAllRecommended = async (req: Request, res: Response): Promise<void> => {
     try {
-      const recommendedList = await Recommend.find().sort({ createdAt: -1 });
+      const recommendedList = await Recommend.find().sort({ isFeature:-1 ,createdAt: -1 });
       res.status(200).json({ success: true, data: recommendedList });
     } catch (error) {
       console.error("Error fetching recommended accommodations:", error);
@@ -175,6 +175,38 @@ const getRecommendedById = async (req: Request, res: Response): Promise<void> =>
       }
     }
   };
+
+  
+  const makeFeaturedRecAcco = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { recommendedId } = req.params;
+      const isfeatureParam = req.query.isfeature?.toString().trim().toLowerCase();
+  
+      if (isfeatureParam !== "true" && isfeatureParam !== "false") {
+        res.status(400).json({ success: false, message: "Invalid value for isfeature. Use 'true' or 'false'." });
+        return;
+      }
+  
+      const isFeature = isfeatureParam === "true";
+  
+      const updatedAcco = await Recommend.findByIdAndUpdate(
+        recommendedId,
+        { $set: { isFeature } }, 
+        { new: true }
+      );
+  
+      if (!updatedAcco) {
+        res.status(404).json({ success: false, message: "Recommended accommodation not found" });
+        return;
+      }
+  
+      res.status(200).json({ success: true, message: "Updated successfully", data: updatedAcco });
+  
+    } catch (error) {
+      res.status(500).json({ success: false, message: error instanceof Error ? error.message : "Server Error" });
+    }
+  };
   
 
-export {editReccommendedAcco,addRecommededAcco,getAllRecommended,getRecommendedById,deleteReccommended}
+
+export {editReccommendedAcco,addRecommededAcco,getAllRecommended,getRecommendedById,deleteReccommended, makeFeaturedRecAcco }

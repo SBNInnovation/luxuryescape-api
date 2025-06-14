@@ -90,4 +90,19 @@
 }
 
 
+// {
+//   "compilerOptions": {
+//     "outDir": "./dist",
+//     "module": "CommonJS",         // <-- Use CommonJS instead of ESNext
+//     "target": "ES2020",
+//     "moduleResolution": "Node",
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true
+//   },
+//   "include": ["src/**/*"],
+//   "exclude": ["node_modules"]
+// }
+
+
 

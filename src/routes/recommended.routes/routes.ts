@@ -1,5 +1,5 @@
 import express from "express";
-import { addRecommededAcco, deleteReccommended, editReccommendedAcco, getAllRecommended, getRecommendedById, MulterRequest } from "../../controllers/recommendedAcco.controller.ts/recommended.controller.js";
+import { addRecommededAcco, deleteReccommended, editReccommendedAcco, getAllRecommended, getRecommendedById, makeFeaturedRecAcco, MulterRequest } from "../../controllers/recommendedAcco.controller.ts/recommended.controller.js";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
@@ -47,5 +47,6 @@ recommendedRouter.patch("/recommend/edit/:recommendedId",
         editReccommendedAcco(req as MulterRequest, res)
     }
 )
+recommendedRouter.route("recommend/update/:recommendedId").patch(makeFeaturedRecAcco)
 
 export default recommendedRouter;

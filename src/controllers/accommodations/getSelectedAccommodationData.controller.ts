@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import Accommodation from "../../models/accommodation.models/Accommodation.js";
-import Destination from "../../models/destination.models/destination.js";
 
 
 const getSelectedAccommodationData = async (req: Request, res: Response): Promise<void> => {
@@ -50,11 +49,12 @@ const getSelectedAccommodationData = async (req: Request, res: Response): Promis
         }
 
         // Sorting logic (default: newest first)
-        let sortQuery: any = { createdAt: -1 };
+        // let sortQuery: any = { createdAt: -1 };
+        let sortQuery: any = { isFeature: -1, createdAt: -1 }; // Default: featured first, then newest
         if (sort === "asc") {
-            sortQuery = { createdAt: 1 };
+            sortQuery = {createdAt: 1 };
         } else if (sort === "desc") {
-            sortQuery = { createdAt: -1 };
+            sortQuery = {createdAt: -1 };
         }
 
         // Fetch accommodations

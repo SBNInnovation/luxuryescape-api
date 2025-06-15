@@ -47,6 +47,6 @@ recommendedRouter.patch("/recommend/edit/:recommendedId",
         editReccommendedAcco(req as MulterRequest, res)
     }
 )
-recommendedRouter.route("recommend/update/:recommendedId").patch(makeFeaturedRecAcco)
+recommendedRouter.route("/recommend/update/:recommendedId").patch(makeFeaturedRecAcco)
 
 export default recommendedRouter;

@@ -37,7 +37,7 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     if (!trekName) missingFields.push("trekName");
     if (!duration) missingFields.push("duration");
     if (!idealTime) missingFields.push("idealTime");
-    if (!cost) missingFields.push("cost");
+    // if (!cost) missingFields.push("cost");
     if (!difficultyLevel) missingFields.push("difficultyLevel");
     if (!trekOverview) missingFields.push("trekOverview");
     if (!trekInclusion) missingFields.push("trekInclusion");
@@ -54,11 +54,10 @@ const addTrek = async (req: MulterRequest, res: Response): Promise<void> => {
     }
 
     // Validate cost
-    if (isNaN(cost) || cost <= 0) {
+    if (cost != null && (isNaN(cost) || Number(cost) <= 0)) {
       res.status(400).json({ success: false, message: "Cost must be a valid positive number" });
       return;
     }
-
     // Check for files in the request, but allow them to be optional
     const thumbnail = req?.files?.thumbnail || [];
     const routeMap =req?.files?.routeMap || [];

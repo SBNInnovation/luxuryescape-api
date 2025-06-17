@@ -67,6 +67,7 @@ import { bookingRouter } from "./routes/booking.routes/booking.routes.js";
 import activeteTrekRouter from "./routes/trek.routes/activate.routes.js";
 import destinationRouter from "./routes/destination.routes/destination.routes.js";
 import recommendedRouter from "./routes/recommended.routes/routes.js";
+import fineDiningRouter from "./routes/dining.routes/dining.routes.js";
 
 
 const app = express();
@@ -183,7 +184,10 @@ app.use(
     destinationRouter,
 
     //recommended
-    recommendedRouter
+    recommendedRouter,
+
+    //fine dining
+    fineDiningRouter
 
 )
 

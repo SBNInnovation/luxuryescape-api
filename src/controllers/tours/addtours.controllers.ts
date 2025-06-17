@@ -36,7 +36,7 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     if (!tourName) missingFields.push("tourName");
     if (!duration) missingFields.push("duration");
     if (!idealTime) missingFields.push("idealTime");
-    if (!cost) missingFields.push("cost");
+    // if (!cost) missingFields.push("cost");
     if (!tourTypes) missingFields.push("tourTypes");
     if (!tourOverview) missingFields.push("tourOverview");
     if (!tourInclusion) missingFields.push("tourInclusion");
@@ -53,9 +53,9 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     }
 
     // Validate cost
-    if (isNaN(cost) || cost <= 0) {
-       res.status(400).json({ success: false, message: "Cost must be a valid positive number" });
-       return
+    if (cost != null && (isNaN(cost) || Number(cost) <= 0)) {
+      res.status(400).json({ success: false, message: "Cost must be a valid positive number" });
+      return;
     }
 
      // Check for files in the request, but allow them to be optional

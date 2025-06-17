@@ -72,7 +72,7 @@ fineDiningRouter.route("/finedining/update/:fineDiningId").patch(makeFeaturedFin
 fineDiningRouter.route("/finedining/get-all-details").get(getSelectedDiningData)
 
 //get specific
-fineDiningRouter.route("/finedining/get/:fineDiningId").get(getSpecificFineDining)
+fineDiningRouter.route("/finedining/get/:slug").get(getSpecificFineDining)
 
 export default fineDiningRouter
 

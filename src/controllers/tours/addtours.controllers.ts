@@ -53,10 +53,14 @@ const addTour = async (req: MulterRequest, res: Response): Promise<void> => {
     }
 
     // Validate cost
-    if (cost != null && (isNaN(cost) || Number(cost) <= 0)) {
-      res.status(400).json({ success: false, message: "Cost must be a valid positive number" });
-      return;
+    if (cost !== undefined && cost !== null) {
+      const numericCost = Number(cost);
+      if (isNaN(numericCost) || numericCost <= 0) {
+        res.status(400).json({ success: false, message: "Cost must be a valid positive number" });
+        return;
+      }
     }
+
 
      // Check for files in the request, but allow them to be optional
       const thumbnail = req?.files?.thumbnail ||[]; 
